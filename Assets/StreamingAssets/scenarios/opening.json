@@ -1,0 +1,20 @@
+{
+  "scenarioId": "opening",
+  "displayName": "教學開局",
+  "units": [
+    {
+      "spawnKey": "player",
+      "type": "legion",
+      "faction": 1,
+      "commander": 1,
+      "escortCommander": 2,
+      "vice": [3],
+      "soldiers": 1000,
+      "wounded": 500,
+      "morale": 100,
+      "stamina": 100,
+      "hexQ": 12,
+      "hexR": 8
+    }
+  ]
+}

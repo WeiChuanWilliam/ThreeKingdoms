@@ -1,0 +1,28 @@
+{
+  "terrains": [
+    {
+      "id": 0,
+      "terrainName": "平原",
+      "flagsPacked": 3,
+      "fireEffect": 0,
+      "moralePenalty": 0,
+      "suggestedEnterCost": 15
+    },
+    {
+      "id": 1,
+      "terrainName": "官道",
+      "flagsPacked": 3,
+      "fireEffect": 0,
+      "moralePenalty": 0,
+      "suggestedEnterCost": 10
+    },
+    {
+      "id": 4,
+      "terrainName": "水域",
+      "flagsPacked": 0,
+      "fireEffect": 0,
+      "moralePenalty": 0,
+      "suggestedEnterCost": 99
+    }
+  ]
+}

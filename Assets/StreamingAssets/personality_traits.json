@@ -1,0 +1,2150 @@
+{
+  "version": 1,
+  "sourceDoc": "Docs/PERSONALITY_TRAITS_TABLES.md",
+  "categoryOrder": [
+    "統御",
+    "戰鬥",
+    "智略",
+    "政治",
+    "特殊"
+  ],
+  "tierOrder": [
+    "紫",
+    "金",
+    "藍",
+    "紅"
+  ],
+  "composeSeparator": "；",
+  "purplePerCategoryMax": 1,
+  "purpleByCategory": {
+    "統御": [
+      "梟雄",
+      "神將",
+      "神眼"
+    ],
+    "戰鬥": [
+      "猛虎",
+      "飛將",
+      "麒麟",
+      "龍膽"
+    ],
+    "智略": [
+      "懿心",
+      "火神",
+      "臥龍"
+    ],
+    "政治": [
+      "修仙",
+      "嘴王",
+      "棟樑",
+      "煉丹"
+    ],
+    "特殊": [
+      "一騎"
+    ]
+  },
+  "pairedMutex": [
+    [
+      "逆境",
+      "高慢"
+    ]
+  ],
+  "mutexGroups": {
+    "A": [
+      "向心",
+      "威風",
+      "樂奏",
+      "才媛",
+      "幻術",
+      "妖術",
+      "鬥將",
+      "脫兔",
+      "強行",
+      "軍心",
+      "一心",
+      "長驅",
+      "疾走",
+      "孤狼",
+      "豪傑",
+      "解毒",
+      "使役",
+      "再起",
+      "洞察",
+      "破罠",
+      "石兵",
+      "滅火",
+      "屯田",
+      "反計",
+      "施計",
+      "慎重",
+      "調配",
+      "搬運",
+      "富豪",
+      "米道",
+      "徵稅",
+      "農政",
+      "振興",
+      "名聲",
+      "文化",
+      "教化",
+      "支援",
+      "協作",
+      "強運"
+    ],
+    "C": [
+      "龍膽",
+      "常勝",
+      "任才",
+      "神威",
+      "逆境",
+      "孤狼",
+      "猛虎"
+    ],
+    "C2": [
+      "膽識",
+      "麒麟",
+      "五胡",
+      "南蠻",
+      "胡人",
+      "水戰",
+      "山戰",
+      "森戰",
+      "蠻族",
+      "地利",
+      "使役",
+      "宿將",
+      "果敢"
+    ],
+    "C3": [
+      "掃蕩",
+      "無畏"
+    ],
+    "C4": [
+      "堅守",
+      "殿軍",
+      "鐵壁"
+    ],
+    "C5": [
+      "遠矢",
+      "操器"
+    ],
+    "C6": [
+      "崩壁",
+      "操器"
+    ],
+    "D": [
+      "神將",
+      "名將",
+      "水將"
+    ],
+    "D2": [
+      "驍將"
+    ],
+    "D3": [
+      "剛將"
+    ],
+    "D4": [
+      "勇將"
+    ],
+    "D5": [
+      "督將"
+    ],
+    "D6": [
+      "工神"
+    ],
+    "D7": [
+      "才媛",
+      "傾國"
+    ],
+    "E": [
+      "梟雄",
+      "智將"
+    ],
+    "E2": [
+      "機略"
+    ],
+    "E3": [
+      "妙算"
+    ],
+    "E4": [
+      "詭計"
+    ],
+    "E5": [
+      "詐謀"
+    ],
+    "G_morale_friend": [
+      "樂奏",
+      "傾國"
+    ],
+    "G_morale_enemy": [
+      "幻術",
+      "鬼門"
+    ],
+    "G_stamina_friend": [
+      "應援"
+    ],
+    "G_stamina_enemy": [
+      "妖術",
+      "鬼門"
+    ]
+  },
+  "traits": [
+    {
+      "name": "梟雄",
+      "category": "統御",
+      "tier": "紫",
+      "effect": "3 格內敵軍攻擊、防禦 -30%；威風",
+      "composes": [
+        "威風"
+      ],
+      "id": 1,
+      "key": "梟雄"
+    },
+    {
+      "name": "神將",
+      "category": "統御",
+      "tier": "紫",
+      "effect": "3 格內我軍攻擊 & 防禦 +30%；向心",
+      "composes": [
+        "向心"
+      ],
+      "id": 2,
+      "key": "神將"
+    },
+    {
+      "name": "神眼",
+      "category": "統御",
+      "tier": "紫",
+      "effect": "部隊視野 +2，可看穿阻擋視野的地形；3 格內我軍機動 +25%",
+      "composes": [],
+      "id": 3,
+      "key": "神眼"
+    },
+    {
+      "name": "傾國",
+      "category": "統御",
+      "tier": "金",
+      "effect": "樂奏；才媛",
+      "composes": [
+        "樂奏",
+        "才媛"
+      ],
+      "id": 4,
+      "key": "傾國"
+    },
+    {
+      "name": "名將",
+      "category": "統御",
+      "tier": "金",
+      "effect": "3 格內我軍攻擊、防禦 +15%",
+      "composes": [],
+      "id": 5,
+      "key": "名將"
+    },
+    {
+      "name": "工神",
+      "category": "統御",
+      "tier": "金",
+      "effect": "3 格內我軍攻城、破城 +30%",
+      "composes": [],
+      "id": 6,
+      "key": "工神"
+    },
+    {
+      "name": "智將",
+      "category": "統御",
+      "tier": "金",
+      "effect": "3 格內敵軍攻擊、防禦 -15%",
+      "composes": [],
+      "id": 7,
+      "key": "智將"
+    },
+    {
+      "name": "神算",
+      "category": "統御",
+      "tier": "金",
+      "effect": "3 格範圍內對敵軍的施計成功率 +50%",
+      "composes": [],
+      "id": 8,
+      "key": "神算"
+    },
+    {
+      "name": "虛實",
+      "category": "統御",
+      "tier": "金",
+      "effect": "3 格內敵軍陷入異常狀態天數 +50%",
+      "composes": [],
+      "id": 9,
+      "key": "虛實"
+    },
+    {
+      "name": "護衛",
+      "category": "統御",
+      "tier": "金",
+      "effect": "3 格內我軍不會負傷、戰死；體力充沛時代行單挑",
+      "composes": [],
+      "id": 10,
+      "key": "護衛"
+    },
+    {
+      "name": "領袖",
+      "category": "統御",
+      "tier": "金",
+      "effect": "解除 3 格範圍內對我軍的中計狀態（混亂、止步、偽報、挑撥）",
+      "composes": [],
+      "id": 11,
+      "key": "領袖"
+    },
+    {
+      "name": "鬼門",
+      "category": "統御",
+      "tier": "金",
+      "effect": "幻術；妖術",
+      "composes": [
+        "幻術",
+        "妖術"
+      ],
+      "id": 12,
+      "key": "鬼門"
+    },
+    {
+      "name": "鳳雛",
+      "category": "統御",
+      "tier": "金",
+      "effect": "3 格內敵軍異常狀態戰法成功率 -50%",
+      "composes": [],
+      "id": 13,
+      "key": "鳳雛"
+    },
+    {
+      "name": "黃天",
+      "category": "統御",
+      "tier": "金",
+      "effect": "每天開始回復 3 格內我軍每個部隊傷兵 10 人",
+      "composes": [],
+      "id": 14,
+      "key": "黃天"
+    },
+    {
+      "name": "剛將",
+      "category": "統御",
+      "tier": "藍",
+      "effect": "3 格內我軍防禦 +15%",
+      "composes": [],
+      "id": 15,
+      "key": "剛將"
+    },
+    {
+      "name": "勇將",
+      "category": "統御",
+      "tier": "藍",
+      "effect": "3 格內我軍攻城 +15%",
+      "composes": [],
+      "id": 16,
+      "key": "勇將"
+    },
+    {
+      "name": "向心",
+      "category": "統御",
+      "tier": "藍",
+      "effect": "3 格內我軍可抵消士氣下降值 -1",
+      "composes": [],
+      "id": 17,
+      "key": "向心"
+    },
+    {
+      "name": "嘲諷",
+      "category": "統御",
+      "tier": "藍",
+      "effect": "3 格內敵軍「挑撥」天數 +20%",
+      "composes": [],
+      "id": 18,
+      "key": "嘲諷"
+    },
+    {
+      "name": "妖術",
+      "category": "統御",
+      "tier": "藍",
+      "effect": "回合開始，自己部隊 3 格內敵軍體力 -1",
+      "composes": [],
+      "id": 19,
+      "key": "妖術"
+    },
+    {
+      "name": "妙算",
+      "category": "統御",
+      "tier": "藍",
+      "effect": "3 格內敵軍防禦 -15%（船艦、兵器除外）",
+      "composes": [],
+      "id": 20,
+      "key": "妙算"
+    },
+    {
+      "name": "威風",
+      "category": "統御",
+      "tier": "藍",
+      "effect": "3 格內敵軍士氣減少時多 -1",
+      "composes": [],
+      "id": 21,
+      "key": "威風"
+    },
+    {
+      "name": "封殺",
+      "category": "統御",
+      "tier": "藍",
+      "effect": "3 格內敵軍「止步」天數 +20%",
+      "composes": [],
+      "id": 22,
+      "key": "封殺"
+    },
+    {
+      "name": "幻術",
+      "category": "統御",
+      "tier": "藍",
+      "effect": "回合開始，自己部隊 3 格內敵軍士氣 -10",
+      "composes": [],
+      "id": 23,
+      "key": "幻術"
+    },
+    {
+      "name": "怒髮",
+      "category": "統御",
+      "tier": "藍",
+      "effect": "若 3 格內我軍被殲滅，則自己士氣 +10",
+      "composes": [],
+      "id": 24,
+      "key": "怒髮"
+    },
+    {
+      "name": "應援",
+      "category": "統御",
+      "tier": "藍",
+      "effect": "回合開始，自己部隊 3 格內友軍體力 +1",
+      "composes": [],
+      "id": 25,
+      "key": "應援"
+    },
+    {
+      "name": "才媛",
+      "category": "統御",
+      "tier": "藍",
+      "effect": "3 格內我軍全能力 +10%",
+      "composes": [],
+      "id": 26,
+      "key": "才媛"
+    },
+    {
+      "name": "昂揚",
+      "category": "統御",
+      "tier": "藍",
+      "effect": "3 格內我軍殲滅敵軍，則自己士氣 +10",
+      "composes": [],
+      "id": 27,
+      "key": "昂揚"
+    },
+    {
+      "name": "明鏡",
+      "category": "統御",
+      "tier": "藍",
+      "effect": "3 格內我軍「混亂」天數 -50%",
+      "composes": [],
+      "id": 28,
+      "key": "明鏡"
+    },
+    {
+      "name": "樂奏",
+      "category": "統御",
+      "tier": "藍",
+      "effect": "回合開始，自己部隊 3 格內友軍士氣 +10",
+      "composes": [],
+      "id": 29,
+      "key": "樂奏"
+    },
+    {
+      "name": "機略",
+      "category": "統御",
+      "tier": "藍",
+      "effect": "3 格內敵軍攻擊 -15%（船艦、兵器除外）",
+      "composes": [],
+      "id": 30,
+      "key": "機略"
+    },
+    {
+      "name": "水將",
+      "category": "統御",
+      "tier": "藍",
+      "effect": "「大河、激流」地形中自己友軍部隊攻擊防禦 +10%，攻城、破城 +10%",
+      "composes": [],
+      "id": 31,
+      "key": "水將"
+    },
+    {
+      "name": "水性",
+      "category": "統御",
+      "tier": "藍",
+      "effect": "率領船艦時自己友方部隊機動 +25%",
+      "composes": [],
+      "id": 32,
+      "key": "水性"
+    },
+    {
+      "name": "煽動",
+      "category": "統御",
+      "tier": "藍",
+      "effect": "3 格內敵軍「混亂」天數 +20%",
+      "composes": [],
+      "id": 33,
+      "key": "煽動"
+    },
+    {
+      "name": "督勵",
+      "category": "統御",
+      "tier": "藍",
+      "effect": "3 格內我軍「止步」天數 -50%",
+      "composes": [],
+      "id": 34,
+      "key": "督勵"
+    },
+    {
+      "name": "督將",
+      "category": "統御",
+      "tier": "藍",
+      "effect": "3 格內我軍破城 +15%",
+      "composes": [],
+      "id": 35,
+      "key": "督將"
+    },
+    {
+      "name": "血路",
+      "category": "統御",
+      "tier": "藍",
+      "effect": "3 格內我軍不會被俘虜",
+      "composes": [],
+      "id": 36,
+      "key": "血路"
+    },
+    {
+      "name": "詐謀",
+      "category": "統御",
+      "tier": "藍",
+      "effect": "3 格內敵軍破城 -15%（船艦、兵器除外）",
+      "composes": [],
+      "id": 37,
+      "key": "詐謀"
+    },
+    {
+      "name": "詩想",
+      "category": "統御",
+      "tier": "藍",
+      "effect": "若 3 格內我軍殲滅敵軍，則範圍內我軍士氣 +10",
+      "composes": [],
+      "id": 38,
+      "key": "詩想"
+    },
+    {
+      "name": "詭計",
+      "category": "統御",
+      "tier": "藍",
+      "effect": "3 格內敵軍攻城 -15%（船艦、兵器除外）",
+      "composes": [],
+      "id": 39,
+      "key": "詭計"
+    },
+    {
+      "name": "諫止",
+      "category": "統御",
+      "tier": "藍",
+      "effect": "3 格內我軍「挑撥」天數 -50%",
+      "composes": [],
+      "id": 40,
+      "key": "諫止"
+    },
+    {
+      "name": "驍將",
+      "category": "統御",
+      "tier": "藍",
+      "effect": "3 格內我軍攻擊 +15%",
+      "composes": [],
+      "id": 41,
+      "key": "驍將"
+    },
+    {
+      "name": "消沉",
+      "category": "統御",
+      "tier": "紅",
+      "effect": "若 3 格內我軍被殲滅，自己士氣 -10",
+      "composes": [],
+      "id": 42,
+      "key": "消沉"
+    },
+    {
+      "name": "猛虎",
+      "category": "戰鬥",
+      "tier": "紫",
+      "effect": "豪傑；孤狼",
+      "composes": [
+        "豪傑",
+        "孤狼"
+      ],
+      "id": 43,
+      "key": "猛虎"
+    },
+    {
+      "name": "飛將",
+      "category": "戰鬥",
+      "tier": "紫",
+      "effect": "鬥將；脫兔",
+      "composes": [
+        "鬥將",
+        "脫兔"
+      ],
+      "id": 44,
+      "key": "飛將"
+    },
+    {
+      "name": "麒麟",
+      "category": "戰鬥",
+      "tier": "紫",
+      "effect": "疾走；消耗兵糧減少 25%；自己部隊攻擊防禦 +20%",
+      "composes": [
+        "疾走"
+      ],
+      "id": 45,
+      "key": "麒麟"
+    },
+    {
+      "name": "龍膽",
+      "category": "戰鬥",
+      "tier": "紫",
+      "effect": "自己部隊全屬性 +40%；強行；軍心",
+      "composes": [
+        "強行",
+        "軍心"
+      ],
+      "id": 46,
+      "key": "龍膽"
+    },
+    {
+      "name": "五胡",
+      "category": "戰鬥",
+      "tier": "金",
+      "effect": "低山、中山、高山、山路中自己部隊攻擊防禦 +20%；疾走",
+      "composes": [
+        "疾走"
+      ],
+      "id": 47,
+      "key": "五胡"
+    },
+    {
+      "name": "任才",
+      "category": "戰鬥",
+      "tier": "金",
+      "effect": "若 3 格內我軍 3 隊，則自己全能力 +20%",
+      "composes": [],
+      "id": 48,
+      "key": "任才"
+    },
+    {
+      "name": "南蠻",
+      "category": "戰鬥",
+      "tier": "金",
+      "effect": "森林、密林、溼地、淺灘、河川中自己部隊攻擊防禦 +20%；疾走；解毒",
+      "composes": [
+        "疾走",
+        "解毒"
+      ],
+      "id": 49,
+      "key": "南蠻"
+    },
+    {
+      "name": "宿將",
+      "category": "戰鬥",
+      "tier": "金",
+      "effect": "到一定年齡部隊攻擊防禦與單挑增加（60 歲 +20%，每年 +1%，最大 30%）；特殊劇本直接 +30%",
+      "composes": [],
+      "id": 50,
+      "key": "宿將"
+    },
+    {
+      "name": "射程",
+      "category": "戰鬥",
+      "tier": "金",
+      "effect": "若自己部隊陣型為投石、弩床，攻擊距離 +1",
+      "composes": [],
+      "id": 51,
+      "key": "射程"
+    },
+    {
+      "name": "常勝",
+      "category": "戰鬥",
+      "tier": "金",
+      "effect": "自己部隊全屬性 +25%",
+      "composes": [],
+      "id": 52,
+      "key": "常勝"
+    },
+    {
+      "name": "操器",
+      "category": "戰鬥",
+      "tier": "金",
+      "effect": "若自己部隊陣型為器械、象兵，攻城 & 破城 +50%",
+      "composes": [],
+      "id": 53,
+      "key": "操器"
+    },
+    {
+      "name": "據守",
+      "category": "戰鬥",
+      "tier": "金",
+      "effect": "使役；再起",
+      "composes": [
+        "使役",
+        "再起"
+      ],
+      "id": 54,
+      "key": "據守"
+    },
+    {
+      "name": "神威",
+      "category": "戰鬥",
+      "tier": "金",
+      "effect": "若 3 格內敵軍 3 隊，則自己全能力 +20%",
+      "composes": [],
+      "id": 55,
+      "key": "神威"
+    },
+    {
+      "name": "神速",
+      "category": "戰鬥",
+      "tier": "金",
+      "effect": "疾走；無視移動限制技能（止步、混亂、挑撥）",
+      "composes": [
+        "疾走"
+      ],
+      "id": 56,
+      "key": "神速"
+    },
+    {
+      "name": "脫兔",
+      "category": "戰鬥",
+      "tier": "金",
+      "effect": "退卻時自己部隊機動 +50%，無視限制技能（止步、混亂、挑撥）",
+      "composes": [],
+      "id": 57,
+      "key": "脫兔"
+    },
+    {
+      "name": "膽識",
+      "category": "戰鬥",
+      "tier": "金",
+      "effect": "自己部隊攻擊防禦 +30%（船艦、兵器除外）",
+      "composes": [],
+      "id": 58,
+      "key": "膽識"
+    },
+    {
+      "name": "航行",
+      "category": "戰鬥",
+      "tier": "金",
+      "effect": "率領船艦時自己部隊機動 +10%，無視移動限制技能",
+      "composes": [],
+      "id": 59,
+      "key": "航行"
+    },
+    {
+      "name": "軍心",
+      "category": "戰鬥",
+      "tier": "金",
+      "effect": "自己部隊士氣於 30 也不會潰逃；一心；長驅",
+      "composes": [
+        "一心",
+        "長驅"
+      ],
+      "id": 60,
+      "key": "軍心"
+    },
+    {
+      "name": "逆境",
+      "category": "戰鬥",
+      "tier": "金",
+      "effect": "兵力低於 3000（含）時自己全能力 +30%（與高慢互斥）",
+      "composes": [],
+      "id": 61,
+      "key": "逆境"
+    },
+    {
+      "name": "鬥將",
+      "category": "戰鬥",
+      "tier": "金",
+      "effect": "自己部隊免疫包圍效果（船艦、兵器除外）",
+      "composes": [],
+      "id": 62,
+      "key": "鬥將"
+    },
+    {
+      "name": "一心",
+      "category": "戰鬥",
+      "tier": "藍",
+      "effect": "自己部隊受到攻擊時士氣下降值 -1",
+      "composes": [],
+      "id": 63,
+      "key": "一心"
+    },
+    {
+      "name": "不屈",
+      "category": "戰鬥",
+      "tier": "藍",
+      "effect": "糧道切斷時自己士氣下降值減半",
+      "composes": [],
+      "id": 64,
+      "key": "不屈"
+    },
+    {
+      "name": "使役",
+      "category": "戰鬥",
+      "tier": "藍",
+      "effect": "駐紮 陣、寨、砦、城砦、縣城、要塞中自己部隊攻擊防禦 +10%",
+      "composes": [],
+      "id": 65,
+      "key": "使役"
+    },
+    {
+      "name": "俘獲",
+      "category": "戰鬥",
+      "tier": "藍",
+      "effect": "俘虜敵將機率 +30%",
+      "composes": [],
+      "id": 66,
+      "key": "俘獲"
+    },
+    {
+      "name": "地利",
+      "category": "戰鬥",
+      "tier": "藍",
+      "effect": "自勢力所屬地區中自己部隊攻擊防禦 +10%",
+      "composes": [],
+      "id": 67,
+      "key": "地利"
+    },
+    {
+      "name": "堅守",
+      "category": "戰鬥",
+      "tier": "藍",
+      "effect": "自己部隊防禦 +30%（船艦、兵器除外）",
+      "composes": [],
+      "id": 68,
+      "key": "堅守"
+    },
+    {
+      "name": "孤狼",
+      "category": "戰鬥",
+      "tier": "藍",
+      "effect": "周圍 3 格沒隊友時，自己全能力 +30%",
+      "composes": [],
+      "id": 69,
+      "key": "孤狼"
+    },
+    {
+      "name": "山戰",
+      "category": "戰鬥",
+      "tier": "藍",
+      "effect": "低山、中山、高山、山路、山林中自己部隊攻擊防禦 +20%",
+      "composes": [],
+      "id": 70,
+      "key": "山戰"
+    },
+    {
+      "name": "崩壁",
+      "category": "戰鬥",
+      "tier": "藍",
+      "effect": "自己部隊破城 +30%（船艦、兵器除外）",
+      "composes": [],
+      "id": 71,
+      "key": "崩壁"
+    },
+    {
+      "name": "快船",
+      "category": "戰鬥",
+      "tier": "藍",
+      "effect": "自己船艦部隊機動 +25%",
+      "composes": [],
+      "id": 72,
+      "key": "快船"
+    },
+    {
+      "name": "掃蕩",
+      "category": "戰鬥",
+      "tier": "藍",
+      "effect": "自己部隊攻擊 +30%（船艦、兵器除外）",
+      "composes": [],
+      "id": 73,
+      "key": "掃蕩"
+    },
+    {
+      "name": "操舵",
+      "category": "戰鬥",
+      "tier": "藍",
+      "effect": "率領船艦時無視止步",
+      "composes": [],
+      "id": 74,
+      "key": "操舵"
+    },
+    {
+      "name": "森戰",
+      "category": "戰鬥",
+      "tier": "藍",
+      "effect": "森林、密林、山林中自己部隊攻擊防禦 +20%",
+      "composes": [],
+      "id": 75,
+      "key": "森戰"
+    },
+    {
+      "name": "殿軍",
+      "category": "戰鬥",
+      "tier": "藍",
+      "effect": "護衛軍團時增加防禦 30%",
+      "composes": [],
+      "id": 76,
+      "key": "殿軍"
+    },
+    {
+      "name": "水戰",
+      "category": "戰鬥",
+      "tier": "藍",
+      "effect": "「大河、激流」地形中自己部隊攻擊防禦 +20%，攻城、破城 +20%",
+      "composes": [],
+      "id": 77,
+      "key": "水戰"
+    },
+    {
+      "name": "泰然",
+      "category": "戰鬥",
+      "tier": "藍",
+      "effect": "糧道切斷時自己部隊不會陷入混亂",
+      "composes": [],
+      "id": 78,
+      "key": "泰然"
+    },
+    {
+      "name": "無畏",
+      "category": "戰鬥",
+      "tier": "藍",
+      "effect": "自己部隊包圍時攻擊不會下降",
+      "composes": [],
+      "id": 79,
+      "key": "無畏"
+    },
+    {
+      "name": "猛者",
+      "category": "戰鬥",
+      "tier": "藍",
+      "effect": "令敵將負傷、戰死機率 +10%",
+      "composes": [],
+      "id": 80,
+      "key": "猛者"
+    },
+    {
+      "name": "疾走",
+      "category": "戰鬥",
+      "tier": "藍",
+      "effect": "自己部隊機動 +25%（船艦、兵器除外）",
+      "composes": [],
+      "id": 81,
+      "key": "疾走"
+    },
+    {
+      "name": "胡人",
+      "category": "戰鬥",
+      "tier": "藍",
+      "effect": "低山、中山、高山、山路中自己部隊攻擊防禦 +10%",
+      "composes": [],
+      "id": 82,
+      "key": "胡人"
+    },
+    {
+      "name": "蠻族",
+      "category": "戰鬥",
+      "tier": "藍",
+      "effect": "森林、密林、溼地、淺灘、河川中自己部隊攻擊防禦 +10%；解毒",
+      "composes": [
+        "解毒"
+      ],
+      "id": 83,
+      "key": "蠻族"
+    },
+    {
+      "name": "遠矢",
+      "category": "戰鬥",
+      "tier": "藍",
+      "effect": "自己部隊攻城 +30%（船艦、兵器除外）",
+      "composes": [],
+      "id": 84,
+      "key": "遠矢"
+    },
+    {
+      "name": "鐵壁",
+      "category": "戰鬥",
+      "tier": "藍",
+      "effect": "自己部隊包圍時防禦不會下降",
+      "composes": [],
+      "id": 85,
+      "key": "鐵壁"
+    },
+    {
+      "name": "長驅",
+      "category": "戰鬥",
+      "tier": "藍",
+      "effect": "自己部隊士氣受地形影響下降值 -1",
+      "composes": [],
+      "id": 86,
+      "key": "長驅"
+    },
+    {
+      "name": "惰弱",
+      "category": "戰鬥",
+      "tier": "紅",
+      "effect": "退卻時自己部隊全能力 -10%",
+      "composes": [],
+      "id": 87,
+      "key": "惰弱"
+    },
+    {
+      "name": "輕率",
+      "category": "戰鬥",
+      "tier": "紅",
+      "effect": "中「偽報」後機動上升 30%",
+      "composes": [],
+      "id": 88,
+      "key": "輕率"
+    },
+    {
+      "name": "酒瘋",
+      "category": "戰鬥",
+      "tier": "紅",
+      "effect": "糧道切斷時自己攻擊防禦 -20%",
+      "composes": [],
+      "id": 89,
+      "key": "酒瘋"
+    },
+    {
+      "name": "驚慌",
+      "category": "戰鬥",
+      "tier": "紅",
+      "effect": "糧道切斷時自己士氣下降值 +20%，機動下降 25%",
+      "composes": [],
+      "id": 90,
+      "key": "驚慌"
+    },
+    {
+      "name": "懿心",
+      "category": "智略",
+      "tier": "紫",
+      "effect": "屯田；反計；施計",
+      "composes": [
+        "屯田",
+        "反計",
+        "施計"
+      ],
+      "id": 91,
+      "key": "懿心"
+    },
+    {
+      "name": "火神",
+      "category": "智略",
+      "tier": "紫",
+      "effect": "自己部隊及太守據點免疫火傷害；「火計」和火焰戰法必定成功且傷害 +50%；滅火",
+      "composes": [
+        "滅火"
+      ],
+      "id": 92,
+      "key": "火神"
+    },
+    {
+      "name": "臥龍",
+      "category": "智略",
+      "tier": "紫",
+      "effect": "計略戰法必定成功且天數 +50%；洞察；破罠；石兵",
+      "composes": [
+        "洞察",
+        "破罠",
+        "石兵"
+      ],
+      "id": 93,
+      "key": "臥龍"
+    },
+    {
+      "name": "反計",
+      "category": "智略",
+      "tier": "金",
+      "effect": "受到計略攻擊若看破則能返施展給施放方",
+      "composes": [],
+      "id": 94,
+      "key": "反計"
+    },
+    {
+      "name": "施計",
+      "category": "智略",
+      "tier": "金",
+      "effect": "施放計略戰法成功率 +50%",
+      "composes": [],
+      "id": 95,
+      "key": "施計"
+    },
+    {
+      "name": "洞察",
+      "category": "智略",
+      "tier": "金",
+      "effect": "自己部隊或駐紮時所在據點免疫計略和異常狀態",
+      "composes": [],
+      "id": 96,
+      "key": "洞察"
+    },
+    {
+      "name": "火攻",
+      "category": "智略",
+      "tier": "金",
+      "effect": "自己部隊及太守據點受火影響 -30%；「火計」和火焰戰法成功率 +30% 且傷害 +30%",
+      "composes": [],
+      "id": 97,
+      "key": "火攻"
+    },
+    {
+      "name": "破罠",
+      "category": "智略",
+      "tier": "金",
+      "effect": "進入敵陷阱效果範圍則解除該陷阱",
+      "composes": [],
+      "id": 98,
+      "key": "破罠"
+    },
+    {
+      "name": "築城",
+      "category": "智略",
+      "tier": "金",
+      "effect": "對陷阱和設施建設速度 +50%",
+      "composes": [],
+      "id": 99,
+      "key": "築城"
+    },
+    {
+      "name": "踏破",
+      "category": "智略",
+      "tier": "金",
+      "effect": "通行棧道不受傷害和不掉士氣；減少受建築攻擊傷害；慎重",
+      "composes": [
+        "慎重"
+      ],
+      "id": 100,
+      "key": "踏破"
+    },
+    {
+      "name": "冷靜",
+      "category": "智略",
+      "tier": "藍",
+      "effect": "自己部隊免疫「挑撥」狀態",
+      "composes": [],
+      "id": 101,
+      "key": "冷靜"
+    },
+    {
+      "name": "慎重",
+      "category": "智略",
+      "tier": "藍",
+      "effect": "受敵陷阱傷害 -50%",
+      "composes": [],
+      "id": 102,
+      "key": "慎重"
+    },
+    {
+      "name": "教唆",
+      "category": "智略",
+      "tier": "藍",
+      "effect": "提升自己部隊對敵「偽報、混亂」成功率 +30%",
+      "composes": [],
+      "id": 103,
+      "key": "教唆"
+    },
+    {
+      "name": "明察",
+      "category": "智略",
+      "tier": "藍",
+      "effect": "自己部隊免疫被降士氣戰法影響",
+      "composes": [],
+      "id": 104,
+      "key": "明察"
+    },
+    {
+      "name": "果敢",
+      "category": "智略",
+      "tier": "藍",
+      "effect": "自己在「止步」狀態下攻擊防禦 +30%",
+      "composes": [],
+      "id": 105,
+      "key": "果敢"
+    },
+    {
+      "name": "沉著",
+      "category": "智略",
+      "tier": "藍",
+      "effect": "自己部隊免疫「止步」狀態",
+      "composes": [],
+      "id": 106,
+      "key": "沉著"
+    },
+    {
+      "name": "清醒",
+      "category": "智略",
+      "tier": "藍",
+      "effect": "自己部隊每天有 30% 機率能解除「挑撥、偽報、混亂」狀態",
+      "composes": [],
+      "id": 107,
+      "key": "清醒"
+    },
+    {
+      "name": "滅火",
+      "category": "智略",
+      "tier": "藍",
+      "effect": "滅掉自己部隊經過土地的火；免疫後續灼燒",
+      "composes": [],
+      "id": 108,
+      "key": "滅火"
+    },
+    {
+      "name": "發明",
+      "category": "智略",
+      "tier": "藍",
+      "effect": "可在沒有研究時建設「投石台、連弩樓、弩床」；研究科技後建造速度 +100%",
+      "composes": [],
+      "id": 109,
+      "key": "發明"
+    },
+    {
+      "name": "看破",
+      "category": "智略",
+      "tier": "藍",
+      "effect": "自己部隊免疫「偽報」狀態",
+      "composes": [],
+      "id": 110,
+      "key": "看破"
+    },
+    {
+      "name": "石兵",
+      "category": "智略",
+      "tier": "藍",
+      "effect": "可建設「石兵八陣」",
+      "composes": [],
+      "id": 111,
+      "key": "石兵"
+    },
+    {
+      "name": "祕計",
+      "category": "智略",
+      "tier": "藍",
+      "effect": "降低對方部隊士氣 20 點",
+      "composes": [],
+      "id": 112,
+      "key": "祕計"
+    },
+    {
+      "name": "策士",
+      "category": "智略",
+      "tier": "藍",
+      "effect": "施放止步計略戰法必定成功",
+      "composes": [],
+      "id": 113,
+      "key": "策士"
+    },
+    {
+      "name": "粉碎",
+      "category": "智略",
+      "tier": "藍",
+      "effect": "建築攻擊時耐久度傷害 +100%",
+      "composes": [],
+      "id": 114,
+      "key": "粉碎"
+    },
+    {
+      "name": "藤甲",
+      "category": "智略",
+      "tier": "藍",
+      "effect": "火以外傷害減半；火傷害 ×3",
+      "composes": [],
+      "id": 115,
+      "key": "藤甲"
+    },
+    {
+      "name": "規律",
+      "category": "智略",
+      "tier": "藍",
+      "effect": "自己部隊及太守據點免疫「混亂」",
+      "composes": [],
+      "id": 116,
+      "key": "規律"
+    },
+    {
+      "name": "解毒",
+      "category": "智略",
+      "tier": "藍",
+      "effect": "免疫毒影響",
+      "composes": [],
+      "id": 117,
+      "key": "解毒"
+    },
+    {
+      "name": "言毒",
+      "category": "智略",
+      "tier": "藍",
+      "effect": "提升自己部隊對敵「挑撥、止步」成功率 +30%",
+      "composes": [],
+      "id": 118,
+      "key": "言毒"
+    },
+    {
+      "name": "金剛",
+      "category": "智略",
+      "tier": "藍",
+      "effect": "減少受建築攻擊傷害",
+      "composes": [],
+      "id": 119,
+      "key": "金剛"
+    },
+    {
+      "name": "優柔",
+      "category": "智略",
+      "tier": "紅",
+      "effect": "自己部隊陷入「止步」天數 +40%",
+      "composes": [],
+      "id": 120,
+      "key": "優柔"
+    },
+    {
+      "name": "暴躁",
+      "category": "智略",
+      "tier": "紅",
+      "effect": "交戰時行動力減半",
+      "composes": [],
+      "id": 121,
+      "key": "暴躁"
+    },
+    {
+      "name": "直情",
+      "category": "智略",
+      "tier": "紅",
+      "effect": "受敵陷阱傷害 +30%",
+      "composes": [],
+      "id": 122,
+      "key": "直情"
+    },
+    {
+      "name": "短慮",
+      "category": "智略",
+      "tier": "紅",
+      "effect": "自己部隊及太守據點陷入異常天數 +40%",
+      "composes": [],
+      "id": 123,
+      "key": "短慮"
+    },
+    {
+      "name": "粗忽",
+      "category": "智略",
+      "tier": "紅",
+      "effect": "自己部隊及太守據點被降士氣打擊 +100%",
+      "composes": [],
+      "id": 124,
+      "key": "粗忽"
+    },
+    {
+      "name": "修仙",
+      "category": "政治",
+      "tier": "紫",
+      "effect": "每天有 0.1% 機會讓所屬勢力 1 武將隨機學會新個性（個性已滿則覆蓋 1 個舊的）",
+      "composes": [],
+      "id": 125,
+      "key": "修仙"
+    },
+    {
+      "name": "嘴王",
+      "category": "政治",
+      "tier": "紫",
+      "effect": "舌戰時有優勢，血量 +40%",
+      "composes": [],
+      "id": 126,
+      "key": "嘴王"
+    },
+    {
+      "name": "棟樑",
+      "category": "政治",
+      "tier": "紫",
+      "effect": "富豪；米道；徵稅；農政",
+      "composes": [
+        "富豪",
+        "米道",
+        "徵稅",
+        "農政"
+      ],
+      "id": 127,
+      "key": "棟樑"
+    },
+    {
+      "name": "煉丹",
+      "category": "政治",
+      "tier": "紫",
+      "effect": "每天有 1% 機會讓所屬勢力 1 武將隨機增加一點能力值（保留經驗直接增加一點）",
+      "composes": [],
+      "id": 128,
+      "key": "煉丹"
+    },
+    {
+      "name": "名門",
+      "category": "政治",
+      "tier": "金",
+      "effect": "指揮 +2000",
+      "composes": [],
+      "id": 129,
+      "key": "名門"
+    },
+    {
+      "name": "屯田",
+      "category": "政治",
+      "tier": "金",
+      "effect": "所屬部隊駐紮在縣城、要塞、城池兵糧消耗減半",
+      "composes": [],
+      "id": 130,
+      "key": "屯田"
+    },
+    {
+      "name": "巧匠",
+      "category": "政治",
+      "tier": "金",
+      "effect": "增加兵器生產速度 50%",
+      "composes": [],
+      "id": 131,
+      "key": "巧匠"
+    },
+    {
+      "name": "張羅",
+      "category": "政治",
+      "tier": "金",
+      "effect": "所在據點軍糧消費 -20%",
+      "composes": [],
+      "id": 132,
+      "key": "張羅"
+    },
+    {
+      "name": "後勤",
+      "category": "政治",
+      "tier": "金",
+      "effect": "調配；搬運",
+      "composes": [
+        "調配",
+        "搬運"
+      ],
+      "id": 133,
+      "key": "後勤"
+    },
+    {
+      "name": "慈愛",
+      "category": "政治",
+      "tier": "金",
+      "effect": "所屬都市傷兵、負傷武將恢復量 +10%",
+      "composes": [],
+      "id": 134,
+      "key": "慈愛"
+    },
+    {
+      "name": "柱石",
+      "category": "政治",
+      "tier": "金",
+      "effect": "文化；教化",
+      "composes": [
+        "文化",
+        "教化"
+      ],
+      "id": 135,
+      "key": "柱石"
+    },
+    {
+      "name": "民政",
+      "category": "政治",
+      "tier": "金",
+      "effect": "在所在武將地區通行的隊伍速度增加 25%",
+      "composes": [],
+      "id": 136,
+      "key": "民政"
+    },
+    {
+      "name": "王佐",
+      "category": "政治",
+      "tier": "金",
+      "effect": "振興；名聲",
+      "composes": [
+        "振興",
+        "名聲"
+      ],
+      "id": 137,
+      "key": "王佐"
+    },
+    {
+      "name": "神醫",
+      "category": "政治",
+      "tier": "金",
+      "effect": "所在都市傷兵、傷病武將回復速度 +100%",
+      "composes": [],
+      "id": 138,
+      "key": "神醫"
+    },
+    {
+      "name": "繁殖",
+      "category": "政治",
+      "tier": "金",
+      "effect": "增加馬匹和象群產量 50%",
+      "composes": [],
+      "id": 139,
+      "key": "繁殖"
+    },
+    {
+      "name": "美名",
+      "category": "政治",
+      "tier": "金",
+      "effect": "入城後該地區治安全部 +20",
+      "composes": [],
+      "id": 140,
+      "key": "美名"
+    },
+    {
+      "name": "能吏",
+      "category": "政治",
+      "tier": "金",
+      "effect": "增加兵裝產量(步 騎 弓 象) 50%",
+      "composes": [],
+      "id": 141,
+      "key": "能吏"
+    },
+    {
+      "name": "詭辯",
+      "category": "政治",
+      "tier": "金",
+      "effect": "舌戰時有優勢，血量 +20%",
+      "composes": [],
+      "id": 142,
+      "key": "詭辯"
+    },
+    {
+      "name": "諜報",
+      "category": "政治",
+      "tier": "金",
+      "effect": "能看相鄰城市、要塞、縣城的即時兵力武將資訊",
+      "composes": [],
+      "id": 143,
+      "key": "諜報"
+    },
+    {
+      "name": "輔佐",
+      "category": "政治",
+      "tier": "金",
+      "effect": "支援；協作",
+      "composes": [
+        "支援",
+        "協作"
+      ],
+      "id": 144,
+      "key": "輔佐"
+    },
+    {
+      "name": "鎮壓",
+      "category": "政治",
+      "tier": "金",
+      "effect": "所在都市不會出現盜匪或異族",
+      "composes": [],
+      "id": 145,
+      "key": "鎮壓"
+    },
+    {
+      "name": "人脈",
+      "category": "政治",
+      "tier": "藍",
+      "effect": "登庸、探索時間 -50%",
+      "composes": [],
+      "id": 146,
+      "key": "人脈"
+    },
+    {
+      "name": "仁政",
+      "category": "政治",
+      "tier": "藍",
+      "effect": "所在都市下時該據點武將忠誠不掉",
+      "composes": [],
+      "id": 147,
+      "key": "仁政"
+    },
+    {
+      "name": "休養",
+      "category": "政治",
+      "tier": "藍",
+      "effect": "所在都市時據點武將與士兵回復體力增加 1 點",
+      "composes": [],
+      "id": 148,
+      "key": "休養"
+    },
+    {
+      "name": "動員",
+      "category": "政治",
+      "tier": "藍",
+      "effect": "官職基礎上額外指揮士兵數 +1000",
+      "composes": [],
+      "id": 149,
+      "key": "動員"
+    },
+    {
+      "name": "協作",
+      "category": "政治",
+      "tier": "藍",
+      "effect": "所有的支援（+1% 全能力）",
+      "composes": [],
+      "id": 150,
+      "key": "協作"
+    },
+    {
+      "name": "占術",
+      "category": "政治",
+      "tier": "藍",
+      "effect": "所在都市災害機率 -30%；豐收機率 +30%",
+      "composes": [],
+      "id": 151,
+      "key": "占術"
+    },
+    {
+      "name": "召募",
+      "category": "政治",
+      "tier": "藍",
+      "effect": "募兵擔當：士兵數 +30%",
+      "composes": [],
+      "id": 152,
+      "key": "召募"
+    },
+    {
+      "name": "史官",
+      "category": "政治",
+      "tier": "藍",
+      "effect": "獲得技巧點 +50%",
+      "composes": [],
+      "id": 153,
+      "key": "史官"
+    },
+    {
+      "name": "名聲",
+      "category": "政治",
+      "tier": "藍",
+      "effect": "地區擔當：佔領格 +30",
+      "composes": [],
+      "id": 154,
+      "key": "名聲"
+    },
+    {
+      "name": "嚮導",
+      "category": "政治",
+      "tier": "藍",
+      "effect": "(PK) 交易所需天數 -10",
+      "composes": [],
+      "id": 155,
+      "key": "嚮導"
+    },
+    {
+      "name": "堅牢",
+      "category": "政治",
+      "tier": "藍",
+      "effect": "所在都市駐紮軍團反擊傷害 +30%",
+      "composes": [],
+      "id": 156,
+      "key": "堅牢"
+    },
+    {
+      "name": "學者",
+      "category": "政治",
+      "tier": "藍",
+      "effect": "君主與己主義相同則每回合 +10 技巧點",
+      "composes": [],
+      "id": 157,
+      "key": "學者"
+    },
+    {
+      "name": "富豪",
+      "category": "政治",
+      "tier": "藍",
+      "effect": "所在都市獲收入時額外金 1000",
+      "composes": [],
+      "id": 158,
+      "key": "富豪"
+    },
+    {
+      "name": "寡欲",
+      "category": "政治",
+      "tier": "藍",
+      "effect": "俸祿 -50%",
+      "composes": [],
+      "id": 159,
+      "key": "寡欲"
+    },
+    {
+      "name": "徵稅",
+      "category": "政治",
+      "tier": "藍",
+      "effect": "所在都市獲收入：金錢收入 +30%",
+      "composes": [],
+      "id": 160,
+      "key": "徵稅"
+    },
+    {
+      "name": "情報",
+      "category": "政治",
+      "tier": "藍",
+      "effect": "提供被派駐地點的兵力武將資訊",
+      "composes": [],
+      "id": 161,
+      "key": "情報"
+    },
+    {
+      "name": "振興",
+      "category": "政治",
+      "tier": "藍",
+      "effect": "地區擔當：開發度 +30%",
+      "composes": [],
+      "id": 162,
+      "key": "振興"
+    },
+    {
+      "name": "搬運",
+      "category": "政治",
+      "tier": "藍",
+      "effect": "輸送陣形機動 +30%",
+      "composes": [],
+      "id": 163,
+      "key": "搬運"
+    },
+    {
+      "name": "搶奪",
+      "category": "政治",
+      "tier": "藍",
+      "effect": "(PK) 擊敗敵軍可免費獲金 100、糧 500（不減少敵勢力金糧）",
+      "composes": [],
+      "id": 164,
+      "key": "搶奪"
+    },
+    {
+      "name": "撫慰",
+      "category": "政治",
+      "tier": "藍",
+      "effect": "所在都市不會出現盜匪",
+      "composes": [],
+      "id": 165,
+      "key": "撫慰"
+    },
+    {
+      "name": "操練",
+      "category": "政治",
+      "tier": "藍",
+      "effect": "訓練擔當：士氣 +30%",
+      "composes": [],
+      "id": 166,
+      "key": "操練"
+    },
+    {
+      "name": "支援",
+      "category": "政治",
+      "tier": "藍",
+      "effect": "獲得非厭惡關係以外的支援（+1% 全能力）",
+      "composes": [],
+      "id": 167,
+      "key": "支援"
+    },
+    {
+      "name": "教化",
+      "category": "政治",
+      "tier": "藍",
+      "effect": "地區擔當：士兵收入 +30%",
+      "composes": [],
+      "id": 168,
+      "key": "教化"
+    },
+    {
+      "name": "整修",
+      "category": "政治",
+      "tier": "藍",
+      "effect": "所在都市關口要塞耐久回復量 +30%",
+      "composes": [],
+      "id": 169,
+      "key": "整修"
+    },
+    {
+      "name": "文化",
+      "category": "政治",
+      "tier": "藍",
+      "effect": "地區擔當：人口增加 +30%",
+      "composes": [],
+      "id": 170,
+      "key": "文化"
+    },
+    {
+      "name": "智囊",
+      "category": "政治",
+      "tier": "藍",
+      "effect": "同都市非軍師但可替代舌戰（登庸、談判）",
+      "composes": [],
+      "id": 171,
+      "key": "智囊"
+    },
+    {
+      "name": "法律",
+      "category": "政治",
+      "tier": "藍",
+      "effect": "地區擔當：治安上升 +30%",
+      "composes": [],
+      "id": 172,
+      "key": "法律"
+    },
+    {
+      "name": "潛能",
+      "category": "政治",
+      "tier": "藍",
+      "effect": "獲得經驗 +50%",
+      "composes": [],
+      "id": 173,
+      "key": "潛能"
+    },
+    {
+      "name": "特使",
+      "category": "政治",
+      "tier": "藍",
+      "effect": "(PK) 交易時友好度 +20",
+      "composes": [],
+      "id": 174,
+      "key": "特使"
+    },
+    {
+      "name": "監守",
+      "category": "政治",
+      "tier": "藍",
+      "effect": "所在都市時據點俘虜不會逃亡",
+      "composes": [],
+      "id": 175,
+      "key": "監守"
+    },
+    {
+      "name": "眼光",
+      "category": "政治",
+      "tier": "藍",
+      "effect": "登庸、探索效果 +30%",
+      "composes": [],
+      "id": 176,
+      "key": "眼光"
+    },
+    {
+      "name": "眾望",
+      "category": "政治",
+      "tier": "藍",
+      "effect": "擔任地域擔當可防止其他勢力懷柔",
+      "composes": [],
+      "id": 177,
+      "key": "眾望"
+    },
+    {
+      "name": "節約",
+      "category": "政治",
+      "tier": "藍",
+      "effect": "自己部隊兵糧消耗 -20%",
+      "composes": [],
+      "id": 178,
+      "key": "節約"
+    },
+    {
+      "name": "米道",
+      "category": "政治",
+      "tier": "藍",
+      "effect": "所在都市獲收入時額外糧 100000",
+      "composes": [],
+      "id": 179,
+      "key": "米道"
+    },
+    {
+      "name": "親烏",
+      "category": "政治",
+      "tier": "藍",
+      "effect": "都市不出現烏桓；計略「埋伏之毒」可令烏桓出現",
+      "composes": [],
+      "id": 180,
+      "key": "親烏"
+    },
+    {
+      "name": "親羌",
+      "category": "政治",
+      "tier": "藍",
+      "effect": "都市不出現羌族；計略「埋伏之毒」可令羌族出現",
+      "composes": [],
+      "id": 181,
+      "key": "親羌"
+    },
+    {
+      "name": "親蠻",
+      "category": "政治",
+      "tier": "藍",
+      "effect": "都市不出現南蠻；計略「埋伏之毒」可令南蠻出現",
+      "composes": [],
+      "id": 182,
+      "key": "親蠻"
+    },
+    {
+      "name": "親越",
+      "category": "政治",
+      "tier": "藍",
+      "effect": "都市不出現山越；計略「埋伏之毒」可令山越出現",
+      "composes": [],
+      "id": 183,
+      "key": "親越"
+    },
+    {
+      "name": "親鮮",
+      "category": "政治",
+      "tier": "藍",
+      "effect": "都市不出現鮮卑；計略「埋伏之毒」可令鮮卑出現",
+      "composes": [],
+      "id": 184,
+      "key": "親鮮"
+    },
+    {
+      "name": "調配",
+      "category": "政治",
+      "tier": "藍",
+      "effect": "輸送時最大輸送量 +20%",
+      "composes": [],
+      "id": 185,
+      "key": "調配"
+    },
+    {
+      "name": "論客",
+      "category": "政治",
+      "tier": "藍",
+      "effect": "外交效果 +30%；在同盟停戰議題上能以舌戰勝利強制說服對方（親密度 >80）",
+      "composes": [],
+      "id": 186,
+      "key": "論客"
+    },
+    {
+      "name": "農政",
+      "category": "政治",
+      "tier": "藍",
+      "effect": "所在都市獲收入：兵糧收入 +30%",
+      "composes": [],
+      "id": 187,
+      "key": "農政"
+    },
+    {
+      "name": "醫術",
+      "category": "政治",
+      "tier": "藍",
+      "effect": "所在都市傷兵、傷病武將回復速度 +50%",
+      "composes": [],
+      "id": 188,
+      "key": "醫術"
+    },
+    {
+      "name": "頑健",
+      "category": "政治",
+      "tier": "藍",
+      "effect": "負傷、生病機率 -30%",
+      "composes": [],
+      "id": 189,
+      "key": "頑健"
+    },
+    {
+      "name": "強欲",
+      "category": "政治",
+      "tier": "紅",
+      "effect": "俸祿 +100%",
+      "composes": [],
+      "id": 190,
+      "key": "強欲"
+    },
+    {
+      "name": "怠慢",
+      "category": "政治",
+      "tier": "紅",
+      "effect": "輸送陣形機動 -30%",
+      "composes": [],
+      "id": 191,
+      "key": "怠慢"
+    },
+    {
+      "name": "恣意",
+      "category": "政治",
+      "tier": "紅",
+      "effect": "地區擔當：治安上升只能到 80；若超過則每天 -1；治安上升量減半",
+      "composes": [],
+      "id": 192,
+      "key": "恣意"
+    },
+    {
+      "name": "惡名",
+      "category": "政治",
+      "tier": "紅",
+      "effect": "入城後該地區治安全部 -20",
+      "composes": [],
+      "id": 193,
+      "key": "惡名"
+    },
+    {
+      "name": "浪費",
+      "category": "政治",
+      "tier": "紅",
+      "effect": "自己部隊兵糧消耗 +30%",
+      "composes": [],
+      "id": 194,
+      "key": "浪費"
+    },
+    {
+      "name": "虛弱",
+      "category": "政治",
+      "tier": "紅",
+      "effect": "負傷、生病機率 +30%",
+      "composes": [],
+      "id": 195,
+      "key": "虛弱"
+    },
+    {
+      "name": "一騎",
+      "category": "特殊",
+      "tier": "紫",
+      "effect": "觸發單挑率 +40%，血量 +40%；強運",
+      "composes": [
+        "強運"
+      ],
+      "id": 196,
+      "key": "一騎"
+    },
+    {
+      "name": "強行",
+      "category": "特殊",
+      "tier": "金",
+      "effect": "移動時多走一格",
+      "composes": [],
+      "id": 197,
+      "key": "強行"
+    },
+    {
+      "name": "強運",
+      "category": "特殊",
+      "tier": "金",
+      "effect": "自己部隊不會負傷、戰死、被俘",
+      "composes": [],
+      "id": 198,
+      "key": "強運"
+    },
+    {
+      "name": "潛行",
+      "category": "特殊",
+      "tier": "金",
+      "effect": "阻擋視野的地形中只有鄰近才會被看見",
+      "composes": [],
+      "id": 199,
+      "key": "潛行"
+    },
+    {
+      "name": "豪傑",
+      "category": "特殊",
+      "tier": "金",
+      "effect": "觸發單挑率 +20%，血量 +20%",
+      "composes": [],
+      "id": 200,
+      "key": "豪傑"
+    },
+    {
+      "name": "再起",
+      "category": "特殊",
+      "tier": "藍",
+      "effect": "駐紮 陣、寨、砦、城砦、縣城、要塞每天開始傷兵回復 50 人（不超指揮上限），士氣恢復 1",
+      "composes": [],
+      "id": 201,
+      "key": "再起"
+    },
+    {
+      "name": "慈悲",
+      "category": "特殊",
+      "tier": "藍",
+      "effect": "雙方死亡士兵減半，轉為傷兵",
+      "composes": [],
+      "id": 202,
+      "key": "慈悲"
+    },
+    {
+      "name": "英名",
+      "category": "特殊",
+      "tier": "藍",
+      "effect": "部隊時擴大佔領範圍左右各 1 格",
+      "composes": [],
+      "id": 203,
+      "key": "英名"
+    },
+    {
+      "name": "功名",
+      "category": "特殊",
+      "tier": "紅",
+      "effect": "無法執行退卻",
+      "composes": [],
+      "id": 204,
+      "key": "功名"
+    },
+    {
+      "name": "暴虐",
+      "category": "特殊",
+      "tier": "紅",
+      "effect": "主將時，軍團部隊佔領範圍左右各減 1",
+      "composes": [],
+      "id": 205,
+      "key": "暴虐"
+    },
+    {
+      "name": "粗暴",
+      "category": "特殊",
+      "tier": "紅",
+      "effect": "敵我士兵產生傷兵一半死亡",
+      "composes": [],
+      "id": 206,
+      "key": "粗暴"
+    },
+    {
+      "name": "膽小",
+      "category": "特殊",
+      "tier": "紅",
+      "effect": "交戰中攻擊防禦能力減 20%",
+      "composes": [],
+      "id": 207,
+      "key": "膽小"
+    },
+    {
+      "name": "莽撞",
+      "category": "特殊",
+      "tier": "紅",
+      "effect": "交戰中移動能力減半",
+      "composes": [],
+      "id": 208,
+      "key": "莽撞"
+    },
+    {
+      "name": "賊徒",
+      "category": "特殊",
+      "tier": "紅",
+      "effect": "駐紮縣城、要塞地形回合開始該地區治安 -10",
+      "composes": [],
+      "id": 209,
+      "key": "賊徒"
+    },
+    {
+      "name": "高慢",
+      "category": "特殊",
+      "tier": "紅",
+      "effect": "3000（含）兵以下時自己部隊全能力 -10%（與逆境互斥）",
+      "composes": [],
+      "id": 210,
+      "key": "高慢"
+    }
+  ]
+}

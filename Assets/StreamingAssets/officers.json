@@ -1,0 +1,51 @@
+{
+  "officers": [
+    {
+      "id": 1,
+      "lastName": "關",
+      "firstName": "羽",
+      "aliasName": "雲長",
+      "biography": "",
+      "attack": 97,
+      "intelligence": 75,
+      "leadership": 93,
+      "policy": 60,
+      "charisma": 90,
+      "stamina": 100,
+      "birthYear": 160,
+      "ageLimit": 59,
+      "title": "",
+      "gender": 0
+    },
+    {
+      "id": 2,
+      "lastName": "張",
+      "firstName": "飛",
+      "aliasName": "益德",
+      "attack": 98,
+      "intelligence": 30,
+      "leadership": 85,
+      "policy": 20,
+      "charisma": 70,
+      "stamina": 100,
+      "birthYear": 165,
+      "ageLimit": 54,
+      "gender": 0
+    },
+    {
+      "id": 3,
+      "lastName": "諸葛",
+      "firstName": "亮",
+      "aliasName": "孔明",
+      "attack": 38,
+      "intelligence": 100,
+      "leadership": 92,
+      "policy": 98,
+      "charisma": 92,
+      "stamina": 100,
+      "birthYear": 181,
+      "ageLimit": 53,
+      "gender": 0
+    }
+  ]
+}

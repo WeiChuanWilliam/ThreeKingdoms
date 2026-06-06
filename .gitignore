@@ -1,0 +1,65 @@
+# =============================================================================
+# ThreeKindoms — Unity 專案（Windows / macOS 共用）
+# 務必提交：Assets/、ProjectSettings/、Packages/manifest.json、*.meta
+# =============================================================================
+
+# --- Unity 自動生成（每台機器不同，不要 commit）---
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+[Uu]ser[Ss]ettings/
+[Mm]emoryCaptures/
+[Rr]ecordings/
+sysinfo.txt
+
+# --- IDE / 編輯器 ---
+.vs/
+.vscode/
+.idea/
+*.sln
+*.csproj
+*.unityproj
+*.suo
+*.user
+*.userprefs
+*.pidb
+*.booproj
+*.svd
+*.pdb
+*.mdb
+*.opendb
+*.VC.db
+
+# --- 作業系統 ---
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+
+# --- .NET local-tests / TestConsole（編譯輸出）---
+**/bin/
+**/obj/
+*.DotSettings.user
+
+# --- 建置產物、本機設定 ---
+*.apk
+*.aab
+*.unitypackage
+*.app
+*.exe
+*.dll
+*.pdb
+*.mdb
+
+# --- 敏感資料（若有請勿提交）---
+.env
+.env.*
+*.pem
+credentials.json

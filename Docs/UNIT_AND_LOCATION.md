@@ -1,0 +1,57 @@
+# 部隊 Unit 與地格 Location（請先讀這份）
+
+## 你問的：UnitFactory / MapUnit 是什麼？
+
+| 名稱 | 來源 | 現在 |
+|------|------|------|
+| **UnitFactory** | 我加的 Spike 範例（從 JSON 造部隊） | **已刪除**（你沒設計 JSON 部隊表） |
+| **MapUnit** | 我把 C++ `ActualUnit` 暫時改的名字 | **已刪除**，改回 **`ActualUnit`** |
+| **UnitState** | 最早六角移動測試用的小類 | **已刪除**，併入 `ActualUnit` |
+
+你的 C++ 裡真正的地圖部隊 = **`Unit::AbstractUnit` / `ActualUnit`**。  
+C# 對應：
+
+- 規則與欄位 → `AbstractUnit`
+- 地圖上會動的部隊 → **`ActualUnit`**
+
+## 部隊要連到建築、著火 —— 怎麼接？
+
+**不在部隊上憑空寫 `onFire`，而是腳下那一格 `MapLocation`。**
+
+```text
+ActualUnit
+  ├─ BindToWorld(LocationGrid, 起始 hex, 地形)
+  ├─ EnterHex / LeaveCurrentHex  → 呼叫 Location.UnitMoveIn / Out
+  ├─ CurrentLocation             → 目前 MapLocation
+  ├─ IsOnFire / IsOnDefence      → 讀 Location.LocationFlags
+  ├─ StationedBuilding           → 部隊.building 或 腳下格.Building
+  └─ FireEffect / MoralePenalty  → 著火時從 Location.Terrain 同步
+```
+
+建築放在 **格子上**（與你 C++ `Location::building` 一致）：
+
+```csharp
+locationGrid.TryGet(hex, out var loc);
+loc.SetBuilding(new Building(id, "襄陽"));
+// 部隊走進該 hex 後，PlayerUnit.StationedBuilding 會指向同一建築
+```
+
+著火在 **格子上**（與 `LocationFlag.onFire` 一致）：
+
+```csharp
+loc.SetOnFire();  // 需地形 Fireable
+// 部隊在該格時 ActualUnit.IsOnFire == true
+```
+
+## 你還沒設計、仍是佔位的
+
+- BattleSkill、Items、Personality 詳細規則
+- Building 只有 id+名稱（城池系統未做）
+- ForceUnit / GroupUnit 編制
+
+## 調整程式時建議只改這幾個檔
+
+- `Core/Units/AbstractUnit.cs` — 你的 C++ 欄位
+- `Core/Units/ActualUnit.cs` — 與 Location 連動邏輯
+- `Core/Locations/MapLocation.cs` — 進出格、起火
+- `Core/Locations/LocationGrid.cs` — 整圖索引

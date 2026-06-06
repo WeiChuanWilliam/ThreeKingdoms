@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "width": 16,
+  "height": 16,
+  "cells": [
+    { "q": 5, "r": 5, "terrain": "road", "enterCost": 10 },
+    { "q": 6, "r": 5, "terrain": "road", "enterCost": 10 },
+    { "q": 7, "r": 5, "terrain": "road", "enterCost": 10 },
+    { "q": 8, "r": 5, "terrain": "road", "enterCost": 10 },
+    { "q": 9, "r": 5, "terrain": "road", "enterCost": 10 },
+    { "q": 7, "r": 6, "terrain": "hill", "enterCost": 22 },
+    { "q": 7, "r": 7, "terrain": "mountain", "enterCost": 35, "passable": true },
+    { "q": 10, "r": 8, "terrain": "forest", "enterCost": 18 },
+    { "q": 3, "r": 10, "terrain": "water", "enterCost": 99, "passable": false },
+    { "q": 4, "r": 10, "terrain": "water", "enterCost": 99, "passable": false }
+  ]
+}

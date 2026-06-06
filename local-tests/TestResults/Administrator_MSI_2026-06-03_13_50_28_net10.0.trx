@@ -1,0 +1,134 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TestRun id="13f3b73d-4af0-4944-83b1-d69c55f70af9" name="Administrator@MSI 2026-06-03 13:50:28" runUser="MSI\Administrator" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Times creation="2026-06-03T13:50:28.8596243-04:00" queuing="2026-06-03T13:50:28.8596247-04:00" start="2026-06-03T13:50:27.2295023-04:00" finish="2026-06-03T13:50:28.8734936-04:00" />
+  <TestSettings name="default" id="5b310f24-56cd-4f12-9203-15eaf6168af7">
+    <Deployment runDeploymentRoot="Administrator_MSI_2026-06-03_13_50_28" />
+  </TestSettings>
+  <Results>
+    <UnitTestResult executionId="04f60b80-c47c-4478-970a-e95b95e0660d" testId="49f9dd04-b59b-c739-a38d-fb77a6ad48c7" testName="ThreeKindoms.Local.Tests.UnitPropertiesTests.Every_registry_kind_has_display_and_six_stats" computerName="MSI" duration="00:00:00.2042508" startTime="2026-06-03T13:50:28.6118816-04:00" endTime="2026-06-03T13:50:28.6119667-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="04f60b80-c47c-4478-970a-e95b95e0660d">
+      <Output>
+        <StdOut>OK  [archer]&#xD;
+OK  [armor]&#xD;
+OK  [armor.advance]&#xD;
+OK  [armor.baimao]&#xD;
+OK  [armor.xianzhen]&#xD;
+OK  [bow]&#xD;
+OK  [bow.advance]&#xD;
+OK  [bow.danyang]&#xD;
+OK  [bow.wudan]&#xD;
+OK  [cavalry]&#xD;
+OK  [crossbow]&#xD;
+OK  [crossbow.advance]&#xD;
+OK  [crossbow.xiandeng]&#xD;
+OK  [crossbow.zhuge]&#xD;
+OK  [horseman]&#xD;
+OK  [horseman.advance]&#xD;
+OK  [horseman.baima]&#xD;
+OK  [horseman.bingzhou]&#xD;
+OK  [infantry]&#xD;
+OK  [knight]&#xD;
+OK  [knight.advance]&#xD;
+OK  [knight.hubao]&#xD;
+OK  [knight.xilian]&#xD;
+OK  [navy.final]&#xD;
+OK  [navy.large]&#xD;
+OK  [navy.medium]&#xD;
+OK  [navy.small]&#xD;
+OK  [siege.charger]&#xD;
+OK  [siege.crossbow]&#xD;
+OK  [siege.elephant]&#xD;
+OK  [siege.mushou]&#xD;
+OK  [siege.shooter]&#xD;
+OK  [siege.stone]&#xD;
+OK  [spear]&#xD;
+OK  [spear.advance]&#xD;
+OK  [spear.daji]&#xD;
+OK  [spear.qingzhou]</StdOut>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="ee4bd098-9628-4edd-9e18-55b9527502ef" testId="2cee6c02-c05b-9e8e-c07c-a60ad6ee883c" testName="ThreeKindoms.Local.Tests.TroopKindRegistryTests.Count_aliases_and_baima_multiplier" computerName="MSI" duration="00:00:00.2042692" startTime="2026-06-03T13:50:28.6194384-04:00" endTime="2026-06-03T13:50:28.6194387-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="ee4bd098-9628-4edd-9e18-55b9527502ef" />
+    <UnitTestResult executionId="129fac55-1bf5-458a-8902-10ee6d30ecfa" testId="ee3052aa-2770-62d6-886a-1013a38a4e44" testName="ThreeKindoms.Local.Tests.CombatTroopKindTests.All_kinds_5000_soldiers_no_skills" computerName="MSI" duration="00:00:00.2117301" startTime="2026-06-03T13:50:28.6216885-04:00" endTime="2026-06-03T13:50:28.6216889-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="129fac55-1bf5-458a-8902-10ee6d30ecfa">
+      <Output>
+        <StdOut>=== Combat 兵種（各 5000 兵，無技能）===&#xD;
+OK  [archer] 攻75 防75 兵5000&#xD;
+OK  [armor] 攻100 防110 兵5000&#xD;
+OK  [armor.advance] 攻105 防115 兵5000&#xD;
+OK  [armor.baimao] 攻110 防125 兵5000&#xD;
+OK  [armor.xianzhen] 攻110 防120 兵5000&#xD;
+OK  [bow] 攻85 防75 兵5000&#xD;
+OK  [bow.advance] 攻90 防80 兵5000&#xD;
+OK  [bow.danyang] 攻95 防80 兵5000&#xD;
+OK  [bow.wudan] 攻95 防90 兵5000&#xD;
+OK  [cavalry] 攻110 防100 兵5000&#xD;
+OK  [crossbow] 攻90 防75 兵5000&#xD;
+OK  [crossbow.advance] 攻100 防80 兵5000&#xD;
+OK  [crossbow.xiandeng] 攻105 防90 兵5000&#xD;
+OK  [crossbow.zhuge] 攻115 防80 兵5000&#xD;
+OK  [horseman] 攻120 防90 兵5000&#xD;
+OK  [horseman.advance] 攻125 防95 兵5000&#xD;
+OK  [horseman.baima] 攻125 防100 兵5000&#xD;
+OK  [horseman.bingzhou] 攻130 防105 兵5000&#xD;
+OK  [infantry] 攻100 防100 兵5000&#xD;
+OK  [knight] 攻115 防110 兵5000&#xD;
+OK  [knight.advance] 攻125 防115 兵5000&#xD;
+OK  [knight.hubao] 攻135 防125 兵5000&#xD;
+OK  [knight.xilian] 攻125 防120 兵5000&#xD;
+OK  [navy.final] 攻100 防100 兵5000&#xD;
+OK  [navy.large] 攻90 防90 兵5000&#xD;
+OK  [navy.medium] 攻80 防85 兵5000&#xD;
+OK  [navy.small] 攻70 防80 兵5000&#xD;
+OK  [siege.charger] 攻20 防30 兵5000&#xD;
+OK  [siege.crossbow] 攻80 防30 兵5000&#xD;
+OK  [siege.elephant] 攻80 防140 兵5000&#xD;
+OK  [siege.mushou] 攻40 防30 兵5000&#xD;
+OK  [siege.shooter] 攻70 防20 兵5000&#xD;
+OK  [siege.stone] 攻50 防30 兵5000&#xD;
+OK  [spear] 攻110 防95 兵5000&#xD;
+OK  [spear.advance] 攻115 防100 兵5000&#xD;
+OK  [spear.daji] 攻115 防120 兵5000&#xD;
+OK  [spear.qingzhou] 攻125 防105 兵5000&#xD;
+--- OK=37 ERROR=0 ---</StdOut>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="bbb926c5-e588-4c00-9fef-e81cebab7be4" testId="7336fb4c-d21d-9c0c-3fae-8027b5096b74" testName="ThreeKindoms.Local.Tests.TroopKindTreeTests.Registry_keys_exist_on_tree_and_navy_chain" computerName="MSI" duration="00:00:00.2042512" startTime="2026-06-03T13:50:28.6185323-04:00" endTime="2026-06-03T13:50:28.6185326-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="bbb926c5-e588-4c00-9fef-e81cebab7be4" />
+  </Results>
+  <TestDefinitions>
+    <UnitTest name="ThreeKindoms.Local.Tests.TroopKindTreeTests.Registry_keys_exist_on_tree_and_navy_chain" storage="d:\workspace\personal project\threekindoms\local-tests\threekindoms.local.tests\bin\debug\net10.0\threekindoms.local.tests.dll" id="7336fb4c-d21d-9c0c-3fae-8027b5096b74">
+      <Execution id="bbb926c5-e588-4c00-9fef-e81cebab7be4" />
+      <TestMethod codeBase="D:\workspace\personal project\ThreeKindoms\local-tests\ThreeKindoms.Local.Tests\bin\Debug\net10.0\ThreeKindoms.Local.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ThreeKindoms.Local.Tests.TroopKindTreeTests" name="Registry_keys_exist_on_tree_and_navy_chain" />
+    </UnitTest>
+    <UnitTest name="ThreeKindoms.Local.Tests.UnitPropertiesTests.Every_registry_kind_has_display_and_six_stats" storage="d:\workspace\personal project\threekindoms\local-tests\threekindoms.local.tests\bin\debug\net10.0\threekindoms.local.tests.dll" id="49f9dd04-b59b-c739-a38d-fb77a6ad48c7">
+      <Execution id="04f60b80-c47c-4478-970a-e95b95e0660d" />
+      <TestMethod codeBase="D:\workspace\personal project\ThreeKindoms\local-tests\ThreeKindoms.Local.Tests\bin\Debug\net10.0\ThreeKindoms.Local.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ThreeKindoms.Local.Tests.UnitPropertiesTests" name="Every_registry_kind_has_display_and_six_stats" />
+    </UnitTest>
+    <UnitTest name="ThreeKindoms.Local.Tests.CombatTroopKindTests.All_kinds_5000_soldiers_no_skills" storage="d:\workspace\personal project\threekindoms\local-tests\threekindoms.local.tests\bin\debug\net10.0\threekindoms.local.tests.dll" id="ee3052aa-2770-62d6-886a-1013a38a4e44">
+      <Execution id="129fac55-1bf5-458a-8902-10ee6d30ecfa" />
+      <TestMethod codeBase="D:\workspace\personal project\ThreeKindoms\local-tests\ThreeKindoms.Local.Tests\bin\Debug\net10.0\ThreeKindoms.Local.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ThreeKindoms.Local.Tests.CombatTroopKindTests" name="All_kinds_5000_soldiers_no_skills" />
+    </UnitTest>
+    <UnitTest name="ThreeKindoms.Local.Tests.TroopKindRegistryTests.Count_aliases_and_baima_multiplier" storage="d:\workspace\personal project\threekindoms\local-tests\threekindoms.local.tests\bin\debug\net10.0\threekindoms.local.tests.dll" id="2cee6c02-c05b-9e8e-c07c-a60ad6ee883c">
+      <Execution id="ee4bd098-9628-4edd-9e18-55b9527502ef" />
+      <TestMethod codeBase="D:\workspace\personal project\ThreeKindoms\local-tests\ThreeKindoms.Local.Tests\bin\Debug\net10.0\ThreeKindoms.Local.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="ThreeKindoms.Local.Tests.TroopKindRegistryTests" name="Count_aliases_and_baima_multiplier" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestEntries>
+    <TestEntry testId="49f9dd04-b59b-c739-a38d-fb77a6ad48c7" executionId="04f60b80-c47c-4478-970a-e95b95e0660d" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="2cee6c02-c05b-9e8e-c07c-a60ad6ee883c" executionId="ee4bd098-9628-4edd-9e18-55b9527502ef" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="ee3052aa-2770-62d6-886a-1013a38a4e44" executionId="129fac55-1bf5-458a-8902-10ee6d30ecfa" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="7336fb4c-d21d-9c0c-3fae-8027b5096b74" executionId="bbb926c5-e588-4c00-9fef-e81cebab7be4" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <TestLists>
+    <TestList name="Results Not in a List" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="All Loaded Results" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <ResultSummary outcome="Completed">
+    <Counters total="4" executed="4" passed="4" failed="0" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Output>
+      <StdOut>[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v2.8.2+699d445a1a (64-bit .NET 10.0.8)&#xD;
+[xUnit.net 00:00:00.18]   Discovering: ThreeKindoms.Local.Tests&#xD;
+[xUnit.net 00:00:00.27]   Discovered:  ThreeKindoms.Local.Tests&#xD;
+[xUnit.net 00:00:00.28]   Starting:    ThreeKindoms.Local.Tests&#xD;
+[xUnit.net 00:00:00.60]   Finished:    ThreeKindoms.Local.Tests&#xD;
+</StdOut>
+    </Output>
+  </ResultSummary>
+</TestRun>
