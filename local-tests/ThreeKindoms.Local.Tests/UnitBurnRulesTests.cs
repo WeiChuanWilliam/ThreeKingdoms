@@ -3,13 +3,12 @@ using ThreeKindoms.Core.Locations;
 using ThreeKindoms.Core.Officers;
 using ThreeKindoms.Core.Terrain;
 using ThreeKindoms.Core.Units;
-using ThreeKindoms.Data.Locations;
 using ThreeKindoms.Data.Units;
 using Xunit;
 
 namespace ThreeKindoms.Local.Tests
 {
-    public class CombatBurnRulesTests
+    public class UnitBurnRulesTests
     {
         [Fact]
         public void TryCreateBurnContext_requires_tile_on_fire()
@@ -18,10 +17,9 @@ namespace ThreeKindoms.Local.Tests
             var terrain = TerrainDefinition.FromTerrainType(TerrainType.Forest);
             terrain.SetFireEffect(1);
             var loc = grid.GetOrCreate(new HexCoord(0, 0), terrain);
-            // 未起火
 
             var combat = CreateCombatOnLocation(grid, loc, terrain);
-            Assert.False(CombatBurnRules.TryCreateBurnContext(combat, loc, out _));
+            Assert.False(UnitBurnRules.TryCreateBurnContext(combat, loc, out _));
         }
 
         [Fact]
@@ -36,10 +34,11 @@ namespace ThreeKindoms.Local.Tests
             var combat = CreateCombatOnLocation(grid, loc, terrain);
             combat.Location.SyncFireFromLocation();
 
-            Assert.True(CombatBurnRules.IsBurning(combat));
-            Assert.True(CombatBurnRules.TryCreateBurnContext(combat, loc, out var ctx));
+            Assert.True(UnitBurnRules.IsBurning(combat));
+            Assert.True(UnitBurnRules.TryCreateBurnContext(combat, loc, out var ctx));
             Assert.Equal(2, ctx.TerrainN);
             Assert.Equal(HazardDamageLevel.Medium, ctx.FlameLevel);
+            Assert.Equal(1f, ctx.FireDamageFactor);
         }
 
         [Fact]
@@ -57,26 +56,69 @@ namespace ThreeKindoms.Local.Tests
             combat.SetCommander(cmd);
             combat.Location.SyncFireFromLocation();
 
-            Assert.True(CombatBurnRules.IsBurning(combat));
-            Assert.True(CombatBurnRules.IsImmuneToBurnDamage(combat));
-            Assert.False(CombatBurnRules.TryCreateBurnContext(combat, loc, out _));
+            Assert.True(UnitBurnRules.IsBurning(combat));
+            Assert.True(UnitBurnRules.IsImmuneToBurnDamage(combat));
+            Assert.False(UnitBurnRules.TryCreateBurnContext(combat, loc, out _));
         }
 
         [Fact]
-        public void CalculateBurnDamage_is_stub_for_now()
+        public void CalculateBurnDamage_applies_combat_factor_and_flame_level()
         {
+            UnitConfigUtil.Load(TestPaths.UnitPropertiesPath);
+
+            var grid = new LocationGrid();
+            var terrain = TerrainDefinition.FromTerrainType(TerrainType.Forest);
+            terrain.SetFireEffect(2);
+            var loc = grid.GetOrCreate(new HexCoord(0, 0), terrain);
+            loc.SetOnFire();
+
+            var combat = CreateCombatOnLocation(grid, loc, terrain);
+            combat.SetManpower(1000, 0);
+            combat.Location.SyncFireFromLocation();
+            UnitBurnRules.TryCreateBurnContext(combat, loc, out var ctx);
+
+            var result = UnitBurnRules.CalculateBurnDamage(ctx);
+            Assert.True(result.HasEffect);
+            Assert.True(result.SoldierDeaths > 0);
+            Assert.True(result.MoraleLoss > 0);
+        }
+
+        [Fact]
+        public void Transport_uses_lower_fire_damage_factor()
+        {
+            UnitConfigUtil.Load(TestPaths.UnitPropertiesPath);
+
             var grid = new LocationGrid();
             var terrain = TerrainDefinition.FromTerrainType(TerrainType.Forest);
             terrain.SetFireEffect(1);
             var loc = grid.GetOrCreate(new HexCoord(0, 0), terrain);
             loc.SetOnFire();
 
-            var combat = CreateCombatOnLocation(grid, loc, terrain);
-            combat.Location.SyncFireFromLocation();
-            CombatBurnRules.TryCreateBurnContext(combat, loc, out var ctx);
+            var transport = new Transport(new TransportUnitDef(1, soldiers: 1000));
+            transport.Location.BindToWorld(grid, loc.Hex, terrain);
+            transport.Location.SyncFireFromLocation();
 
-            var result = CombatBurnRules.CalculateBurnDamage(ctx);
-            Assert.False(result.HasEffect);
+            Assert.True(UnitBurnRules.TryCreateBurnContext(transport, loc, out var ctx));
+            Assert.Equal(0.8f, ctx.FireDamageFactor);
+        }
+
+        [Fact]
+        public void TryApplyDailyBurnDamage_reduces_soldiers()
+        {
+            UnitConfigUtil.Load(TestPaths.UnitPropertiesPath);
+
+            var grid = new LocationGrid();
+            var terrain = TerrainDefinition.FromTerrainType(TerrainType.Forest);
+            terrain.SetFireEffect(2);
+            var loc = grid.GetOrCreate(new HexCoord(0, 0), terrain);
+            loc.SetOnFire();
+
+            var combat = CreateCombatOnLocation(grid, loc, terrain);
+            combat.SetManpower(1000, 0);
+            combat.Location.SyncFireFromLocation();
+
+            Assert.True(UnitBurnRules.TryApplyDailyBurnDamage(combat, loc));
+            Assert.True(combat.Soldiers < 1000);
         }
 
         static Combat CreateCombatOnLocation(LocationGrid grid, MapLocation loc, TerrainDefinition terrain)

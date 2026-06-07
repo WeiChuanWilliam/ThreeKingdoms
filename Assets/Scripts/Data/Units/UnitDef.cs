@@ -67,6 +67,9 @@ namespace ThreeKindoms.Data.Units
     {
         public const int DefaultSoldiers = 5000;
 
+        /// <summary>副將（戰鬥部隊至多一位）。</summary>
+        public int ViceOfficerId { get; set; }
+
         readonly HashSet<int> battleSkillIds = new();
         readonly HashSet<int> strategySkillIds = new();
         readonly HashSet<int> mobilitySkillIds = new();
@@ -104,12 +107,25 @@ namespace ThreeKindoms.Data.Units
 
         internal void ApplyTo(Combat unit)
         {
-            ApplyCommonTo(unit);
+            unit.SetManpower(Soldiers, Wounded);
+            unit.SetMorale(Morale);
+            unit.SetStamina(Stamina);
+            unit.SetMoney(Money);
+            if (CommanderOfficerId > 0)
+                unit.SetCommanderFromPool(CommanderOfficerId);
+            else
+                unit.SetCommander(null);
+
+            if (ViceOfficerId > 0)
+                unit.SetViceOfficerFromPool(ViceOfficerId);
+
             if (!string.IsNullOrWhiteSpace(TroopKindKey) &&
                 TroopKindRegistry.TryGet(TroopKindKey, out AbstractTroopKind kind))
                 unit.BindTroopKind(kind);
             else
                 unit.SetTroopType(TroopType);
+
+            unit.RefreshSkillsFromOfficers();
 
             foreach (int id in battleSkillIds) unit.AddBattleSkill(id);
             foreach (int id in strategySkillIds) unit.AddStrategySkill(id);

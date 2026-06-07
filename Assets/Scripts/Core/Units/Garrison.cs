@@ -8,6 +8,7 @@ namespace ThreeKindoms.Core.Units
     public sealed class Garrison : Unit, ICombatTroopStatsSource
     {
         public override float FoodConsumptionFactor => 0f;
+        public override float FireDamageFactor => UnitConfigUtil.GetFireDamageFactor(UnitKind.Garrison);
 
         readonly GarrisonSnapshot snapshot;
         readonly SettlementSiteKind siteKind;

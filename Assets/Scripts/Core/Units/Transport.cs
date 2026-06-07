@@ -7,6 +7,7 @@ namespace ThreeKindoms.Core.Units
     public sealed class Transport : Unit
     {
         public override float FoodConsumptionFactor => UnitConfigUtil.GetFoodConsumptionFactor(UnitKind.Transport);
+        public override float FireDamageFactor => UnitConfigUtil.GetFireDamageFactor(UnitKind.Transport);
 
         /// <summary>行军 mobility（参数档绝对值，非倍率）。</summary>
         public float MarchMobility => UnitConfigUtil.GetUnitMarchMobility(UnitKind.Transport);

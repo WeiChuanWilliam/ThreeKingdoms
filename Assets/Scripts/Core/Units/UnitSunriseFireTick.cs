@@ -7,15 +7,14 @@ namespace ThreeKindoms.Core.Units
     {
         /// <summary>
         /// 腳下格已著火且已 <see cref="UnitLocationBinding.SyncFireFromLocation"/> 後呼叫。
-        /// 戰鬥部隊走 <see cref="CombatBurnRules.TryApplyDailyBurnDamage"/>。
+        /// 所有部隊走 <see cref="UnitBurnRules.TryApplyDailyBurnDamage"/>。
         /// </summary>
         public static void ApplyDailyFireFormulas(Unit unit, MapLocation location)
         {
             if (unit == null || location == null || !location.LocationFlags.OnFire)
                 return;
 
-            if (unit is Combat combat)
-                CombatBurnRules.TryApplyDailyBurnDamage(combat, location);
+            UnitBurnRules.TryApplyDailyBurnDamage(unit, location);
         }
     }
 }

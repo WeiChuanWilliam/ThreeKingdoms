@@ -15,11 +15,23 @@ namespace ThreeKindoms.Data.Skill
             templates[template.SkillId] = template;
         }
 
-        public static void Register(int skillId, byte level = 1, bool enabled = true) =>
-            Register(new Skill { SkillId = skillId, Level = level, Enabled = enabled });
+        public static void Register(int skillId, byte level = 1, bool enabled = true, SkillCategory category = SkillCategory.Unknown) =>
+            Register(new Skill { SkillId = skillId, Level = level, Enabled = enabled, Category = category });
 
         public static bool TryGetTemplate(int skillId, out Skill skill) =>
             templates.TryGetValue(skillId, out skill);
+
+        public static bool TryGetCategory(int skillId, out SkillCategory category)
+        {
+            if (TryGetTemplate(skillId, out Skill skill))
+            {
+                category = skill.Category;
+                return category != SkillCategory.Unknown;
+            }
+
+            category = SkillCategory.Unknown;
+            return false;
+        }
 
         /// <summary>部隊攜帶用：複製模板（無模板則建立預設 Lv.1）。</summary>
         public static Skill CopyForUnit(int skillId)

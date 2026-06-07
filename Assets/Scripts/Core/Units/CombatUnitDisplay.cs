@@ -42,7 +42,8 @@ namespace ThreeKindoms.Core.Units
                 $"攻{e.Attack}({b.Attack}) 防{e.Defense}({b.Defense}) " +
                 $"机{e.Mobility}({b.Mobility}) 破{e.Jipo}({b.Jipo}) 城{e.Gongcheng}({b.Gongcheng}) " +
                 $"耐{e.Stamina}({b.Stamina}) 距{e.AttackRange}({b.AttackRange}) | " +
-                $"智力{CombatStatMath.GetUnitIntelligence(unit)} 主将{commander} 副将{unit.ViceOfficers.Count}";
+                $"智力{CombatStatMath.GetUnitIntelligence(unit)} 主将{commander} 副将{unit.ViceOfficers.Count}" +
+                (unit is Combat c2 ? $" 戰鬥力{c2.CombatPower}" : "");
         }
     }
 }

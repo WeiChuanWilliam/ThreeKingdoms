@@ -125,6 +125,38 @@ namespace ThreeKindoms.Data.Units
             _ => GetFloat("unit.food_factor.combat", 1f)
         };
 
+        /// <summary>火焰傷害倍率；见 unit.fire_damage_factor.*。</summary>
+        public static float GetFireDamageFactor(UnitKind kind) => kind switch
+        {
+            UnitKind.Legion => GetFloat("unit.fire_damage_factor.legion", 1f),
+            UnitKind.Transport => GetFloat("unit.fire_damage_factor.transport", 0.8f),
+            UnitKind.Garrison => GetFloat("unit.fire_damage_factor.garrison", 1f),
+            _ => GetFloat("unit.fire_damage_factor.combat", 1f)
+        };
+
+        /// <summary>日出灼燒：每 1000 兵基礎死亡數（公式前乘數）。</summary>
+        public static int GetFireBaseDeathsPer1000Soldiers() =>
+            System.Math.Max(0, GetInt("unit.fire.base_deaths_per_1000_soldiers", 50));
+
+        /// <summary>日出灼燒：基礎士氣下降（再乘 FlameLevel）。</summary>
+        public static short GetFireBaseMoraleLossPerDay() =>
+            (short)System.Math.Clamp(GetInt("unit.fire.base_morale_loss_per_day", 2), 0, 100);
+
+        public static float GetCombatPowerOfficerScale() =>
+            GetFloat("unit.combat_power.officer_scale", 0.002f);
+
+        public static float GetCombatPowerSkillBonusPerSkill() =>
+            GetFloat("unit.combat_power.skill_bonus_per_skill", 0.02f);
+
+        public static float GetCombatPowerMoraleWeight() =>
+            GetFloat("unit.combat_power.morale_weight", 1f);
+
+        public static float GetCombatPowerStaminaWeight() =>
+            GetFloat("unit.combat_power.stamina_weight", 1f);
+
+        public static float GetCombatPowerManpowerDivisor() =>
+            Math.Max(1f, GetFloat("unit.combat_power.manpower_divisor", 100f));
+
         static string NormalizeKindKey(string kindKey)
         {
             if (string.IsNullOrWhiteSpace(kindKey)) return "";

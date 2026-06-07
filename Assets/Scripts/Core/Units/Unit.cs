@@ -43,6 +43,8 @@ namespace ThreeKindoms.Core.Units
         public abstract UnitKind Kind { get; }
         /// <summary>耗粮倍率（相对 <see cref="BaseFoodByHeadCount"/>）。</summary>
         public abstract float FoodConsumptionFactor { get; }
+        /// <summary>火焰傷害倍率（相對基礎火傷）。</summary>
+        public abstract float FireDamageFactor { get; }
         public abstract int CalculateFoodConsumption();
 
         protected Unit(string name, int factionBelonged)

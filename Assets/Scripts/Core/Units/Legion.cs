@@ -5,6 +5,7 @@ namespace ThreeKindoms.Core.Units
     public sealed class Legion : Unit
     {
         public override float FoodConsumptionFactor => UnitConfigUtil.GetFoodConsumptionFactor(UnitKind.Legion);
+        public override float FireDamageFactor => UnitConfigUtil.GetFireDamageFactor(UnitKind.Legion);
 
         /// <summary>行军 mobility（参数档绝对值，非倍率）。</summary>
         public float MarchMobility => UnitConfigUtil.GetUnitMarchMobility(UnitKind.Legion);

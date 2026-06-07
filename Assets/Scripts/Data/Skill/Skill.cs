@@ -9,5 +9,6 @@ namespace ThreeKindoms.Data.Skill
         public int SkillId;
         public byte Level;
         public bool Enabled;
+        public SkillCategory Category;
     }
 }

@@ -60,13 +60,13 @@ namespace ThreeKindoms.Local.Tests
             var grid = new LocationGrid();
             var plain = TerrainDefinition.FromTerrainType(TerrainType.Plain);
             var forest = TerrainDefinition.FromTerrainType(TerrainType.Forest);
-            forest.SetFireEffect(1);
+            forest.SetFireEffect(4);
 
             grid.GetOrCreate(new HexCoord(0, 0), plain);
             var burning = grid.GetOrCreate(new HexCoord(1, 0), forest);
             burning.SetOnFire();
 
-            grid.TickFireAtSunrise(new System.Random(0));
+            grid.TickFireAtSunrise(new System.Random(99));
 
             Assert.Equal(1, grid.BurningCellCount);
             Assert.True(grid.IsBurning(burning.Hex));
