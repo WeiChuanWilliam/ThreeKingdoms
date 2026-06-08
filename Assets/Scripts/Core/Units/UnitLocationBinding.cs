@@ -34,26 +34,28 @@ namespace ThreeKindoms.Core.Units
         {
             _locationGrid = locationGrid;
             EnterHex(startHex, terrainAtStart);
+            UnitRegistry.Register(_unit);
+        }
+
+        /// <summary>駐軍轉換等情境：複製另一部隊的地圖綁定狀態。</summary>
+        internal void InheritWorldStateFrom(UnitLocationBinding source)
+        {
+            if (source == null)
+                return;
+            _locationGrid = source._locationGrid;
+            _currentLocation = source._currentLocation;
+            Position = source.Position;
+            MovementPointsLeft = source.MovementPointsLeft;
         }
 
         public void RefillMovementAtSunrise() =>
             MovementPointsLeft = MovementRules.DefaultDailyPoints;
 
-        /// <summary>
-        /// 日出：從腳下格讀 <see cref="MapLocation.LocationFlags.OnFire"/> 與地形 n（<see cref="AbstractTerrain.FireEffect"/>），
-        /// 同步 <see cref="Unit.FireEffect"/>／<see cref="Unit.FlameDamage"/>；若著火則套用每日火計公式。
-        /// （格子的續燃應先由 <see cref="LocationGridSunrise.TickFireAtSunrise"/> 處理。）
-        /// </summary>
-        public void TickFireAtSunrise()
-        {
-            SyncFireFromLocation();
-            if (!IsOnFire)
-                return;
-            UnitSunriseFireTick.ApplyDailyFireFormulas(_unit, _currentLocation);
-        }
+        /// <summary>從目前腳下格／地形同步著火與環境傷害（不含續燃擲骰與灼燒結算）。</summary>
+        public void SyncEnvironmentFromLocation() => ApplyFireAndMoraleFromLocation();
 
-        /// <summary>從目前腳下格／地形同步著火與環境傷害（不含續燃擲骰）。</summary>
-        public void SyncFireFromLocation() => ApplyFireAndMoraleFromLocation();
+        /// <summary>相容舊呼叫；等同 <see cref="SyncEnvironmentFromLocation"/>。</summary>
+        public void SyncFireFromLocation() => SyncEnvironmentFromLocation();
 
         public void LeaveCurrentHex()
         {

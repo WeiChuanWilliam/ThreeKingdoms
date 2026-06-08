@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using ThreeKindoms.Data.Units.TroopKinds;
 
 namespace ThreeKindoms.Data.Units
 {
@@ -51,10 +52,10 @@ namespace ThreeKindoms.Data.Units
         {
             var map = new Dictionary<string, TroopKindNode>();
 
-            // --- 步：根 infantry，兩條 4 階線（槍 / 甲）---
-            Add(map, "infantry", TroopType.Infantry, parent: null);
-            AddLine(map, TroopType.Infantry, root: "infantry", branch: "spear", advance: "spear.advance", leaf1: "spear.qingzhou", leaf2: "spear.daji");
-            AddLine(map, TroopType.Infantry, root: "infantry", branch: "armor", advance: "armor.advance", leaf1: "armor.xianzhen", leaf2: "armor.baimao");
+            // --- 步：根 blade（刀兵），兩條 4 階線（槍 / 甲）---
+            Add(map, TroopKindKeys.Blade, TroopType.Infantry, parent: null);
+            AddLine(map, TroopType.Infantry, root: TroopKindKeys.Blade, branch: "spear", advance: "spear.advance", leaf1: "spear.qingzhou", leaf2: "spear.daji");
+            AddLine(map, TroopType.Infantry, root: TroopKindKeys.Blade, branch: "armor", advance: "armor.advance", leaf1: "armor.xianzhen", leaf2: "armor.baimao");
 
             // --- 騎 ---
             Add(map, "cavalry", TroopType.Cavalry, parent: null);

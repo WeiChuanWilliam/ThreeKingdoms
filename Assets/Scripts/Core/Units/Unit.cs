@@ -1,6 +1,9 @@
 using System.Collections.Generic;
+using ThreeKindoms.Core;
 using ThreeKindoms.Core.Buildings;
+using ThreeKindoms.Core.Locations;
 using ThreeKindoms.Core.Officers;
+using ThreeKindoms.Core.Terrain;
 using ThreeKindoms.Data.Units;
 
 namespace ThreeKindoms.Core.Units
@@ -34,6 +37,18 @@ namespace ThreeKindoms.Core.Units
         public int Wounded { get; private set; }
 
         public UnitLocationBinding Location { get; private set; }
+
+        /// <summary>目前地圖座標（未進入地圖時為預設值）。</summary>
+        public HexCoord CurrentHex => Location.Position;
+
+        /// <summary>腳下格；未綁定地圖時為 null。</summary>
+        public MapLocation CurrentMapLocation => Location.CurrentLocation;
+
+        /// <summary>是否已進入地圖並佔據一格。</summary>
+        public bool IsOnMap => Location?.CurrentLocation != null;
+
+        /// <summary>腳下地形；未進入地圖時為 null。</summary>
+        public AbstractTerrain CurrentTerrain => Location?.CurrentTerrain;
 
         public IReadOnlyList<Officer> ViceOfficers => viceOfficers;
 
@@ -99,7 +114,10 @@ namespace ThreeKindoms.Core.Units
         {
             Soldiers = System.Math.Max(0, totalSoldiers);
             Wounded = System.Math.Clamp(woundedCount, 0, Soldiers);
+            bool wasAnnihilated = annihilated;
             annihilated = UnitManpower.IsAnnihilated(Soldiers);
+            if (!wasAnnihilated && annihilated)
+                UnitRegistry.Unregister(this);
         }
 
         public void SetReachableFlag(bool reachable) => UnitFlags.Reachable = reachable;

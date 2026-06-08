@@ -28,7 +28,8 @@ namespace ThreeKindoms.UnityBridge
                 Log("未載入 chinese/unit.properties，使用程式內建預設值");
             ThreeKindoms.Data.Units.TroopKinds.TroopKindRegistry.EnsureBuilt();
 
-            var officerDb = ThreeKindoms.Data.Officers.OfficerDatabase.LoadFromStreamingAssets();
+            ThreeKindoms.Data.Officers.OfficerConfigUtil.LoadDefault(Application.streamingAssetsPath);
+            var officerDb = OfficerDatabaseUnity.LoadFromStreamingAssets();
             ThreeKindoms.Core.Officers.OfficerPool.Initialize(officerDb);
             ThreeKindoms.Data.Skill.SkillPool.Register(101);
             ThreeKindoms.Data.Skill.SkillPool.Register(102);

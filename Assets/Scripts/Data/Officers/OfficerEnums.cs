@@ -1,12 +1,12 @@
 namespace ThreeKindoms.Data.Officers
 {
-    /// <summary>0 健康 … 3 重病（對應 C++ health : 2）</summary>
-    public enum HealthLevel : byte
+    /// <summary>傷病：0 正常、1 輕傷、2 重傷、3 死亡。</summary>
+    public enum OfficerInjuryState : byte
     {
-        Fine = 0,
-        Slight = 1,
-        Medium = 2,
-        Serious = 3
+        Normal = 0,
+        Light = 1,
+        Severe = 2,
+        Dead = 3
     }
 
     /// <summary>武將顯示/歸屬狀態（對應 C++ show : 2）</summary>
@@ -22,5 +22,14 @@ namespace ThreeKindoms.Data.Officers
     {
         Male = 0,
         Female = 1
+    }
+
+    /// <summary>兵科適性（僅 S／A／B／C；對應步兵／騎兵／弓兵／器械／水軍五類）。</summary>
+    public enum TroopAptitudeGrade : byte
+    {
+        S = 0,
+        A = 1,
+        B = 2,
+        C = 3
     }
 }

@@ -124,8 +124,8 @@ namespace ThreeKindoms.UnityBridge
             Clock.AdvanceToNextSunrise();
             var rng = new System.Random();
             Locations.TickFireAtSunrise(rng);
-            Locations.TickAllUnitsFireAtSunrise();
-            PlayerLocation.RefillMovementAtSunrise();
+            Locations.ApplyBurnDamageAtSunrise();
+            Locations.TickAllUnitsAtSunrise();
             string fireNote = PlayerUnit.IsOnFire ? $" {UnitConfigUtil.StatusOnFire}" : "";
             LastMessage = $"第 {Clock.TotalDay} 天日出 行動力 {PlayerLocation.MovementPointsLeft}{fireNote}";
         }

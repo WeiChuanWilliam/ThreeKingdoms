@@ -13,7 +13,7 @@ namespace ThreeKindoms.Local.Tests
         {
             UnitConfigUtil.Load(TestPaths.UnitPropertiesPath);
 
-            var combat = new Combat(new CombatUnitDef(1, "infantry", soldiers: 5000));
+            var combat = new Combat(new CombatUnitDef(1, "blade", soldiers: 5000));
             combat.SetMorale(80);
             combat.SetStamina(70);
 
@@ -59,7 +59,7 @@ namespace ThreeKindoms.Local.Tests
         {
             UnitConfigUtil.Load(TestPaths.UnitPropertiesPath);
 
-            var combat = new Combat(new CombatUnitDef(1, "infantry", soldiers: 1000));
+            var combat = new Combat(new CombatUnitDef(1, "blade", soldiers: 1000));
             var cmd = new Officer(1);
             cmd.SetBattleSkills(new OfficerBattleSkills
             {
@@ -74,7 +74,7 @@ namespace ThreeKindoms.Local.Tests
 
         static Combat BuildCombat(short morale, short stamina, short attack, short leadership)
         {
-            var combat = new Combat(new CombatUnitDef(1, "infantry", soldiers: 5000));
+            var combat = new Combat(new CombatUnitDef(1, "blade", soldiers: 5000));
             combat.SetMorale(morale);
             combat.SetStamina(stamina);
 

@@ -53,7 +53,7 @@ namespace ThreeKindoms.Local.Tests
 
         static Combat CreateCombatWithTrait(string traitName)
         {
-            var def = new CombatUnitDef(1, "infantry", soldiers: 1000);
+            var def = new CombatUnitDef(1, "blade", soldiers: 1000);
             var combat = new Combat(def);
             var cmd = new Officer(1);
             cmd.AddPersonality(0, traitName, traitName);

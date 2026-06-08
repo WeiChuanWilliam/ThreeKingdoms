@@ -3,6 +3,10 @@ namespace ThreeKindoms.Data.Units.TroopKinds
     /// <summary>與 unit.properties 的 troop.kind.* 後綴一致（拼音已校正處見註解）。</summary>
     public static class TroopKindKeys
     {
+        /// <summary>步兵預設起點（刀兵）。</summary>
+        public const string Blade = "blade";
+
+        /// <summary>舊鍵；<see cref="TroopKindRegistry"/> 別名至 <see cref="Blade"/>。</summary>
         public const string Infantry = "infantry";
 
         public const string Spear = "spear";

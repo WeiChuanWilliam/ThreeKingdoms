@@ -49,6 +49,7 @@ namespace ThreeKindoms.Data.Units.TroopKinds
             {
                 "spear.chinzhou" => TroopKindKeys.SpearQingzhou,
                 "armor.baihau" => TroopKindKeys.ArmorBaimao,
+                TroopKindKeys.Infantry => TroopKindKeys.Blade,
                 _ => null
             };
             return canonical != null;
@@ -59,7 +60,7 @@ namespace ThreeKindoms.Data.Units.TroopKinds
         {
             AbstractTroopKind[] instances =
             {
-                new InfantryTroopKind(),
+                new BladeTroopKind(),
                 new SpearTroopKind(),
                 new SpearAdvanceTroopKind(),
                 new SpearQingzhouTroopKind(),

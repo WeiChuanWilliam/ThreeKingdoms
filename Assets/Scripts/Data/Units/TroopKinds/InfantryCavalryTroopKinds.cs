@@ -1,8 +1,8 @@
 namespace ThreeKindoms.Data.Units.TroopKinds
 {
-    public sealed class InfantryTroopKind : AbstractTroopKind
+    public sealed class BladeTroopKind : AbstractTroopKind
     {
-        public override string KindKey => TroopKindKeys.Infantry;
+        public override string KindKey => TroopKindKeys.Blade;
     }
 
     public sealed class SpearTroopKind : AbstractSpearTroopKind

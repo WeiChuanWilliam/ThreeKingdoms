@@ -12,7 +12,7 @@ namespace ThreeKindoms.Local.Tests
         [Fact]
         public void CollectMergedOfficerSkillIds_deduplicates_commander_and_vice()
         {
-            var combat = new Combat(new CombatUnitDef(1, "infantry", soldiers: 100));
+            var combat = new Combat(new CombatUnitDef(1, "blade", soldiers: 100));
 
             var cmd = new Officer(1);
             cmd.SetBattleSkills(new OfficerBattleSkills
@@ -42,7 +42,7 @@ namespace ThreeKindoms.Local.Tests
         [Fact]
         public void RefreshEquippedSkills_updates_officer_skill_id_set()
         {
-            var combat = new Combat(new CombatUnitDef(1, "infantry", soldiers: 100));
+            var combat = new Combat(new CombatUnitDef(1, "blade", soldiers: 100));
 
             var cmd = new Officer(1);
             cmd.SetBattleSkills(new OfficerBattleSkills
@@ -61,7 +61,7 @@ namespace ThreeKindoms.Local.Tests
         [Fact]
         public void Combat_allows_only_one_vice_officer()
         {
-            var combat = new Combat(new CombatUnitDef(1, "infantry", soldiers: 100));
+            var combat = new Combat(new CombatUnitDef(1, "blade", soldiers: 100));
             Assert.True(combat.AddViceOfficer(new Officer(2)));
             Assert.False(combat.AddViceOfficer(new Officer(3)));
             Assert.Equal(2, combat.ViceOfficer.RuntimeId);
@@ -70,7 +70,7 @@ namespace ThreeKindoms.Local.Tests
         [Fact]
         public void SetViceOfficer_replaces_previous_vice()
         {
-            var combat = new Combat(new CombatUnitDef(1, "infantry", soldiers: 100));
+            var combat = new Combat(new CombatUnitDef(1, "blade", soldiers: 100));
             combat.SetViceOfficer(new Officer(2));
             combat.SetViceOfficer(new Officer(5));
             Assert.Equal(5, combat.ViceOfficer.RuntimeId);

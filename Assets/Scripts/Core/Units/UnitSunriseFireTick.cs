@@ -2,12 +2,12 @@ using ThreeKindoms.Core.Locations;
 
 namespace ThreeKindoms.Core.Units
 {
-    /// <summary>日出時部隊在著火格上的每日處理。</summary>
+    /// <summary>著火格反查部隊後的每日灼燒結算（由 <see cref="LocationGridSunrise.ApplyBurnDamageAtSunrise"/> 呼叫）。</summary>
     public static class UnitSunriseFireTick
     {
         /// <summary>
-        /// 腳下格已著火且已 <see cref="UnitLocationBinding.SyncFireFromLocation"/> 後呼叫。
-        /// 所有部隊走 <see cref="UnitBurnRules.TryApplyDailyBurnDamage"/>。
+        /// 腳下格已著火時呼叫；走 <see cref="UnitBurnRules.TryApplyDailyBurnDamage"/>。
+        /// 不由部隊清單驅動，而是由著火座標反查 <see cref="MapLocation.OccupyingUnit"/>。
         /// </summary>
         public static void ApplyDailyFireFormulas(Unit unit, MapLocation location)
         {

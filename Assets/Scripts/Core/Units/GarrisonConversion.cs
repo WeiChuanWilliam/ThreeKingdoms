@@ -16,7 +16,9 @@ namespace ThreeKindoms.Core.Units
                 return false;
 
             Garrison garrison = Garrison.FromCombat(fieldUnit, site);
+            garrison.Location.InheritWorldStateFrom(fieldUnit.Location);
             location.SetFightingUnit(garrison);
+            UnitRegistry.Replace(fieldUnit, garrison);
             bindingUnit = garrison;
             return true;
         }
@@ -28,8 +30,10 @@ namespace ThreeKindoms.Core.Units
                 return null;
 
             Combat field = garrison.ToFieldCombat();
+            field.Location.InheritWorldStateFrom(garrison.Location);
             if (location != null)
                 location.SetFightingUnit(field);
+            UnitRegistry.Replace(garrison, field);
             bindingUnit = field;
             return field;
         }

@@ -26,5 +26,28 @@ namespace ThreeKindoms.Local.Tests
                     "找不到 unit.properties。請從 repo 根目錄執行 dotnet test，或確認 StreamingAssets 存在。");
             }
         }
+
+        public static string StreamingAssetsPath => ResolveUnderAssets("StreamingAssets");
+
+        public static string OfficersJsonPath => Path.Combine(StreamingAssetsPath, "officers.json");
+
+        public static string PersonalityTraitsPath => Path.Combine(StreamingAssetsPath, "personality_traits.json");
+
+        public static string OfficerPropertiesPath =>
+            Path.Combine(StreamingAssetsPath, "chinese", "officer.properties");
+
+        static string ResolveUnderAssets(string leaf)
+        {
+            string dir = AppContext.BaseDirectory;
+            for (int i = 0; i < 10 && !string.IsNullOrEmpty(dir); i++)
+            {
+                string candidate = Path.Combine(dir, "Assets", leaf);
+                if (Directory.Exists(candidate))
+                    return Path.GetFullPath(candidate);
+                dir = Directory.GetParent(dir)?.FullName;
+            }
+
+            throw new FileNotFoundException($"找不到 Assets/{leaf}。");
+        }
     }
 }

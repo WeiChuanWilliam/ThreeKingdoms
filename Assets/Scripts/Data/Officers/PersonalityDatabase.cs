@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.IO;
-using UnityEngine;
 
 namespace ThreeKindoms.Data.Officers
 {
@@ -12,18 +11,13 @@ namespace ThreeKindoms.Data.Officers
         public IReadOnlyDictionary<int, PersonalityTraitDef> ById => _byId;
         public IReadOnlyDictionary<string, PersonalityTraitDef> ByName => _byName;
 
-        public static PersonalityDatabase LoadFromStreamingAssets(string fileName = "personality_traits.json")
+        public static PersonalityDatabase LoadFromFile(string absolutePath)
         {
             var db = new PersonalityDatabase();
-            string path = Path.Combine(Application.streamingAssetsPath, fileName);
-            if (!File.Exists(path))
-            {
-                Debug.LogWarning($"[PersonalityDatabase] 找不到 {path}");
+            if (!File.Exists(absolutePath))
                 return db;
-            }
 
-            var json = File.ReadAllText(path);
-            var list = JsonUtility.FromJson<PersonalityTraitList>(json);
+            var list = OfficerJsonSerializer.DeserializePersonalities(File.ReadAllText(absolutePath));
             if (list?.traits == null)
                 return db;
 
@@ -34,7 +28,6 @@ namespace ThreeKindoms.Data.Officers
                     db._byName[def.name] = def;
             }
 
-            Debug.Log($"[PersonalityDatabase] 已載入 {db._byId.Count} 筆個性定義");
             return db;
         }
 

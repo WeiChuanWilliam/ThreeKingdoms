@@ -234,6 +234,10 @@ namespace ThreeKindoms.Data.Units
             _ => SuffixCompany
         };
 
+        /// <summary>步兵預設兵種鍵（troop.default.infantry，未設則 blade）。</summary>
+        public static string GetDefaultInfantryKindKey() =>
+            Get("troop.default.infantry", TroopKinds.TroopKindKeys.Blade);
+
         /// <summary>大類顯示名（troop.type.*）。</summary>
         public static string GetTroopTypeDisplayName(TroopType troop) => troop switch
         {

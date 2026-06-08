@@ -119,8 +119,12 @@ namespace ThreeKindoms.Data.Units
             if (ViceOfficerId > 0)
                 unit.SetViceOfficerFromPool(ViceOfficerId);
 
-            if (!string.IsNullOrWhiteSpace(TroopKindKey) &&
-                TroopKindRegistry.TryGet(TroopKindKey, out AbstractTroopKind kind))
+            string kindKey = TroopKindKey;
+            if (string.IsNullOrWhiteSpace(kindKey) && TroopType == TroopType.Infantry)
+                kindKey = UnitConfigUtil.GetDefaultInfantryKindKey();
+
+            if (!string.IsNullOrWhiteSpace(kindKey) &&
+                TroopKindRegistry.TryGet(kindKey, out AbstractTroopKind kind))
                 unit.BindTroopKind(kind);
             else
                 unit.SetTroopType(TroopType);

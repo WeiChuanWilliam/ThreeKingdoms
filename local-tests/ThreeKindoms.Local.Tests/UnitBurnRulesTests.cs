@@ -123,7 +123,7 @@ namespace ThreeKindoms.Local.Tests
 
         static Combat CreateCombatOnLocation(LocationGrid grid, MapLocation loc, TerrainDefinition terrain)
         {
-            var combat = new Combat(new CombatUnitDef(1, "infantry", soldiers: 1000));
+            var combat = new Combat(new CombatUnitDef(1, "blade", soldiers: 1000));
             combat.Location.BindToWorld(grid, loc.Hex, terrain);
             return combat;
         }

@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
 using ThreeKindoms.Core.Officers;
-using UnityEngine;
 
 namespace ThreeKindoms.Data.Officers
 {
@@ -9,28 +8,26 @@ namespace ThreeKindoms.Data.Officers
     {
         readonly Dictionary<int, OfficerDef> _defs = new();
         readonly Dictionary<int, Officer> _runtime = new();
+        PersonalityDatabase _personalities = new();
 
         public IReadOnlyDictionary<int, OfficerDef> Defs => _defs;
+        public PersonalityDatabase Personalities => _personalities;
 
-        public static OfficerDatabase LoadFromStreamingAssets(string fileName = "officers.json")
+        public static OfficerDatabase LoadFromFile(string officersJsonPath, string personalityJsonPath = null)
         {
             var db = new OfficerDatabase();
-            string path = Path.Combine(Application.streamingAssetsPath, fileName);
-            if (!File.Exists(path))
-            {
-                Debug.LogWarning($"[OfficerDatabase] 找不到 {path}");
+            if (!File.Exists(officersJsonPath))
                 return db;
+
+            var list = OfficerJsonSerializer.DeserializeOfficers(File.ReadAllText(officersJsonPath));
+            if (list?.officers != null)
+            {
+                foreach (var def in list.officers)
+                    db._defs[def.id] = def;
             }
 
-            var json = File.ReadAllText(path);
-            var list = JsonUtility.FromJson<OfficerDefList>(json);
-            if (list?.officers == null)
-                return db;
-
-            foreach (var def in list.officers)
-                db._defs[def.id] = def;
-
-            Debug.Log($"[OfficerDatabase] 已載入 {_defs.Count} 筆武將定義");
+            if (!string.IsNullOrEmpty(personalityJsonPath))
+                db._personalities = PersonalityDatabase.LoadFromFile(personalityJsonPath);
             return db;
         }
 
@@ -40,12 +37,9 @@ namespace ThreeKindoms.Data.Officers
                 return existing;
 
             if (!_defs.TryGetValue(defId, out var def))
-            {
-                Debug.LogWarning($"[OfficerDatabase] 無 def id={defId}");
                 return null;
-            }
 
-            var officer = OfficerFactory.FromDef(def);
+            var officer = OfficerFactory.FromDef(def, _personalities);
             _runtime[defId] = officer;
             return officer;
         }
