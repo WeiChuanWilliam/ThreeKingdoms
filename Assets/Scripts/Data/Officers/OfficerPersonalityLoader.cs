@@ -35,15 +35,9 @@ namespace ThreeKindoms.Data.Officers
                     continue;
 
                 if (trait != null)
-                {
                     officer.AddPersonality(trait.id, trait.key, trait.name);
-                    officer.AddPersonalityId(trait.id);
-                }
                 else
-                {
                     officer.AddPersonality(id, $"trait_{id}", $"trait_{id}");
-                    officer.AddPersonalityId(id);
-                }
 
                 total++;
             }

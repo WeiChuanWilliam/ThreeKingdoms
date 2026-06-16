@@ -21,11 +21,11 @@
       "injury": 0,
       "compatibility": 145,
       "troopAptitude": {
-        "Infantry": 0,
-        "Cavalry": 0,
-        "Archer": 2,
-        "Siege": 3,
-        "Navy": 3
+        "Infantry": 3,
+        "Cavalry": 3,
+        "Archer": 1,
+        "Siege": 0,
+        "Navy": 0
       },
       "personalityIds": [],
       "itemIds": [],
@@ -60,11 +60,11 @@
       "injury": 0,
       "compatibility": 148,
       "troopAptitude": {
-        "Infantry": 0,
-        "Cavalry": 1,
-        "Archer": 3,
-        "Siege": 3,
-        "Navy": 3
+        "Infantry": 3,
+        "Cavalry": 2,
+        "Archer": 0,
+        "Siege": 0,
+        "Navy": 0
       },
       "birthYear": 165,
       "lifespan": 54
@@ -90,11 +90,11 @@
       "injury": 0,
       "compatibility": 152,
       "troopAptitude": {
-        "Infantry": 1,
-        "Cavalry": 2,
-        "Archer": 2,
-        "Siege": 1,
-        "Navy": 2
+        "Infantry": 2,
+        "Cavalry": 1,
+        "Archer": 1,
+        "Siege": 2,
+        "Navy": 1
       },
       "birthYear": 181,
       "lifespan": 53

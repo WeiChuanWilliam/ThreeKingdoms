@@ -43,5 +43,17 @@ namespace ThreeKindoms.Data.Officers
             _runtime[defId] = officer;
             return officer;
         }
+
+        public void MaterializeAllRuntimes()
+        {
+            foreach (int defId in _defs.Keys)
+                GetOrCreateRuntime(defId);
+        }
+
+        public void SyncAllRelations()
+        {
+            foreach (Officer officer in _runtime.Values)
+                OfficerRelationsSync.EnsureSymmetric(officer, GetOrCreateRuntime);
+        }
     }
 }

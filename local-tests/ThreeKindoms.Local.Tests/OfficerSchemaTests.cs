@@ -76,5 +76,69 @@ namespace ThreeKindoms.Local.Tests
             Assert.Equal(5, officer.BelovedOfficerIds.Count);
             Assert.Equal(3, officer.SpouseOfficerIds.Count);
         }
+
+        [Fact]
+        public void RemovePersonality_syncs_ids_and_defs_then_can_add_new()
+        {
+            var officer = new Officer(1);
+            officer.AddPersonality(10, "old_trait", "舊個性");
+
+            Assert.True(officer.RemovePersonality(10));
+            Assert.Empty(officer.Personalities);
+
+            officer.AddPersonality(20, "new_trait", "新個性");
+
+            Assert.Single(officer.Personalities);
+            Assert.True(officer.HasPersonalityId(20));
+            foreach (PersonalityDef p in officer.Personalities)
+            {
+                if (p.Id == 20)
+                    Assert.Equal("新個性", p.DisplayName);
+            }
+        }
+
+        [Fact(Skip = "TODO: Officer.CalculatePerformance 五維發揮公式待實作")]
+        public void Performance_drops_with_injury_and_low_stamina()
+        {
+            var officer = new Officer(1);
+            officer.SetStats(100, 100, 100, 100, 100, 100);
+            officer.SetInjury(OfficerInjuryState.Severe);
+            officer.SetStamina(0);
+            Assert.True(officer.AttackPerform < 100);
+        }
+
+        [Fact]
+        public void RollRandom_returns_value_within_inclusive_range()
+        {
+            var officer = new Officer(1);
+            for (int i = 0; i < 50; i++)
+            {
+                int roll = officer.RollRandom(3, 7);
+                Assert.InRange(roll, 3, 7);
+            }
+        }
+
+        [Fact]
+        public void Relations_sync_bidirectional_after_database_load()
+        {
+            OfficerConfigUtil.Load(TestPaths.OfficerPropertiesPath);
+            OfficerDatabase db = OfficerDatabase.LoadFromFile(
+                TestPaths.OfficersJsonPath,
+                TestPaths.PersonalityTraitsPath);
+            db.MaterializeAllRuntimes();
+            db.SyncAllRelations();
+
+            Officer guan = db.GetOrCreateRuntime(1);
+            Officer zhang = db.GetOrCreateRuntime(2);
+            Officer zhuge = db.GetOrCreateRuntime(3);
+
+            Assert.Contains(2, guan.BelovedOfficerIds);
+            Assert.Contains(3, guan.BelovedOfficerIds);
+            Assert.Contains(1, zhang.BelovedOfficerIds);
+            Assert.Contains(1, zhuge.BelovedOfficerIds);
+            Assert.Contains(2, guan.SwornBrotherIds);
+            Assert.Contains(1, zhang.SwornBrotherIds);
+            Assert.Contains(1, zhuge.SwornBrotherIds);
+        }
     }
 }

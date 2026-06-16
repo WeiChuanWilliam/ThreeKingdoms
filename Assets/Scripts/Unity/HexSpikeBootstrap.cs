@@ -30,6 +30,8 @@ namespace ThreeKindoms.UnityBridge
 
             ThreeKindoms.Data.Officers.OfficerConfigUtil.LoadDefault(Application.streamingAssetsPath);
             var officerDb = OfficerDatabaseUnity.LoadFromStreamingAssets();
+            officerDb.MaterializeAllRuntimes();
+            officerDb.SyncAllRelations();
             ThreeKindoms.Core.Officers.OfficerPool.Initialize(officerDb);
             ThreeKindoms.Data.Skill.SkillPool.Register(101);
             ThreeKindoms.Data.Skill.SkillPool.Register(102);

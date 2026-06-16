@@ -2,6 +2,7 @@ using ThreeKindoms.Data.Units;
 
 namespace ThreeKindoms.Core.Units
 {
+    /// <summary>兵團（Legion）：地圖上出征的部隊編制，非「軍團」（後方城市管理，另訂）。</summary>
     public sealed class Legion : Unit
     {
         public override float FoodConsumptionFactor => UnitConfigUtil.GetFoodConsumptionFactor(UnitKind.Legion);

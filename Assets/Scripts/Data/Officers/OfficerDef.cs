@@ -34,7 +34,7 @@ namespace ThreeKindoms.Data.Officers
         public short loyalty = 100;
         public short belong;
 
-        /// <summary>傷病 0～3：正常／輕傷／重傷／死亡。</summary>
+        /// <summary>傷勢 0～3：正常／輕／中／重；死亡另用執行時 <see cref="OfficerFlag.IsAlive"/>。</summary>
         public byte injury;
 
         /// <summary>相性 0～255。</summary>

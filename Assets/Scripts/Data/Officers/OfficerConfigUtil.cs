@@ -68,7 +68,7 @@ namespace ThreeKindoms.Data.Officers
             (byte)Math.Clamp(GetInt("officer.compatibility.default", 145), 0, 255);
 
         public static TroopAptitudeGrade GetDefaultAptitudeGrade() =>
-            (TroopAptitudeGrade)Math.Clamp(GetInt("officer.aptitude.default", 3), 0, 3);
+            (TroopAptitudeGrade)Math.Clamp(GetInt("officer.aptitude.default", 0), 0, 3);
 
         public static int GetMaxBelovedOfficers() => GetInt("officer.relations.beloved_max", 5);
         public static int GetMaxSwornBrothers() => GetInt("officer.relations.sworn_brother_max", 3);

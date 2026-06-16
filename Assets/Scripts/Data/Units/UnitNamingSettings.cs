@@ -28,7 +28,7 @@ namespace ThreeKindoms.Data.Units
 
             return kind switch
             {
-                UnitKind.Legion => "軍",
+                UnitKind.Legion => "兵團",
                 UnitKind.Transport => "運輸隊",
                 UnitKind.Garrison => "駐軍",
                 _ => "隊"

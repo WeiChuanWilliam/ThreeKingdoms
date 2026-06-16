@@ -43,11 +43,18 @@ loc.SetOnFire();  // 需地形 Fireable
 // 部隊在該格時 ActualUnit.IsOnFire == true
 ```
 
+## 戰役／戰鬥架構（2025 修訂）
+
+- **取消**：補給線切斷斷糧、戰術格山谷／之石
+- **新增**：戰略 **Adjacent** 壓制、兵團自帶糧薪、戰術 **Facing** 向量  
+→ 詳見 [`COMBAT_AND_CAMPAIGN_ARCHITECTURE.md`](COMBAT_AND_CAMPAIGN_ARCHITECTURE.md)
+
 ## 你還沒設計、仍是佔位的
 
 - BattleSkill、Items、Personality 詳細規則
 - Building 只有 id+名稱（城池系統未做）
 - ForceUnit / GroupUnit 編制
+- StrategicNodeGraph（據點 adjacent）
 
 ## 調整程式時建議只改這幾個檔
 

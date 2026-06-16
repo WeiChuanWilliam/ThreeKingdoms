@@ -103,7 +103,7 @@ namespace ThreeKindoms.Core.Units
         }
 
         public bool SetViceOfficerFromPool(int officerDefId) =>
-            SetViceOfficer(officerDefId > 0 ? OfficerPool.CloneForUnit(officerDefId) : null);
+            SetViceOfficer(officerDefId > 0 ? OfficerPool.Get(officerDefId) : null);
 
         public new bool AddViceOfficer(Officer unitCopy)
         {

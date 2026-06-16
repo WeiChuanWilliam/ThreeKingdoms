@@ -30,7 +30,7 @@ namespace ThreeKindoms.Core.Units
         public short Stamina { get; private set; }
         public int Money { get; private set; }
 
-        /// <summary>主將（部隊專用複本，非 OfficerPool 本尊）。</summary>
+        /// <summary>主將（直接引用劇本 <see cref="OfficerPool"/> 內武將）。</summary>
         public Officer Commander { get; private set; }
 
         public int Soldiers { get; private set; }
@@ -83,8 +83,8 @@ namespace ThreeKindoms.Core.Units
 
         public bool AddViceOfficerFromPool(int officerDefId)
         {
-            Officer copy = OfficerPool.CloneForUnit(officerDefId);
-            return copy != null && AddViceOfficer(copy);
+            Officer officer = OfficerPool.Get(officerDefId);
+            return officer != null && AddViceOfficer(officer);
         }
 
         public bool RemoveViceOfficer(int officerDefId)
@@ -98,7 +98,7 @@ namespace ThreeKindoms.Core.Units
         public void SetCommander(Officer unitCopy) => Commander = unitCopy;
 
         public void SetCommanderFromPool(int officerDefId) =>
-            Commander = OfficerPool.CloneForUnit(officerDefId);
+            Commander = OfficerPool.Get(officerDefId);
 
         public void SetMorale(short value) => Morale = Clamp0To100(value);
         public void SetStamina(short value) => Stamina = Clamp0To100(value);

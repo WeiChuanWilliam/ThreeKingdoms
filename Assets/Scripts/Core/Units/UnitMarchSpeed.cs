@@ -5,7 +5,7 @@ namespace ThreeKindoms.Core.Units
     /// <summary>
     /// 地图上移动用的速度倍率（进格 cost ÷ 倍率）。
     /// 战斗部队：unit.march_speed.combat × 兵种 mobility；
-    /// 军团／运输队：参数档绝对 mobility（unit.mobility.legion 等）。
+    /// 兵團（Legion）／運輸隊：參數檔絕對 mobility（unit.mobility.legion 等）。
     /// </summary>
     public static class UnitMarchSpeed
     {

@@ -242,11 +242,11 @@ namespace ThreeKindoms.Data.Persistence
         static Officer RestoreOfficer(OfficerSaveEntry snap)
         {
             if (snap == null || snap.defId <= 0) return null;
-            Officer copy = OfficerPool.CloneForUnit(snap.defId);
-            if (copy == null) return null;
-            copy.StaminaChange((short)(snap.stamina - copy.Stamina));
-            copy.SetBelong(snap.belong, snap.loyalty);
-            return copy;
+            Officer officer = OfficerPool.Get(snap.defId);
+            if (officer == null) return null;
+            officer.SetStamina(snap.stamina);
+            officer.SetBelong(snap.belong, snap.loyalty);
+            return officer;
         }
 
         static void RestoreSkills(SkillSaveEntry[] skills, System.Func<int, bool> addById)

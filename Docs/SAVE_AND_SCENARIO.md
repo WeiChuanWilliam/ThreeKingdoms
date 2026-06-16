@@ -26,6 +26,14 @@ StreamingAssets/
 （之後）PersistentData/saves/slot_0.json
 ```
 
+## 武將池 vs 圖鑑 vs 存檔
+
+| | 武將圖鑑 | 本局 OfficerPool | 存檔 |
+|---|----------|------------------|------|
+| 內容 | 參數、出生年、壽命等 | 劇本進行中**仍存活且收錄**的武將狀態 | 當下 Pool 快照 + Unit 引用 |
+| 誰寫 | 企劃 | 開局篩選建立，局中 mutable | 遊戲自動 |
+| 細節 | [`OFFICER_CLASS.md`](OFFICER_CLASS.md) | [`SCENARIO_OFFICER_POOL.md`](SCENARIO_OFFICER_POOL.md) | 本文 + 上列文件 §7 |
+
 ## 程式進入點
 
 - 劇本：`ScenarioJsonLoader.Load(path)` → `ScenarioUnitSpawner.CreateUnit`

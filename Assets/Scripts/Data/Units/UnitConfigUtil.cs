@@ -108,7 +108,7 @@ namespace ThreeKindoms.Data.Units
         public static float GetCombatMarchSpeedFactor() =>
             GetFloat("unit.march_speed.combat", 1f);
 
-        /// <summary>军团／运输队：参数档绝对行军 mobility（非倍率）。</summary>
+        /// <summary>兵團（Legion）／運輸隊：參數檔絕對行軍 mobility（非倍率）。</summary>
         public static float GetUnitMarchMobility(UnitKind kind) => kind switch
         {
             UnitKind.Legion => GetFloat("unit.mobility.legion", 70f),

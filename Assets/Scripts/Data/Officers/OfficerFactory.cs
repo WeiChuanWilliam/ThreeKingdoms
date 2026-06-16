@@ -27,7 +27,7 @@ namespace ThreeKindoms.Data.Officers
             o.SetCompatibility(def.compatibility);
             o.SetTroopAptitude(def.troopAptitude);
             o.SetBattleSkills(def.battleSkills);
-            o.SetRelations(def.relations);
+            o.ReplaceLocalRelations(def.relations);
             OfficerPersonalityLoader.ApplyFromIds(o, def.personalityIds, personalityDb);
             OfficerItemLoader.ApplyFromIds(o, def.itemIds);
             return o;
