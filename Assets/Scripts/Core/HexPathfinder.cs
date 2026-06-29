@@ -6,6 +6,7 @@ namespace ThreeKindoms.Core
     /// <summary>Dijkstra：邊權 = 進入目標格的 enterCost。可限制最大消耗（今日剩餘行動力）。</summary>
     public static class HexPathfinder
     {
+        /// <summary>在消耗上限內以 Dijkstra 尋找起點至目標的最短路徑。</summary>
         public static PathfindingResult FindPath(
             HexGrid grid,
             HexCoord start,

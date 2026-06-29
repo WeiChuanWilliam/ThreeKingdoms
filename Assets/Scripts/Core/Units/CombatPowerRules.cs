@@ -8,18 +8,40 @@ namespace ThreeKindoms.Core.Units
     /// <summary>戰鬥力計算輸入（武將能力、技能組、士氣、體力、部隊六圍與兵力）。</summary>
     public readonly struct CombatPowerContext
     {
+        /// <summary>主將戰鬥相關能力。</summary>
         public OfficerCombatAbilities CommanderAbilities { get; }
+
+        /// <summary>副將戰鬥相關能力。</summary>
         public OfficerCombatAbilities ViceAbilities { get; }
+
+        /// <summary>主副將加權合併後的能力。</summary>
         public OfficerCombatAbilities BlendedOfficerAbilities { get; }
+
+        /// <summary>主將與副將合併後的技能 id。</summary>
         public IReadOnlyCollection<int> OfficerSkillIds { get; }
+
+        /// <summary>四槽已裝備戰法總數。</summary>
         public int EquippedSkillCount { get; }
+
+        /// <summary>當前士氣。</summary>
         public short Morale { get; }
+
+        /// <summary>當前體力。</summary>
         public short Stamina { get; }
+
+        /// <summary>含加成後的最終六圍。</summary>
         public CombatTroopStatBlock EffectiveTroopStats { get; }
+
+        /// <summary>現役兵力。</summary>
         public int Soldiers { get; }
+
+        /// <summary>傷兵數。</summary>
         public int Wounded { get; }
+
+        /// <summary>有效戰鬥人力（含傷兵折半）。</summary>
         public int EffectiveManpower { get; }
 
+        /// <summary>從戰鬥部隊快照建立戰鬥力計算輸入。</summary>
         internal CombatPowerContext(
             OfficerCombatAbilities commander,
             OfficerCombatAbilities vice,
@@ -50,8 +72,10 @@ namespace ThreeKindoms.Core.Units
     /// <summary>戰鬥力結算結果。</summary>
     public readonly struct CombatPowerResult
     {
+        /// <summary>戰鬥力評分。</summary>
         public int Rating { get; }
 
+        /// <summary>建立戰鬥力結算結果（負值歸零）。</summary>
         public CombatPowerResult(int rating)
         {
             Rating = rating < 0 ? 0 : rating;
@@ -61,6 +85,7 @@ namespace ThreeKindoms.Core.Units
     /// <summary>戰鬥部隊戰鬥力：武將能力 × 技能組 × 士氣 × 體力 × 六圍 × 有效兵力。</summary>
     public static class CombatPowerRules
     {
+        /// <summary>從戰鬥部隊組裝戰鬥力計算上下文。</summary>
         public static bool TryCreateContext(Combat combat, out CombatPowerContext context)
         {
             context = default;
@@ -88,6 +113,7 @@ namespace ThreeKindoms.Core.Units
             return true;
         }
 
+        /// <summary>依上下文公式計算戰鬥力評分。</summary>
         public static CombatPowerResult CalculateCombatPower(in CombatPowerContext context)
         {
             if (context.EffectiveManpower <= 0)
@@ -118,6 +144,7 @@ namespace ThreeKindoms.Core.Units
             return new CombatPowerResult(rating);
         }
 
+        /// <summary>取得戰鬥部隊的戰鬥力評分。</summary>
         public static int GetCombatPower(Combat combat)
         {
             if (!TryCreateContext(combat, out CombatPowerContext context))

@@ -26,7 +26,6 @@ namespace ThreeKindoms.Data.Units
 
         public static string SuffixLegion => Get("suffix.legion", "軍");
         public static string SuffixTransport => Get("suffix.transport", "運輸隊");
-        public static string SuffixEscort => Get("suffix.escort", "護衛隊");
         public static string SuffixGarrison => Get("suffix.garrison", "駐軍");
 
         /// <summary>相容舊程式碼。</summary>
@@ -121,7 +120,6 @@ namespace ThreeKindoms.Data.Units
         {
             UnitKind.Legion => GetFloat("unit.food_factor.legion", 0.5f),
             UnitKind.Transport => GetFloat("unit.food_factor.transport", 0.7f),
-            UnitKind.Garrison => 0f,
             _ => GetFloat("unit.food_factor.combat", 1f)
         };
 
@@ -130,7 +128,6 @@ namespace ThreeKindoms.Data.Units
         {
             UnitKind.Legion => GetFloat("unit.fire_damage_factor.legion", 1f),
             UnitKind.Transport => GetFloat("unit.fire_damage_factor.transport", 0.8f),
-            UnitKind.Garrison => GetFloat("unit.fire_damage_factor.garrison", 1f),
             _ => GetFloat("unit.fire_damage_factor.combat", 1f)
         };
 
@@ -230,7 +227,6 @@ namespace ThreeKindoms.Data.Units
         {
             UnitKind.Legion => SuffixLegion,
             UnitKind.Transport => SuffixTransport,
-            UnitKind.Garrison => SuffixGarrison,
             _ => SuffixCompany
         };
 

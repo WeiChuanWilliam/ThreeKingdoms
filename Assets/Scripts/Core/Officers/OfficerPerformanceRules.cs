@@ -16,16 +16,21 @@ namespace ThreeKindoms.Core.Officers
 
     {
 
+        /// <summary>六圍基礎值下限。</summary>
         public const byte StatMin = 1;
 
+        /// <summary>六圍基礎值與發揮值上限。</summary>
         public const byte StatMax = 100;
 
+        /// <summary>體力下限。</summary>
         public const byte StaminaMin = 0;
 
+        /// <summary>體力上限。</summary>
         public const byte StaminaMax = 100;
 
 
 
+        /// <summary>由基礎值、傷勢、體力與道具計算單項發揮值。</summary>
         public static byte ComputePerform(
 
             byte baseStat,
@@ -60,6 +65,7 @@ namespace ThreeKindoms.Core.Officers
 
 
 
+        /// <summary>依傷勢等級回傳發揮值乘數。</summary>
         public static float GetInjuryMultiplier(OfficerInjuryState injury) => injury switch
 
         {
@@ -110,12 +116,14 @@ namespace ThreeKindoms.Core.Officers
 
 
 
+        /// <summary>將整數基礎值限制在合法六圍區間。</summary>
         public static byte ClampBaseStat(int value) =>
 
             (byte)Math.Clamp(value, StatMin, StatMax);
 
 
 
+        /// <summary>將浮點發揮值四捨五入並限制在 0～100。</summary>
         public static byte ClampPerform(float value)
 
         {
@@ -132,6 +140,7 @@ namespace ThreeKindoms.Core.Officers
 
 
 
+        /// <summary>將整數體力限制在 0～100。</summary>
         public static byte ClampStamina(int value) =>
 
             (byte)Math.Clamp(value, StaminaMin, StaminaMax);

@@ -97,7 +97,7 @@ namespace ThreeKindoms.Local.Tests
             }
         }
 
-        [Fact(Skip = "TODO: Officer.CalculatePerformance 五維發揮公式待實作")]
+        [Fact]
         public void Performance_drops_with_injury_and_low_stamina()
         {
             var officer = new Officer(1);

@@ -82,6 +82,7 @@ namespace ThreeKindoms.Data.Persistence
                 wounded = unit.Wounded,
                 morale = unit.Morale,
                 stamina = unit.Stamina,
+                isStationed = unit.IsStationed,
                 commander = CaptureOfficer(unit.Commander)
             };
 
@@ -104,11 +105,7 @@ namespace ThreeKindoms.Data.Persistence
                     break;
                 case Legion legion:
                     entry.type = "legion";
-                    if (legion.Escort != null)
-                    {
-                        HexCoord escortHex = legion.Escort.Location?.Position ?? hex;
-                        entry.escort = CaptureUnit(legion.Escort, escortHex);
-                    }
+                    entry.carriedFood = legion.CarriedFood;
                     break;
                 case Transport transport:
                     entry.type = "transport";
@@ -139,25 +136,10 @@ namespace ThreeKindoms.Data.Persistence
         {
             if (entry == null) return null;
 
-            string type = entry.type?.ToLowerInvariant() ?? "combat";
-
-            if (type == "legion")
-            {
-                Unit escortUnit = entry.escort != null ? RestoreUnit(entry.escort) : null;
-                var legionDef = BuildDefFromSave(entry) as LegionUnitDef;
-                if (legionDef == null) return null;
-
-                var legion = escortUnit is Combat escortCombat
-                    ? CreateLegionWithEscort(legionDef, escortCombat)
-                    : new Legion(legionDef);
-
-                ApplyRuntimeState(legion, entry);
-                return legion;
-            }
-
             UnitDef def = BuildDefFromSave(entry);
             Unit unit = def switch
             {
+                LegionUnitDef legionDef => new Legion(legionDef),
                 CombatUnitDef c => new Combat(c),
                 TransportUnitDef t => new Transport(t),
                 _ => null
@@ -168,19 +150,16 @@ namespace ThreeKindoms.Data.Persistence
             return unit;
         }
 
-        static Legion CreateLegionWithEscort(LegionUnitDef def, Combat escort)
-        {
-            var legion = new Legion(def);
-            legion.RestoreEscort(escort);
-            return legion;
-        }
-
         static void ApplyRuntimeState(Unit unit, UnitSaveEntry entry)
         {
             ApplyOfficerSnapshots(unit, entry);
             unit.SetManpower(entry.soldiers, entry.wounded);
             unit.SetMorale(entry.morale);
             unit.SetStamina(entry.stamina);
+            unit.SetStationed(entry.isStationed);
+
+            if (unit is Legion legion)
+                legion.SetCarriedFood(entry.carriedFood);
 
             if (unit is Combat combat)
             {
@@ -200,7 +179,7 @@ namespace ThreeKindoms.Data.Persistence
             string type = entry.type?.ToLowerInvariant() ?? "combat";
             UnitDef def = type switch
             {
-                "legion" => new LegionUnitDef(entry.faction),
+                "legion" => new LegionUnitDef(entry.faction) { Food = entry.carriedFood },
                 "transport" => new TransportUnitDef(entry.faction),
                 _ => new CombatUnitDef(entry.faction)
             };
@@ -216,9 +195,6 @@ namespace ThreeKindoms.Data.Persistence
 
             if (def is CombatUnitDef combat)
                 combat.TroopType = (TroopType)entry.troopType;
-
-            if (def is LegionUnitDef legion && entry.escort?.commander != null)
-                legion.EscortCommanderOfficerId = entry.escort.commander.defId;
 
             return def;
         }

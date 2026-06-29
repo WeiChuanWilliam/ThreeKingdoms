@@ -6,14 +6,17 @@ namespace ThreeKindoms.Core.Terrain
     /// <summary>可執行的地形定義（從表或程式建立）。</summary>
     public sealed class TerrainDefinition : AbstractTerrain
     {
+        /// <summary>建議進入消耗（行動力點數）。</summary>
         public byte SuggestedEnterCost { get; private set; }
 
+        /// <summary>以 id、名稱與建議進入消耗建立地形定義。</summary>
         public TerrainDefinition(int id, string name, byte suggestedEnterCost = MovementRules.DefaultDailyPoints)
             : base(id, name)
         {
             SuggestedEnterCost = suggestedEnterCost;
         }
 
+        /// <summary>依 <see cref="TerrainType"/> 產生預設地形定義（Spike 用）。</summary>
         public static TerrainDefinition FromTerrainType(TerrainType type)
         {
             switch (type)

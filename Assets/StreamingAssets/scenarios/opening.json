@@ -7,7 +7,7 @@
       "type": "legion",
       "faction": 1,
       "commander": 1,
-      "escortCommander": 2,
+      "food": 3000,
       "vice": [3],
       "soldiers": 1000,
       "wounded": 500,

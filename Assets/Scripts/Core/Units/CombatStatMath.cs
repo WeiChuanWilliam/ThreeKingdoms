@@ -9,7 +9,10 @@ namespace ThreeKindoms.Core.Units
     /// </summary>
     public static class CombatStatMath
     {
+        /// <summary>統率基準值（低於此無加成、高於則按比例提升攻防）。</summary>
         public const int LeadershipBaseline = 50;
+
+        /// <summary>統率每點偏離基準時的攻防倍率增量。</summary>
         public const float LeadershipScalePerPoint = 0.01f;
 
         static readonly CombatStatKind[] AllKinds =
@@ -37,12 +40,14 @@ namespace ThreeKindoms.Core.Units
                 source.TroopAttackRange);
         }
 
+        /// <summary>從戰鬥部隊取得兵種表原始六圍。</summary>
         public static CombatTroopStatBlock GetBaseTroopStats(Combat unit) => GetBaseTroopStats((ICombatTroopStatsSource)unit);
 
         /// <summary>經武將／科技／戰法，尚未乘地勢（括號前數字的前一階，若地勢為 1 則與最終相同）。</summary>
         public static CombatTroopStatBlock GetStatsAfterOfficerAndResearch(Unit unit, ICombatTroopStatsSource source) =>
             CombatStatModifierHooks.ModifyByOfficerSkillAndResearch(unit, source, GetBaseTroopStats(source));
 
+        /// <summary>從戰鬥部隊取得經武將／科技／戰法後的六圍。</summary>
         public static CombatTroopStatBlock GetStatsAfterOfficerAndResearch(Combat unit) =>
             GetStatsAfterOfficerAndResearch(unit, unit);
 
@@ -50,34 +55,43 @@ namespace ThreeKindoms.Core.Units
         public static CombatTroopStatBlock GetEffectiveTroopStats(Unit unit, ICombatTroopStatsSource source) =>
             CombatStatModifierHooks.ModifyByTerrain(unit, source, GetStatsAfterOfficerAndResearch(unit, source));
 
+        /// <summary>從戰鬥部隊取得含地勢的最終六圍。</summary>
         public static CombatTroopStatBlock GetEffectiveTroopStats(Combat unit) =>
             GetEffectiveTroopStats(unit, unit);
 
+        /// <summary>取得指定維度的最終數值。</summary>
         public static short GetEffective(Unit unit, ICombatTroopStatsSource source, CombatStatKind kind) =>
             GetEffectiveTroopStats(unit, source).Get(kind);
 
+        /// <summary>最終攻擊。</summary>
         public static short GetEffectiveAttack(Combat unit) => GetEffective(unit, unit, CombatStatKind.Attack);
+
+        /// <summary>最終防禦。</summary>
         public static short GetEffectiveDefense(Combat unit) => GetEffective(unit, unit, CombatStatKind.Defense);
+
+        /// <summary>最終機動。</summary>
         public static short GetEffectiveMobility(Combat unit) => GetEffective(unit, unit, CombatStatKind.Mobility);
+
+        /// <summary>最終破甲。</summary>
         public static short GetEffectiveJipo(Combat unit) => GetEffective(unit, unit, CombatStatKind.Jipo);
+
+        /// <summary>最終攻城。</summary>
         public static short GetEffectiveGongcheng(Combat unit) => GetEffective(unit, unit, CombatStatKind.Gongcheng);
+
+        /// <summary>最終耐力。</summary>
         public static short GetEffectiveTroopStamina(Combat unit) => GetEffective(unit, unit, CombatStatKind.Stamina);
+
+        /// <summary>最終攻擊距離。</summary>
         public static short GetEffectiveAttackRange(Combat unit) => GetEffective(unit, unit, CombatStatKind.AttackRange);
 
-        public static short GetEffectiveAttack(Garrison unit) => GetEffective(unit, unit, CombatStatKind.Attack);
-        public static short GetEffectiveDefense(Garrison unit) => GetEffective(unit, unit, CombatStatKind.Defense);
-        public static short GetEffectiveMobility(Garrison unit) => GetEffective(unit, unit, CombatStatKind.Mobility);
-        public static short GetEffectiveJipo(Garrison unit) => GetEffective(unit, unit, CombatStatKind.Jipo);
-        public static short GetEffectiveGongcheng(Garrison unit) => GetEffective(unit, unit, CombatStatKind.Gongcheng);
-        public static short GetEffectiveTroopStamina(Garrison unit) => GetEffective(unit, unit, CombatStatKind.Stamina);
-        public static short GetEffectiveAttackRange(Garrison unit) => GetEffective(unit, unit, CombatStatKind.AttackRange);
-
+        /// <summary>主將統率換算為攻防倍率係數。</summary>
         public static float GetLeadershipFactor(Officer commander)
         {
             if (commander == null) return 1f;
             return 1f + (commander.Leadership - LeadershipBaseline) * LeadershipScalePerPoint;
         }
 
+        /// <summary>套用武將戰法與科技倍率至基礎六圍。</summary>
         internal static CombatTroopStatBlock ApplyOfficerAndResearchMultipliers(
             Unit unit,
             ICombatTroopStatsSource source,
@@ -95,6 +109,7 @@ namespace ThreeKindoms.Core.Units
             return result;
         }
 
+        /// <summary>套用地勢倍率至六圍。</summary>
         internal static CombatTroopStatBlock ApplyTerrainMultipliers(
             Unit unit,
             ICombatTroopStatsSource source,
@@ -110,6 +125,7 @@ namespace ThreeKindoms.Core.Units
             return result;
         }
 
+        /// <summary>部隊智力（主將與最強副將加權合算）。</summary>
         public static short GetUnitIntelligence(Unit unit)
         {
             if (unit == null) return 0;

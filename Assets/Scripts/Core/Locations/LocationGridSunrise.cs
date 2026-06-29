@@ -6,6 +6,7 @@ using ThreeKindoms.Core.Units;
 
 namespace ThreeKindoms.Core.Locations
 {
+    /// <summary>日出時對 <see cref="LocationGrid"/> 執行的火勢與部隊結算擴充方法。</summary>
     public static class LocationGridSunrise
     {
         /// <summary>日出：只遍歷 <see cref="LocationGrid.BurningCells"/> 做續燃與蔓延。</summary>
@@ -75,7 +76,7 @@ namespace ThreeKindoms.Core.Locations
 
                 unit.Location.SyncEnvironmentFromLocation();
 
-                if (unit is Garrison)
+                if (unit.IsStationed)
                     continue;
 
                 unit.Location.RefillMovementAtSunrise();

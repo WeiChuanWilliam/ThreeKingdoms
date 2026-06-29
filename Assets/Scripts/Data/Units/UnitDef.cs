@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using ThreeKindoms.Core.Buildings;
 using ThreeKindoms.Core.Units;
 using ThreeKindoms.Data.Units.TroopKinds;
 
@@ -161,58 +160,8 @@ namespace ThreeKindoms.Data.Units
         }
     }
 
-    public sealed class GarrisonUnitDef : UnitDef
-    {
-        public GarrisonSnapshot Snapshot { get; }
-        public SettlementSiteKind SiteKind { get; }
-        public string UnitDisplayName { get; }
-        public AbstractBuilding StationSite { get; }
-
-        GarrisonUnitDef(
-            int belonged,
-            GarrisonSnapshot snapshot,
-            AbstractBuilding stationSite,
-            string unitDisplayName)
-            : base(
-                belonged,
-                snapshot.Soldiers,
-                snapshot.Wounded,
-                snapshot.Morale,
-                snapshot.Stamina,
-                snapshot.Money,
-                snapshot.CommanderOfficerId,
-                unitDisplayName)
-        {
-            Snapshot = snapshot;
-            StationSite = stationSite;
-            SiteKind = stationSite?.SiteKind ?? SettlementSiteKind.None;
-            UnitDisplayName = unitDisplayName;
-            foreach (int id in snapshot.ViceOfficerIds)
-                AddViceOfficer(id);
-        }
-
-        public static GarrisonUnitDef FromCombat(Combat combat, AbstractBuilding stationSite)
-        {
-            GarrisonSnapshot snap = GarrisonSnapshot.Capture(combat);
-            string suffix = UnitNamingSettings.GetSuffix(UnitKind.Garrison);
-            string siteName = stationSite?.Name ?? UnitConfigUtil.FallbackUnitName;
-            string display = siteName + suffix;
-            return new GarrisonUnitDef(combat.Belonged, snap, stationSite, display);
-        }
-
-        internal void ApplyTo(Garrison unit)
-        {
-            ApplyCommonTo(unit);
-            unit.ApplyTroopStats(Snapshot);
-            if (StationSite != null)
-                unit.SetBuilding(StationSite);
-        }
-    }
-
     public sealed class LegionUnitDef : UnitDef
     {
-        public int EscortCommanderOfficerId { get; set; }
-        public float EscortSoldierRatio { get; set; } = 0.5f;
         public int Food { get; set; }
 
         public LegionUnitDef(
@@ -228,19 +177,10 @@ namespace ThreeKindoms.Data.Units
         {
         }
 
-        internal void ApplyTo(Legion unit) => ApplyCommonTo(unit);
-
-        internal CombatUnitDef CreateEscortDef()
+        internal void ApplyTo(Legion unit)
         {
-            int escortCmd = EscortCommanderOfficerId > 0 ? EscortCommanderOfficerId : CommanderOfficerId;
-            int escortSoldiers = System.Math.Max(
-                UnitManpower.MinSoldiers,
-                (int)(Soldiers * EscortSoldierRatio));
-
-            return new CombatUnitDef(Belonged, soldiers: escortSoldiers, morale: Morale, stamina: Stamina, money: Money, commanderOfficerId: escortCmd)
-            {
-                TroopType = TroopType.Cavalry
-            };
+            ApplyCommonTo(unit);
+            unit.SetCarriedFood(Food);
         }
     }
 

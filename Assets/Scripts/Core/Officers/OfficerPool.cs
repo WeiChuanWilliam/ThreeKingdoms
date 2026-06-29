@@ -16,10 +16,12 @@ namespace ThreeKindoms.Core.Officers
 
 
 
+        /// <summary>本局武將池是否已載入資料庫。</summary>
         public static bool IsInitialized => database != null;
 
 
 
+        /// <summary>以劇本武將資料庫初始化本局 Pool。</summary>
         public static void Initialize(OfficerDatabase db) => database = db;
 
 
@@ -30,6 +32,7 @@ namespace ThreeKindoms.Core.Officers
 
 
 
+        /// <summary>取得或建立執行時武將 Singleton（供關係同步等內部用途）。</summary>
         public static Officer GetShared(int defId) =>
 
             database?.GetOrCreateRuntime(defId);

@@ -11,10 +11,10 @@ namespace ThreeKindoms.Data.Scenario
         public string UnitType { get; set; } = "combat";
         public int FactionId { get; set; } = 1;
         public int CommanderId { get; set; }
-        public int EscortCommanderId { get; set; }
         public IReadOnlyList<int> ViceOfficerIds { get; set; } = System.Array.Empty<int>();
         public int Soldiers { get; set; } = 1000;
         public int Wounded { get; set; }
+        public int Food { get; set; }
         public byte Morale { get; set; } = 100;
         public byte Stamina { get; set; } = 100;
         public TroopType TroopType { get; set; } = TroopType.Infantry;
@@ -36,9 +36,9 @@ namespace ThreeKindoms.Data.Scenario
                 UnitType = PropertiesFile.Get(map, p + "type", "combat"),
                 FactionId = PropertiesFile.GetInt(map, p + "faction", 1),
                 CommanderId = PropertiesFile.GetInt(map, p + "commander"),
-                EscortCommanderId = PropertiesFile.GetInt(map, p + "escort_commander"),
                 Soldiers = PropertiesFile.GetInt(map, p + "soldiers", 1000),
                 Wounded = PropertiesFile.GetInt(map, p + "wounded"),
+                Food = PropertiesFile.GetInt(map, p + "food"),
                 Morale = (byte)PropertiesFile.GetInt(map, p + "morale", 100),
                 Stamina = (byte)PropertiesFile.GetInt(map, p + "stamina", 100),
                 TroopType = (TroopType)PropertiesFile.GetInt(map, p + "troop_type"),

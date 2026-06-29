@@ -3,6 +3,7 @@ namespace ThreeKindoms.Core.Units
     /// <summary>兵力與傷兵換算（全 Unit 共用規則）。</summary>
     public static class UnitManpower
     {
+        /// <summary>低於此兵力視為殲滅。</summary>
         public const int MinSoldiers = 10;
 
         /// <summary>傷兵戰鬥力係數（0.5 → 500 傷兵 ≈ 250 有效兵力）。</summary>
@@ -20,6 +21,7 @@ namespace ThreeKindoms.Core.Units
             return healthy + (int)(wounded * WoundedCombatFactor);
         }
 
+        /// <summary>兵力是否已低於殲滅門檻。</summary>
         public static bool IsAnnihilated(int soldiers) => soldiers < MinSoldiers;
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace ThreeKindoms.Core
 {
+    /// <summary>六角地圖 JSON 反序列化根結構。</summary>
     [Serializable]
     public class HexMapJson
     {
@@ -12,6 +13,7 @@ namespace ThreeKindoms.Core
         public HexCellJson[] cells;
     }
 
+    /// <summary>單一六角格的 JSON 資料。</summary>
     [Serializable]
     public class HexCellJson
     {
@@ -24,8 +26,10 @@ namespace ThreeKindoms.Core
         public bool passable = true;
     }
 
+    /// <summary>將 JSON 地圖描述轉為執行時 <see cref="HexGrid"/>。</summary>
     public static class HexMapLoader
     {
+        /// <summary>解析 <see cref="HexMapJson"/> 並建立含預設平原的矩形地圖，再套用 cells 覆寫。</summary>
         public static HexGrid FromJson(HexMapJson data)
         {
             int w = data?.width ?? 16;

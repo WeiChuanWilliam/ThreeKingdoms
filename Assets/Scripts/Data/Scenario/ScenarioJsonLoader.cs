@@ -45,7 +45,7 @@ namespace ThreeKindoms.Data.Scenario
             UnitType = e.type,
             FactionId = e.faction,
             CommanderId = e.commander,
-            EscortCommanderId = e.escortCommander,
+            Food = e.food,
             ViceOfficerIds = e.vice ?? System.Array.Empty<int>(),
             Soldiers = e.soldiers,
             Wounded = e.wounded,

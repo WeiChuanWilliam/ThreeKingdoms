@@ -52,9 +52,9 @@ namespace ThreeKindoms.UnityBridge
             var def = new Data.Units.LegionUnitDef(1)
             {
                 CommanderOfficerId = 1,
-                EscortCommanderOfficerId = 2,
                 Soldiers = 1000,
-                Wounded = 500
+                Wounded = 500,
+                Food = 3000
             };
             def.AddViceOfficer(3);
             return new Legion(def);

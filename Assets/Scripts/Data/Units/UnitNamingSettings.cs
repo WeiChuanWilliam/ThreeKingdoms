@@ -30,7 +30,6 @@ namespace ThreeKindoms.Data.Units
             {
                 UnitKind.Legion => "兵團",
                 UnitKind.Transport => "運輸隊",
-                UnitKind.Garrison => "駐軍",
                 _ => "隊"
             };
         }

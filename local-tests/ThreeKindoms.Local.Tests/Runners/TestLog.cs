@@ -8,7 +8,6 @@ namespace ThreeKindoms.Local.Tests.Runners
         public static void Line(StringBuilder log, string line)
         {
             log.AppendLine(line);
-            Console.WriteLine(line);
         }
     }
 }

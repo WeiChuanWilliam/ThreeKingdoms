@@ -18,7 +18,7 @@ namespace ThreeKindoms.Data.Scenario
         public string type = "combat";
         public int faction = 1;
         public int commander;
-        public int escortCommander;
+        public int food;
         public int[] vice = Array.Empty<int>();
         public int soldiers = 1000;
         public int wounded;

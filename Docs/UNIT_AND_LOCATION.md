@@ -45,15 +45,29 @@ loc.SetOnFire();  // 需地形 Fireable
 
 ## 戰役／戰鬥架構（2025 修訂）
 
-- **取消**：補給線切斷斷糧、戰術格山谷／之石
+- **取消**：補給線切斷斷糧、戰術格山谷／之石、獨立 `Garrison` 部隊類型
+- **駐紮**：`Unit.IsStationed` 布林值；仍是 `Combat`／`Legion`，不換類別
 - **新增**：戰略 **Adjacent** 壓制、兵團自帶糧薪、戰術 **Facing** 向量  
 → 詳見 [`COMBAT_AND_CAMPAIGN_ARCHITECTURE.md`](COMBAT_AND_CAMPAIGN_ARCHITECTURE.md)
+
+### 駐紮狀態（程式位置）
+
+| 項目 | 位置 |
+|------|------|
+| 據點類型定義 | [`SETTLEMENT_SITES.md`](SETTLEMENT_SITES.md) — 城池／縣城／港灣／關口 ＋ 岩砦／要塞／陣／寨 |
+| 布林值 | `Unit.IsStationed` / `Unit.SetStationed(bool)` |
+| 進據點自動駐紮 | `StationRules.TryAutoStation` ← `UnitLocationBinding` 進格時 |
+| 離開駐紮 | `UnitLocationBinding.DepartStation()` |
+| 駐紮中不可移動 | `UnitLocationBinding.EnterHex` / `MoveAlongPath` 檢查 `IsStationed` |
+| 兵團野戰 | `Legion.CanFightInField` = 僅 `IsStationed` 時 true；否則 `CalculateCombatPower()` = 0 |
+| 戰鬥隊 | 野戰與駐紮皆可作戰；駐紮時耗糧為 0 |
 
 ## 你還沒設計、仍是佔位的
 
 - BattleSkill、Items、Personality 詳細規則
 - Building 只有 id+名稱（城池系統未做）
-- ForceUnit / GroupUnit 編制
+- ForceUnit 編制（未設計）
+- `GroupUnit`：舊 C++ 地格多隊佔位，**不是**四種部隊類型之一；見 `GroupUnit.cs`
 - StrategicNodeGraph（據點 adjacent）
 
 ## 調整程式時建議只改這幾個檔

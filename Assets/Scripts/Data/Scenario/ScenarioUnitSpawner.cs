@@ -71,7 +71,7 @@ namespace ThreeKindoms.Data.Scenario
                 combat.TroopType = spec.TroopType;
 
             if (def is LegionUnitDef legion)
-                legion.EscortCommanderOfficerId = spec.EscortCommanderId;
+                legion.Food = spec.Food;
 
             return def;
         }

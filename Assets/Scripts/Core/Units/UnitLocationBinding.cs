@@ -1,7 +1,6 @@
 using ThreeKindoms.Core.Buildings;
 using ThreeKindoms.Core.Locations;
 using ThreeKindoms.Core.Terrain;
-using ThreeKindoms.Data.Locations;
 using ThreeKindoms.Data.Units;
 
 namespace ThreeKindoms.Core.Units
@@ -13,23 +12,41 @@ namespace ThreeKindoms.Core.Units
         LocationGrid _locationGrid;
         MapLocation _currentLocation;
 
+        /// <summary>綁定的部隊本體。</summary>
         public Unit Unit => _unit;
+
+        /// <summary>目前所在六角格座標。</summary>
         public HexCoord Position { get; set; }
+
+        /// <summary>本日剩餘移動點數。</summary>
         public int MovementPointsLeft { get; set; }
+
+        /// <summary>目前佔據的地圖格實例。</summary>
         public MapLocation CurrentLocation => _currentLocation;
 
+        /// <summary>腳下格是否著火。</summary>
         public bool IsOnFire => _currentLocation != null && _currentLocation.LocationFlags.OnFire;
+
+        /// <summary>腳下格是否有陷阱。</summary>
         public bool IsOnTrap => _currentLocation != null && _currentLocation.LocationFlags.OnTrap;
+
+        /// <summary>腳下格是否處於防禦工事狀態。</summary>
         public bool IsOnDefence => _currentLocation != null && _currentLocation.LocationFlags.OnDefence;
+
+        /// <summary>駐紮建築（部隊自身或腳下格建築）。</summary>
         public AbstractBuilding StationedBuilding => _unit.Building ?? _currentLocation?.Building;
+
+        /// <summary>腳下格地形。</summary>
         public AbstractTerrain CurrentTerrain => _currentLocation?.Terrain;
 
+        /// <summary>建立部隊與地圖格的綁定（尚未進入世界）。</summary>
         public UnitLocationBinding(Unit unit)
         {
             _unit = unit;
             MovementPointsLeft = MovementRules.DefaultDailyPoints;
         }
 
+        /// <summary>進入地圖世界：掛載格網、落點並登記至 <see cref="UnitRegistry"/>。</summary>
         public void BindToWorld(LocationGrid locationGrid, HexCoord startHex, AbstractTerrain terrainAtStart)
         {
             _locationGrid = locationGrid;
@@ -48,6 +65,7 @@ namespace ThreeKindoms.Core.Units
             MovementPointsLeft = source.MovementPointsLeft;
         }
 
+        /// <summary>日出時補滿本日移動點數。</summary>
         public void RefillMovementAtSunrise() =>
             MovementPointsLeft = MovementRules.DefaultDailyPoints;
 
@@ -57,6 +75,7 @@ namespace ThreeKindoms.Core.Units
         /// <summary>相容舊呼叫；等同 <see cref="SyncEnvironmentFromLocation"/>。</summary>
         public void SyncFireFromLocation() => SyncEnvironmentFromLocation();
 
+        /// <summary>離開目前六角格（更新格內佔位與交戰單位）。</summary>
         public void LeaveCurrentHex()
         {
             if (_currentLocation == null) return;
@@ -66,10 +85,11 @@ namespace ThreeKindoms.Core.Units
             _currentLocation = null;
         }
 
+        /// <summary>進入指定六角格；駐紮中或格不可進入時失敗。</summary>
         public bool EnterHex(HexCoord hex, AbstractTerrain terrainIfCreate = null)
         {
             if (_locationGrid == null) return false;
-            if (_unit is Garrison)
+            if (_unit.IsStationed)
                 return false;
 
             LeaveCurrentHex();
@@ -87,9 +107,10 @@ namespace ThreeKindoms.Core.Units
             return true;
         }
 
+        /// <summary>沿路徑逐步移動並扣除進格成本；駐紮中無法移動。</summary>
         public bool MoveAlongPath(HexGrid pathGrid, System.Collections.Generic.IReadOnlyList<HexCoord> path)
         {
-            if (_unit is Garrison)
+            if (_unit.IsStationed)
                 return false;
             if (path == null || path.Count <= 1) return false;
             float speed = UnitMarchSpeed.GetMarchSpeedMultiplier(_unit);
@@ -121,19 +142,13 @@ namespace ThreeKindoms.Core.Units
             if (loc.Building != null)
                 _unit.SetBuilding(loc.Building);
 
-            if (_unit is Combat combat)
-                GarrisonConversion.TryAutoStation(combat, loc, ref _unit);
+            StationRules.TryAutoStation(_unit, loc);
 
             ApplyFireAndMoraleFromLocation();
         }
 
-        /// <summary>駐軍離開據點時呼叫，還原野戰部隊並可再次移動。</summary>
-        public Combat DepartGarrison()
-        {
-            if (_unit is not Garrison garrison)
-                return null;
-            return GarrisonConversion.Depart(garrison, _currentLocation, ref _unit);
-        }
+        /// <summary>離開駐紮狀態，可再次移動。</summary>
+        public void DepartStation() => StationRules.DepartStation(_unit);
 
         void ApplyFireAndMoraleFromLocation()
         {

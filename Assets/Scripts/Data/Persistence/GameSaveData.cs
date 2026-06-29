@@ -26,6 +26,7 @@ namespace ThreeKindoms.Data.Persistence
         public int wounded;
         public short morale;
         public short stamina;
+        public bool isStationed;
 
         public OfficerSaveEntry commander;
         public OfficerSaveEntry[] vice = Array.Empty<OfficerSaveEntry>();
@@ -36,8 +37,8 @@ namespace ThreeKindoms.Data.Persistence
         public SkillSaveEntry[] mobilitySkills = Array.Empty<SkillSaveEntry>();
         public SkillSaveEntry[] defenceSkills = Array.Empty<SkillSaveEntry>();
 
-        /// <summary>Legion 專用：護衛戰鬥隊（巢狀存）。</summary>
-        public UnitSaveEntry escort;
+        /// <summary>Legion 專用：攜帶軍糧。</summary>
+        public int carriedFood;
     }
 
     [Serializable]

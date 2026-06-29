@@ -11,7 +11,10 @@ namespace ThreeKindoms.Core.Locations
     /// </summary>
     public static class LocationFireRules
     {
+        /// <summary>個性名稱：火神（可阻止格著火）。</summary>
         public const string TraitHuoshen = "火神";
+
+        /// <summary>個性名稱：滅火（可阻止續燃）。</summary>
         public const string TraitMiehuo = "滅火";
 
         /// <summary>地形參數 n（專用欄位未定；暫用 fireEffect）。</summary>
@@ -71,6 +74,7 @@ namespace ThreeKindoms.Core.Locations
             return !UnitHasPersonalityTrait(occupyingUnit, TraitMiehuo);
         }
 
+        /// <summary>判斷部隊主將或副將是否持有指定個性。</summary>
         public static bool UnitHasPersonalityTrait(Unit unit, string traitName)
         {
             if (unit == null || string.IsNullOrEmpty(traitName))
