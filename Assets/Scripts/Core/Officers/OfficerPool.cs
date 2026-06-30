@@ -40,7 +40,12 @@ namespace ThreeKindoms.Core.Officers
 
 
         // TODO: RemoveOfficer(defId) — SetAlive(false) 時由劇本 Pool 呼叫，移出本局可玩武將。
-
+        public static void RemoveOfficer(Officer officer)
+        {
+            
+            
+        }
+        
     }
 
 }

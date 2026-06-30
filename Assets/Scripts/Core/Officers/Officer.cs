@@ -138,7 +138,7 @@ namespace ThreeKindoms.Core.Officers
 
 
         /// <summary>登用或釋放武將：設定勢力、忠誠與登場狀態。</summary>
-        public void SetBelong(short factionId, short loyaltyValue = 100)
+        public void SetBelong(short factionId, short loyaltyValue = 80)
 
         {
 
@@ -154,8 +154,12 @@ namespace ThreeKindoms.Core.Officers
 
 
 
-        /// <summary>設定忠誠度（0～100）。</summary>
-        public void SetLoyalty(short value) => loyalty = Clamp0To100(value);
+        /// <summary>change忠誠度（0～100）。</summary>
+        public void ChangeLoyalty(short value)
+        {
+            loyalty += value;
+            loyalty = Clamp0To100(loyalty);
+        } 
 
 
 
