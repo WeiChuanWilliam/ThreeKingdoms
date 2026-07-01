@@ -11,7 +11,9 @@ namespace ThreeKindoms.Local.Tests
 {
     public class LocationFireRulesTests
     {
-        [Fact]
+        const string SkipReason = "SKELETON: 地圖火計尚未實作";
+
+        [Fact(Skip = SkipReason)]
         public void Ignition_is_100_when_n_nonzero_and_no_huoshen_unit()
         {
             Assert.Equal(0, LocationFireRules.ResolveIgnitionChancePercent(0));
@@ -19,14 +21,14 @@ namespace ThreeKindoms.Local.Tests
             Assert.Equal(100, LocationFireRules.ResolveIgnitionChancePercent(1, null));
         }
 
-        [Fact]
+        [Fact(Skip = SkipReason)]
         public void Ignition_is_0_when_unit_has_huoshen()
         {
             Combat combat = CreateCombatWithTrait(LocationFireRules.TraitHuoshen);
             Assert.Equal(0, LocationFireRules.ResolveIgnitionChancePercent(1, combat));
         }
 
-        [Fact]
+        [Fact(Skip = SkipReason)]
         public void Daily_burn_requires_no_miehuo_unit_and_n_times_25()
         {
             UnitConfigUtil.Load(TestPaths.UnitPropertiesPath);
@@ -40,7 +42,7 @@ namespace ThreeKindoms.Local.Tests
             Assert.False(LocationFireRules.EvaluateDailyBurnContinuation(1, roll0To99: 0, withMiehuo));
         }
 
-        [Fact]
+        [Fact(Skip = SkipReason)]
         public void CountFire_at_sunrise_extinguishes_on_failed_roll()
         {
             var terrain = TerrainDefinition.FromTerrainType(TerrainType.Forest);

@@ -29,13 +29,10 @@ namespace ThreeKindoms.UnityBridge
             ThreeKindoms.Data.Units.TroopKinds.TroopKindRegistry.EnsureBuilt();
 
             ThreeKindoms.Data.Officers.OfficerConfigUtil.LoadDefault(Application.streamingAssetsPath);
-            var officerDb = OfficerDatabaseUnity.LoadFromStreamingAssets();
-            officerDb.MaterializeAllRuntimes();
-            officerDb.SyncAllRelations();
-            ThreeKindoms.Core.Officers.OfficerPool.Initialize(officerDb);
+            OfficerDatabaseUnity.LoadScenarioRuntime();
             ThreeKindoms.Data.Skill.SkillPool.Register(101);
             ThreeKindoms.Data.Skill.SkillPool.Register(102);
-            var sample = officerDb.GetOrCreateRuntime(1);
+            var sample = ThreeKindoms.Data.Officers.OfficerDatabase.TryGetRuntime(1);
             if (sample != null)
                 Log($"武將表：{sample.FullName} 武{sample.Attack} 智{sample.Intelligence}");
 

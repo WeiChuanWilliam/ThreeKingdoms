@@ -7,7 +7,11 @@ namespace ThreeKindoms.Local.Tests.Runners
 {
     public static class OfficerTestRunner
     {
-        public static GameTestResult Run(string officerPropertiesPath, string officersJsonPath, string personalityJsonPath)
+        public static GameTestResult Run(
+            string officerPropertiesPath,
+            string officersJsonPath,
+            string personalityJsonPath,
+            string scenarioOfficersPath)
         {
             var log = new StringBuilder();
             int ok = 0, err = 0;
@@ -18,27 +22,32 @@ namespace ThreeKindoms.Local.Tests.Runners
                 return new GameTestResult("Officers", false, log.ToString(), 0, 1);
             }
 
-            OfficerDatabase db = OfficerDatabase.LoadFromFile(officersJsonPath, personalityJsonPath);
-            if (db.Defs.Count == 0)
+            OfficerDatabase.LoadCatalog(officersJsonPath, personalityJsonPath);
+            if (OfficerDatabase.Defs.Count == 0)
             {
                 TestLog.Line(log, "ERROR officers.json 無資料");
                 return new GameTestResult("Officers", false, log.ToString(), 0, 1);
             }
 
-            db.MaterializeAllRuntimes();
-            db.SyncAllRelations();
-            OfficerPool.Initialize(db);
+            OfficerDatabase.MaterializeFromScenarioFile(scenarioOfficersPath);
+            if (OfficerDatabase.RuntimeCount == 0)
+            {
+                TestLog.Line(log, "ERROR 劇本武將清單無有效 id");
+                return new GameTestResult("Officers", false, log.ToString(), 0, 1);
+            }
 
-            TestLog.Line(log, "=== officers.json + officer.properties ===");
-            TestLog.Line(log, $"載入 {db.Defs.Count} 名武將（括號內＝表上基礎值，括號外＝發揮值 *Perform）");
+            OfficerDatabase.SyncAllRelations();
+
+            TestLog.Line(log, "=== officers.json（圖鑑）+ scenario_officers（本劇本 Pool）===");
+            TestLog.Line(log, $"圖鑑 {OfficerDatabase.Defs.Count} 名；本劇本 Pool {OfficerDatabase.RuntimeCount} 名（括號內＝表上基礎值，括號外＝發揮值 *Perform）");
             TestLog.Line(log, "");
 
-            var ids = new List<int>(db.Defs.Keys);
+            var ids = new List<int>(OfficerDatabase.Runtime.Keys);
             ids.Sort();
 
             foreach (int id in ids)
             {
-                Officer o = db.GetOrCreateRuntime(id);
+                Officer o = OfficerDatabase.TryGetRuntime(id);
                 if (o == null)
                 {
                     TestLog.Line(log, $"ERROR id={id} 無法建立");

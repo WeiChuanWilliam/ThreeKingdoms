@@ -203,7 +203,7 @@ namespace ThreeKindoms.Core.Officers
 
                 officerFlag.IsAlive = false;
 
-                // TODO: OfficerPool.RemoveOfficer(RuntimeId) 或 ScenarioOfficerPool — 從本局 Pool 移除，無需 RefreshPerformance
+                OfficerPool.RemoveOfficer(this);
 
                 return;
 

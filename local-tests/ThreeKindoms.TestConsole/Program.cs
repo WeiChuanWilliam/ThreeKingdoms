@@ -19,7 +19,8 @@ namespace ThreeKindoms.TestConsole
             failed += Run(OfficerTestRunner.Run(
                 TestPaths.OfficerPropertiesPath,
                 TestPaths.OfficersJsonPath,
-                TestPaths.PersonalityTraitsPath));
+                TestPaths.PersonalityTraitsPath,
+                TestPaths.ScenarioOfficersPath));
 
             Console.WriteLine(failed == 0 ? "ALL PASSED" : $"FAILED ({failed} suite(s))");
             return failed == 0 ? 0 : 1;

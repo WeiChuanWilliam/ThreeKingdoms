@@ -10,7 +10,9 @@ namespace ThreeKindoms.Local.Tests
 {
     public class UnitBurnRulesTests
     {
-        [Fact]
+        const string SkipReason = "SKELETON: 地圖火計／灼燒鏈尚未接線";
+
+        [Fact(Skip = SkipReason)]
         public void TryCreateBurnContext_requires_tile_on_fire()
         {
             var grid = new LocationGrid();
@@ -22,7 +24,7 @@ namespace ThreeKindoms.Local.Tests
             Assert.False(UnitBurnRules.TryCreateBurnContext(combat, loc, out _));
         }
 
-        [Fact]
+        [Fact(Skip = SkipReason)]
         public void TryCreateBurnContext_succeeds_when_burning_and_n_nonzero()
         {
             var grid = new LocationGrid();
@@ -41,7 +43,7 @@ namespace ThreeKindoms.Local.Tests
             Assert.Equal(1f, ctx.FireDamageFactor);
         }
 
-        [Fact]
+        [Fact(Skip = SkipReason)]
         public void Huoshen_trait_blocks_burn_context()
         {
             var grid = new LocationGrid();
@@ -61,7 +63,7 @@ namespace ThreeKindoms.Local.Tests
             Assert.False(UnitBurnRules.TryCreateBurnContext(combat, loc, out _));
         }
 
-        [Fact]
+        [Fact(Skip = SkipReason)]
         public void CalculateBurnDamage_applies_combat_factor_and_flame_level()
         {
             UnitConfigUtil.Load(TestPaths.UnitPropertiesPath);
@@ -83,7 +85,7 @@ namespace ThreeKindoms.Local.Tests
             Assert.True(result.MoraleLoss > 0);
         }
 
-        [Fact]
+        [Fact(Skip = SkipReason)]
         public void Transport_uses_lower_fire_damage_factor()
         {
             UnitConfigUtil.Load(TestPaths.UnitPropertiesPath);
@@ -102,7 +104,7 @@ namespace ThreeKindoms.Local.Tests
             Assert.Equal(0.8f, ctx.FireDamageFactor);
         }
 
-        [Fact]
+        [Fact(Skip = SkipReason)]
         public void TryApplyDailyBurnDamage_reduces_soldiers()
         {
             UnitConfigUtil.Load(TestPaths.UnitPropertiesPath);

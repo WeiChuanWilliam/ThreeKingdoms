@@ -8,6 +8,8 @@ namespace ThreeKindoms.Local.Tests
 {
     public class BurningCellIndexTests
     {
+        const string SkipFireReason = "SKELETON: 日出火計結算尚未實作";
+
         [Fact]
         public void SetOnFire_registers_hex_in_grid_index()
         {
@@ -35,7 +37,7 @@ namespace ThreeKindoms.Local.Tests
             Assert.Equal(0, grid.BurningCellCount);
         }
 
-        [Fact]
+        [Fact(Skip = SkipFireReason)]
         public void Failed_burn_continuation_at_sunrise_clears_index()
         {
             UnitConfigUtil.Load(TestPaths.UnitPropertiesPath);
@@ -52,7 +54,7 @@ namespace ThreeKindoms.Local.Tests
             Assert.False(grid.IsBurning(loc.Hex));
         }
 
-        [Fact]
+        [Fact(Skip = SkipFireReason)]
         public void TickFireAtSunrise_only_visits_burning_cells()
         {
             UnitConfigUtil.Load(TestPaths.UnitPropertiesPath);

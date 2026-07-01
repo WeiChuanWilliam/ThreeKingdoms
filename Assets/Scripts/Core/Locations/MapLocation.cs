@@ -86,28 +86,10 @@ namespace ThreeKindoms.Core.Locations
         }
 
         /// <inheritdoc/>
-        public override void CountFire(int roll0To99)
-        {
-            LocationFireRules.TickDailyBurnAtSunrise(this, roll0To99);
-        }
+        public override void CountFire(int roll0To99) { }
 
         /// <inheritdoc/>
-        public override bool FireExpansion()
-        {
-            if (!locationFlags.OnFire)
-                return false;
-            LocationFireRules.TrySpreadFireToAdjacentTiles(this, grid: null, rng: null);
-            return locationFlags.OnFire;
-        }
-
-        /// <summary>以網格與亂數嘗試向鄰格蔓延火勢。</summary>
-        public bool FireExpansion(LocationGrid grid, Random rng)
-        {
-            if (!locationFlags.OnFire)
-                return false;
-            LocationFireRules.TrySpreadFireToAdjacentTiles(this, grid, rng);
-            return locationFlags.OnFire;
-        }
+        public override bool FireExpansion() => false;
 
         /// <inheritdoc/>
         public override void UnitMoveOut()

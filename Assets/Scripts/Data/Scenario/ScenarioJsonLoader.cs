@@ -1,59 +1,21 @@
 using System.Collections.Generic;
-using System.IO;
-using UnityEngine;
+using ThreeKindoms.Data.Scenario;
 
 namespace ThreeKindoms.Data.Scenario
 {
+    /// <summary>
+    /// 劇本 JSON 載入與部隊生成入口。
+    /// <para>SKELETON：僅保留方法簽名；開局放置待劇本流程定稿後實作。</para>
+    /// </summary>
     public static class ScenarioJsonLoader
     {
-        public static ScenarioDocument LoadDocument(string absolutePath)
-        {
-            if (!File.Exists(absolutePath))
-            {
-                Debug.LogWarning($"[Scenario] 找不到 {absolutePath}");
-                return new ScenarioDocument();
-            }
+        /// <summary>讀取劇本 JSON 文件。</summary>
+        public static ScenarioDocument LoadDocument(string absolutePath) => new ScenarioDocument();
 
-            string json = File.ReadAllText(absolutePath);
-            var doc = JsonUtility.FromJson<ScenarioDocument>(json);
-            return doc ?? new ScenarioDocument();
-        }
+        /// <summary>讀取劇本並建立開局部隊清單。</summary>
+        public static List<ScenarioSpawnedUnit> LoadAndSpawnUnits(string absolutePath) => new List<ScenarioSpawnedUnit>();
 
-        public static List<ScenarioSpawnedUnit> LoadAndSpawnUnits(string absolutePath)
-        {
-            ScenarioDocument doc = LoadDocument(absolutePath);
-            var result = new List<ScenarioSpawnedUnit>();
-            if (doc.units == null) return result;
-
-            foreach (ScenarioUnitEntry entry in doc.units)
-            {
-                ScenarioUnitSpawnSpec spec = ToSpec(entry);
-                result.Add(new ScenarioSpawnedUnit
-                {
-                    SpawnKey = string.IsNullOrEmpty(entry.spawnKey) ? "unit" : entry.spawnKey,
-                    Unit = ScenarioUnitSpawner.CreateUnit(spec),
-                    Hex = spec.Hex
-                });
-            }
-
-            return result;
-        }
-
-        public static ScenarioUnitSpawnSpec ToSpec(ScenarioUnitEntry e) => new()
-        {
-            SpawnKey = e.spawnKey,
-            UnitType = e.type,
-            FactionId = e.faction,
-            CommanderId = e.commander,
-            Food = e.food,
-            ViceOfficerIds = e.vice ?? System.Array.Empty<int>(),
-            Soldiers = e.soldiers,
-            Wounded = e.wounded,
-            Morale = e.morale,
-            Stamina = e.stamina,
-            TroopType = (Units.TroopType)e.troopType,
-            CustomUnitName = e.customName,
-            Hex = new Core.HexCoord(e.hexQ, e.hexR)
-        };
+        /// <summary>將 JSON 單筆部隊轉為生成規格。</summary>
+        public static ScenarioUnitSpawnSpec ToSpec(ScenarioUnitEntry e) => new ScenarioUnitSpawnSpec();
     }
 }

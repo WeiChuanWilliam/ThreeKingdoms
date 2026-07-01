@@ -11,11 +11,11 @@ namespace ThreeKindoms.Local.Tests
         public void OfficerDef_loads_birth_year_and_lifespan()
         {
             OfficerConfigUtil.Load(TestPaths.OfficerPropertiesPath);
-            OfficerDatabase db = OfficerDatabase.LoadFromFile(
+            OfficerDatabase.LoadCatalogAndMaterializeAll(
                 TestPaths.OfficersJsonPath,
                 TestPaths.PersonalityTraitsPath);
 
-            Officer guan = db.GetOrCreateRuntime(1);
+            Officer guan = OfficerDatabase.TryCreateRuntime(1);
             Assert.NotNull(guan);
             Assert.Equal(160, guan.BirthYear);
             Assert.Equal(59, guan.Lifespan);
@@ -122,15 +122,14 @@ namespace ThreeKindoms.Local.Tests
         public void Relations_sync_bidirectional_after_database_load()
         {
             OfficerConfigUtil.Load(TestPaths.OfficerPropertiesPath);
-            OfficerDatabase db = OfficerDatabase.LoadFromFile(
+            OfficerDatabase.LoadCatalogAndMaterializeAll(
                 TestPaths.OfficersJsonPath,
                 TestPaths.PersonalityTraitsPath);
-            db.MaterializeAllRuntimes();
-            db.SyncAllRelations();
+            OfficerDatabase.SyncAllRelations();
 
-            Officer guan = db.GetOrCreateRuntime(1);
-            Officer zhang = db.GetOrCreateRuntime(2);
-            Officer zhuge = db.GetOrCreateRuntime(3);
+            Officer guan = OfficerDatabase.TryGetRuntime(1);
+            Officer zhang = OfficerDatabase.TryGetRuntime(2);
+            Officer zhuge = OfficerDatabase.TryGetRuntime(3);
 
             Assert.Contains(2, guan.BelovedOfficerIds);
             Assert.Contains(3, guan.BelovedOfficerIds);
@@ -139,6 +138,29 @@ namespace ThreeKindoms.Local.Tests
             Assert.Contains(2, guan.SwornBrotherIds);
             Assert.Contains(1, zhang.SwornBrotherIds);
             Assert.Contains(1, zhuge.SwornBrotherIds);
+        }
+
+        [Fact]
+        public void Catalog_is_static_and_scenario_list_controls_runtime_pool()
+        {
+            OfficerConfigUtil.Load(TestPaths.OfficerPropertiesPath);
+            OfficerDatabase.LoadCatalog(
+                TestPaths.OfficersJsonPath,
+                TestPaths.PersonalityTraitsPath);
+
+            Assert.True(OfficerDatabase.IsCatalogLoaded);
+            Assert.Equal(3, OfficerDatabase.Defs.Count);
+
+            OfficerDatabase.MaterializeFromScenarioFile(TestPaths.ScenarioOfficersPath);
+            Assert.Equal(3, OfficerDatabase.RuntimeCount);
+            Assert.NotNull(OfficerDatabase.TryGetRuntime(1));
+
+            OfficerDatabase.MaterializeFromIds(new[] { 1 });
+            Assert.Equal(1, OfficerDatabase.RuntimeCount);
+            Assert.Null(OfficerDatabase.TryGetRuntime(2));
+
+            OfficerDatabase.ClearRuntime();
+            Assert.Empty(OfficerDatabase.Runtime);
         }
     }
 }

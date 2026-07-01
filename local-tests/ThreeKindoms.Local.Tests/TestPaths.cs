@@ -36,6 +36,9 @@ namespace ThreeKindoms.Local.Tests
         public static string OfficerPropertiesPath =>
             Path.Combine(StreamingAssetsPath, "chinese", "officer.properties");
 
+        public static string ScenarioOfficersPath =>
+            Path.Combine(StreamingAssetsPath, "scenario_officers", "opening.json");
+
         static string ResolveUnderAssets(string leaf)
         {
             string dir = AppContext.BaseDirectory;

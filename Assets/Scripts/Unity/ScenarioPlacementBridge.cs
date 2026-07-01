@@ -1,45 +1,23 @@
 using System.Collections.Generic;
-using System.IO;
 using ThreeKindoms.Core;
 using ThreeKindoms.Core.Locations;
-using ThreeKindoms.Core.Terrain;
 using ThreeKindoms.Core.Units;
-using ThreeKindoms.Data.Scenario;
-using UnityEngine;
 
 namespace ThreeKindoms.UnityBridge
 {
+    /// <summary>
+    /// 劇本部隊放置橋接（StreamingAssets → 地圖格）。
+    /// <para>SKELETON：僅保留方法簽名；開局放置待劇本流程定稿後實作。</para>
+    /// </summary>
     public static class ScenarioPlacementBridge
     {
-        public static List<ScenarioSpawnedUnit> LoadAndPlace(
+        /// <summary>載入劇本並將部隊綁定至地圖格。</summary>
+        public static List<Data.Scenario.ScenarioSpawnedUnit> LoadAndPlace(
             string propertiesFileName,
             LocationGrid locations,
-            HexGrid grid)
-        {
-            string jsonPath = Path.Combine(Application.streamingAssetsPath, "scenarios", "opening.json");
-            List<ScenarioSpawnedUnit> spawns = File.Exists(jsonPath)
-                ? ScenarioJsonLoader.LoadAndSpawnUnits(jsonPath)
-                : new List<ScenarioSpawnedUnit>();
+            HexGrid grid) => new List<Data.Scenario.ScenarioSpawnedUnit>();
 
-            if (spawns.Count == 0)
-            {
-                string path = Path.Combine(Application.streamingAssetsPath, propertiesFileName);
-                spawns = ScenarioUnitSpawner.LoadFromPropertiesFile(path);
-            }
-            foreach (ScenarioSpawnedUnit s in spawns)
-                PlaceUnit(s.Unit, locations, grid, s.Hex);
-            return spawns;
-        }
-
-        public static void PlaceUnit(Unit unit, LocationGrid locations, HexGrid grid, HexCoord hex)
-        {
-            if (unit == null) return;
-            if (!grid.TryGet(hex, out var cell))
-            {
-                Debug.LogWarning($"[Scenario] 格子不存在 {hex}，部隊 {unit.UnitName} 未放置");
-                return;
-            }
-            unit.Location.BindToWorld(locations, hex, TerrainDefinition.FromTerrainType(cell.Terrain));
-        }
+        /// <summary>將單一部隊放置於指定 hex。</summary>
+        public static void PlaceUnit(Unit unit, LocationGrid locations, HexGrid grid, HexCoord hex) { }
     }
 }

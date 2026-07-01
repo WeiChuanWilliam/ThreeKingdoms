@@ -1,121 +1,46 @@
-using System;
 using ThreeKindoms.Core.Officers;
 using ThreeKindoms.Core.Terrain;
 using ThreeKindoms.Core.Units;
-using ThreeKindoms.Data.Units;
 
 namespace ThreeKindoms.Core.Locations
 {
     /// <summary>
-    /// 格子著火／續燃／蔓延。地形參數 n 暫用 <see cref="AbstractTerrain.FireEffect"/>（專用欄位待定）。
+    /// 格子著火／續燃／蔓延規則。
+    /// <para>SKELETON：僅保留方法簽名與用途說明；公式與個性閘待設計定稿後實作。</para>
     /// </summary>
     public static class LocationFireRules
     {
-        /// <summary>個性名稱：火神（可阻止格著火）。</summary>
         public const string TraitHuoshen = "火神";
-
-        /// <summary>個性名稱：滅火（可阻止續燃）。</summary>
         public const string TraitMiehuo = "滅火";
 
-        /// <summary>地形參數 n（專用欄位未定；暫用 fireEffect）。</summary>
-        public static int GetTerrainN(AbstractTerrain terrain) =>
-            terrain?.FireEffect ?? 0;
+        /// <summary>讀取地形火計參數 n（欄位待定）。</summary>
+        public static int GetTerrainN(AbstractTerrain terrain) => 0;
 
-        /// <summary>
-        /// 著火率（%）：<c>(n != 0 &amp;&amp; 通過部隊閘) ? 100 : 0</c>。
-        /// 部隊閘：無部隊，或部隊主／副將皆無 <see cref="TraitHuoshen"/>。
-        /// </summary>
-        public static int ResolveIgnitionChancePercent(int terrainN, Unit occupyingUnit = null)
-        {
-            if (terrainN == 0)
-                return 0;
-            if (!PassesIgnitionUnitGate(occupyingUnit))
-                return 0;
-            return 100;
-        }
+        /// <summary>著火機率（%）：依 n 與駐軍個性（火神）判定。</summary>
+        public static int ResolveIgnitionChancePercent(int terrainN, Unit occupyingUnit = null) => 0;
 
-        /// <summary>著火率 &gt; 0 才可能著火。</summary>
-        public static bool CanIgnite(int terrainN, Unit occupyingUnit = null) =>
-            ResolveIgnitionChancePercent(terrainN, occupyingUnit) > 0;
+        /// <summary>是否可能著火。</summary>
+        public static bool CanIgnite(int terrainN, Unit occupyingUnit = null) => false;
 
-        /// <summary>
-        /// 每日續燃機率（%）：<c>n != 0 &amp;&amp; 通過部隊閘</c> 時為 <c>n×step</c>（step 預設 25），否則 0。
-        /// 部隊閘：無部隊，或部隊主／副將皆無 <see cref="TraitMiehuo"/>。
-        /// </summary>
-        public static int ResolveDailyBurnContinuationChancePercent(int terrainN, Unit occupyingUnit = null)
-        {
-            if (terrainN == 0 || !PassesBurnContinuationUnitGate(occupyingUnit))
-                return 0;
-            int step = UnitConfigUtil.GetFireBurnContinuationStepPercent();
-            return (int)Math.Clamp((long)terrainN * step, 0, 100);
-        }
+        /// <summary>每日續燃機率（%）：依 n、step 與駐軍個性（滅火）判定。</summary>
+        public static int ResolveDailyBurnContinuationChancePercent(int terrainN, Unit occupyingUnit = null) => 0;
 
-        /// <summary>日出續燃：<c>(n != 0 &amp;&amp; 通過部隊閘) &amp;&amp; roll &lt; n×25%</c>。</summary>
-        public static bool EvaluateDailyBurnContinuation(int terrainN, int roll0To99, Unit occupyingUnit = null)
-        {
-            if (terrainN == 0 || !PassesBurnContinuationUnitGate(occupyingUnit))
-                return false;
-            return roll0To99 < ResolveDailyBurnContinuationChancePercent(terrainN, occupyingUnit);
-        }
+        /// <summary>日出續燃：roll 與機率比較。</summary>
+        public static bool EvaluateDailyBurnContinuation(int terrainN, int roll0To99, Unit occupyingUnit = null) => false;
 
-        /// <summary>無部隊，或部隊上沒有火神（主將／副將）。</summary>
-        public static bool PassesIgnitionUnitGate(Unit occupyingUnit)
-        {
-            if (occupyingUnit == null)
-                return true;
-            return !UnitHasPersonalityTrait(occupyingUnit, TraitHuoshen);
-        }
+        /// <summary>著火部隊閘：無部隊或無火神。</summary>
+        public static bool PassesIgnitionUnitGate(Unit occupyingUnit) => true;
 
-        /// <summary>無部隊，或部隊上沒有滅火（主將／副將）。</summary>
-        public static bool PassesBurnContinuationUnitGate(Unit occupyingUnit)
-        {
-            if (occupyingUnit == null)
-                return true;
-            return !UnitHasPersonalityTrait(occupyingUnit, TraitMiehuo);
-        }
+        /// <summary>續燃部隊閘：無部隊或無滅火。</summary>
+        public static bool PassesBurnContinuationUnitGate(Unit occupyingUnit) => true;
 
-        /// <summary>判斷部隊主將或副將是否持有指定個性。</summary>
-        public static bool UnitHasPersonalityTrait(Unit unit, string traitName)
-        {
-            if (unit == null || string.IsNullOrEmpty(traitName))
-                return false;
-            if (OfficerPersonalityUtil.HasTrait(unit.Commander, traitName))
-                return true;
-            foreach (Officer vice in unit.ViceOfficers)
-            {
-                if (OfficerPersonalityUtil.HasTrait(vice, traitName))
-                    return true;
-            }
-            return false;
-        }
+        /// <summary>部隊主／副將是否持有指定個性。</summary>
+        public static bool UnitHasPersonalityTrait(Unit unit, string traitName) => false;
 
-        /// <summary>日出：未通過續燃判定則熄滅。</summary>
-        public static void TickDailyBurnAtSunrise(MapLocation location, int roll0To99)
-        {
-            if (location == null || !location.LocationFlags.OnFire)
-                return;
+        /// <summary>日出：對著火格做續燃判定，失敗則熄滅。</summary>
+        public static void TickDailyBurnAtSunrise(MapLocation location, int roll0To99) { }
 
-            int n = GetTerrainN(location.Terrain);
-            Unit unit = location.OccupyingUnit;
-            if (!EvaluateDailyBurnContinuation(n, roll0To99, unit))
-                location.Extinguish();
-        }
-
-        /// <summary>鄰格火勢蔓延（規則未定；保留呼叫入口，實作先註解）。</summary>
-        public static void TrySpreadFireToAdjacentTiles(
-            MapLocation source,
-            LocationGrid grid,
-            Random rng)
-        {
-            // TODO: 鄰近格蔓延 — 風向、地形 fireable、n 等尚未定案
-            // if (source == null || grid == null || rng == null || !source.LocationFlags.OnFire)
-            //     return;
-            // foreach (HexCoord neighbor in HexTopology.Neighbors(source.Hex))
-            // {
-            //     if (!grid.TryGet(neighbor, out MapLocation target))
-            //         continue;
-            //     ...
-            // }
-        }
+        /// <summary>鄰格火勢蔓延。</summary>
+        public static void TrySpreadFireToAdjacentTiles(MapLocation source, LocationGrid grid, System.Random rng) { }
     }
 }
