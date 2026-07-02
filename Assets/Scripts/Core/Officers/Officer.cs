@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 using ThreeKindoms.Core.Units;
@@ -12,22 +13,129 @@ namespace ThreeKindoms.Core.Officers
 
 {
 
+    /// <summary>武將資料來源：圖鑑表 vs 玩家自創。</summary>
+    public enum OfficerBuildSource : byte
+
+    {
+
+        /// <summary>未標記（測試或手動 <c>new Officer(id)</c>）。</summary>
+        Unspecified = 0,
+
+        /// <summary><c>officers.json</c> 圖鑑定義，經 <see cref="Officer.CreateFromCatalog"/> 建立。</summary>
+        Catalog = 1,
+
+        /// <summary>玩家遊戲內建立，草稿可匯出至 player_officers 類參數檔。</summary>
+        PlayerCustom = 2,
+
+    }
+
+
+
     /// <summary>武將執行時具體類；透過 Set* 方法修改狀態並同步發揮值。</summary>
     public sealed class Officer : AbstractOfficer
 
     {
 
-        /// <summary>本局執行時唯一 id（與定義表 defId 對應）。</summary>
+        /// <summary>本局執行時唯一 id（圖鑑武將通常與 defId 相同；自創武將由劇本池分配）。</summary>
         public int RuntimeId { get; }
 
 
 
-        /// <summary>建立新武將實例並套用預設旗標、體力與壽命。</summary>
-        public Officer(int runtimeId)
+        /// <summary>建構來源（圖鑑／玩家自創）。</summary>
+        public OfficerBuildSource BuildSource { get; private set; }
+
+
+
+        /// <summary>是否為玩家自創武將。</summary>
+        public bool IsPlayerCreated => BuildSource == OfficerBuildSource.PlayerCustom;
+
+
+
+        /// <summary>是否由圖鑑參數檔建立。</summary>
+        public bool IsFromCatalog => BuildSource == OfficerBuildSource.Catalog;
+
+        /// <summary>
+        /// This is to ensure in a certain period the officer will not betray or leave.
+        /// </summary>
+        public short LockPeriod;
+
+        /// <summary>
+        /// 從圖鑑 <c>officers.json</c> 的 <see cref="OfficerDef"/> 建立完整武將。
+        /// 個性／道具上限依 <c>officer.properties</c> 一般規則。
+        /// </summary>
+        public static Officer CreateFromCatalog(OfficerDef def, PersonalityDatabase personalityDb = null)
+
+        {
+
+            if (def == null)
+
+                throw new ArgumentNullException(nameof(def));
+
+            var officer = new Officer(def.id, OfficerBuildSource.Catalog);
+
+            officer.ApplyCatalogDef(def, personalityDb);
+
+            return officer;
+
+        }
+
+
+
+        /// <summary>
+        /// 從玩家自創草稿建立武將。<paramref name="runtimeId"/> 由劇本池分配；
+        /// <paramref name="draft"/> 對應 player_officers 類參數檔欄位。
+        /// 六圍上限等規則見 <c>officer.properties</c> 的 <c>officer.player_custom.*</c>。
+        /// </summary>
+        public static Officer CreateFromPlayerCustom(
+
+            int runtimeId,
+
+            OfficerDef draft,
+
+            PersonalityDatabase personalityDb = null)
+
+        {
+
+            if (draft == null)
+
+                throw new ArgumentNullException(nameof(draft));
+
+            if (runtimeId <= 0)
+
+                throw new ArgumentOutOfRangeException(nameof(runtimeId), "玩家自創武將需正數 runtimeId。");
+
+            var officer = new Officer(runtimeId, OfficerBuildSource.PlayerCustom);
+
+            officer.ApplyPlayerCustomDef(draft, personalityDb);
+
+            return officer;
+
+        }
+
+
+
+        /// <summary>測試或手動組裝用；新程式請用 <see cref="CreateFromCatalog"/> 或 <see cref="CreateFromPlayerCustom"/>。</summary>
+        public Officer(int runtimeId) : this(runtimeId, OfficerBuildSource.Unspecified) { }
+
+
+
+        Officer(int runtimeId, OfficerBuildSource buildSource)
 
         {
 
             RuntimeId = runtimeId;
+
+            BuildSource = buildSource;
+
+            InitializeDefaults();
+
+        }
+
+
+
+        void InitializeDefaults()
+
+        {
 
             officerFlag = new OfficerFlag
 
@@ -43,11 +151,7 @@ namespace ThreeKindoms.Core.Officers
 
             };
 
-            stamina = OfficerConfigUtil.IsLoaded
-
-                ? (byte)OfficerConfigUtil.GetDefaultStamina()
-
-                : (byte)100;
+            stamina = (byte)100;
 
             compatibility = OfficerConfigUtil.IsLoaded
 
@@ -66,6 +170,130 @@ namespace ThreeKindoms.Core.Officers
         }
 
 
+
+        void ApplyCatalogDef(OfficerDef def, PersonalityDatabase personalityDb)
+
+        {
+
+            SetName(def.lastName, def.firstName, def.aliasName);
+
+            SetPresentation(def.tone, def.voice, def.picture);
+
+            SetBiography(def.biography);
+
+            SetStats(
+
+                def.leadership,
+
+                def.attack,
+
+                def.intelligence,
+
+                def.policy,
+
+                def.charisma,
+
+                def.stamina > 0 ? def.stamina : ResolveDefaultStamina());
+
+            SetBelong(def.belong, def.loyalty);
+
+            SetBirthYear(def.birthYear);
+
+            SetLifespan(ResolveCatalogLifespan(def));
+
+            SetTitle(def.title);
+
+            SetGender(def.gender != 1);
+
+            SetInjury((OfficerInjuryState)Math.Clamp((int)def.injury, 0, 3));
+
+            SetCompatibility(def.compatibility);
+
+            SetTroopAptitude(def.troopAptitude);
+
+            SetBattleSkills(def.battleSkills);
+
+            ReplaceLocalRelations(def.relations);
+
+            OfficerPersonalityLoader.ApplyFromIds(this, def.personalityIds, personalityDb);
+
+            OfficerItemLoader.ApplyFromIds(this, def.itemIds);
+
+        }
+
+
+
+        void ApplyPlayerCustomDef(OfficerDef draft, PersonalityDatabase personalityDb)
+
+        {
+
+            short statMax = (short)PlayerCustomConfigInt("stat_max", 80);
+
+            SetName(draft.lastName, draft.firstName, draft.aliasName);
+
+            SetPresentation(draft.tone, draft.voice, draft.picture);
+
+            SetBiography(draft.biography);
+
+            SetStats(
+
+                ClampPlayerCustomStat(draft.leadership, statMax),
+
+                ClampPlayerCustomStat(draft.attack, statMax),
+
+                ClampPlayerCustomStat(draft.intelligence, statMax),
+
+                ClampPlayerCustomStat(draft.policy, statMax),
+
+                ClampPlayerCustomStat(draft.charisma, statMax),
+
+                draft.stamina > 0 ? draft.stamina : ResolvePlayerCustomStamina());
+
+            SetBelong(draft.belong, draft.loyalty);
+
+            SetBirthYear(draft.birthYear);
+
+            SetLifespan(ResolvePlayerCustomLifespan(draft));
+
+            SetTitle(draft.title);
+
+            SetGender(draft.gender != 1);
+
+            SetInjury(OfficerInjuryState.Normal);
+
+            SetCompatibility(
+
+                draft.compatibility > 0
+
+                    ? draft.compatibility
+
+                    : (OfficerConfigUtil.IsLoaded
+
+                        ? OfficerConfigUtil.GetDefaultCompatibility()
+
+                        : (byte)145));
+
+            SetTroopAptitude(draft.troopAptitude);
+
+            SetBattleSkills(draft.battleSkills);
+
+            ReplaceLocalRelations(draft.relations);
+
+            OfficerPersonalityLoader.ApplyFromIds(
+
+                this,
+
+                TrimIds(draft.personalityIds, PlayerCustomConfigInt("personality_total_max", 5)),
+
+                personalityDb);
+
+            OfficerItemLoader.ApplyFromIds(
+
+                this,
+
+                TrimIds(draft.itemIds, PlayerCustomConfigInt("item_max_count", 6)));
+
+        }
 
         /// <summary>設定姓、名與字（別號）。</summary>
         public void SetName(string last, string first, string alias = "")
@@ -137,6 +365,21 @@ namespace ThreeKindoms.Core.Officers
 
 
 
+        /// <summary>增減體力並重算發揮值。</summary>
+        public void ChangeStamina(short value)
+
+        {
+
+            stamina += value;
+
+            stamina = OfficerPerformanceRules.ClampStamina(stamina);
+
+            RefreshPerformance();
+
+        }
+
+
+
         /// <summary>登用或釋放武將：設定勢力、忠誠與登場狀態。</summary>
         public void SetBelong(short factionId, short loyaltyValue = 80)
 
@@ -146,7 +389,7 @@ namespace ThreeKindoms.Core.Officers
 
             loyalty = loyaltyValue;
 
-            salary = factionId == 0 ? (short)0 : salary;
+            salary = factionId == 0 ? (short)0 : 10;
 
             officerFlag.Show = factionId == 0 ? OfficerShowState.OpenShow : OfficerShowState.Belonged;
 
@@ -156,10 +399,14 @@ namespace ThreeKindoms.Core.Officers
 
         /// <summary>change忠誠度（0～100）。</summary>
         public void ChangeLoyalty(short value)
+
         {
+
             loyalty += value;
+
             loyalty = Clamp0To100(loyalty);
-        } 
+
+        }
 
 
 
@@ -212,16 +459,6 @@ namespace ThreeKindoms.Core.Officers
             officerFlag.IsAlive = true;
 
         }
-
-
-
-        /// <summary>所屬兵團（Legion）主將 defId；自領兵團時設為 <see cref="RuntimeId"/>。</summary>
-
-        public void SetLegionLeader(int commanderDefId) =>
-
-            legionLeaderId = commanderDefId < 0 ? 0 : commanderDefId;
-
-
 
         /// <summary>設定傷勢並重算發揮值。</summary>
         public void SetInjury(OfficerInjuryState state)
@@ -415,31 +652,57 @@ namespace ThreeKindoms.Core.Officers
         /// <inheritdoc/>
         public override bool DefendShieldSkill(AbstractOfficer officer, Unit selfUnit) => false;
 
-
+        protected override void HealthChange(bool worsen)
+        {
+            
+            officerFlag.OfficerInjuryState
+        }
 
         /// <inheritdoc/>
         protected override void CalculatePerformance()
+
         {
+
             if (!officerFlag.IsAlive)
+
             {
+
                 attackPerform = 0;
+
                 intelligencePerform = 0;
+
                 leadershipPerform = 0;
+
                 policyPerform = 0;
+
                 charismaPerform = 0;
+
                 return;
+
             }
 
+
+
             attackPerform = OfficerPerformanceRules.ComputePerform(
+
                 attack, officerFlag.Injury, true, stamina, itemIds);
+
             intelligencePerform = OfficerPerformanceRules.ComputePerform(
+
                 intelligence, officerFlag.Injury, true, stamina, itemIds);
+
             leadershipPerform = OfficerPerformanceRules.ComputePerform(
+
                 leadership, officerFlag.Injury, true, stamina, itemIds);
+
             policyPerform = OfficerPerformanceRules.ComputePerform(
+
                 policy, officerFlag.Injury, true, stamina, itemIds);
+
             charismaPerform = OfficerPerformanceRules.ComputePerform(
+
                 charisma, officerFlag.Injury, true, stamina, itemIds);
+
         }
 
 
@@ -453,7 +716,117 @@ namespace ThreeKindoms.Core.Officers
 
                 (minInclusive, maxInclusive) = (maxInclusive, minInclusive);
 
-            return System.Random.Shared.Next(minInclusive, maxInclusive + 1);
+            return Random.Shared.Next(minInclusive, maxInclusive + 1);
+
+        }
+
+
+
+        static short ResolveDefaultStamina() =>
+
+            OfficerConfigUtil.IsLoaded
+
+                ? OfficerConfigUtil.GetDefaultStamina()
+
+                : (short)100;
+
+
+
+        static short ResolveCatalogLifespan(OfficerDef def)
+
+        {
+
+            if (def.lifespan > 0)
+
+                return def.lifespan;
+
+            if (def.ageLimit > 0)
+
+                return def.ageLimit;
+
+            return OfficerConfigUtil.IsLoaded
+
+                ? OfficerConfigUtil.GetDefaultLifespan()
+
+                : (short)60;
+
+        }
+
+
+
+        static short ResolvePlayerCustomLifespan(OfficerDef draft)
+
+        {
+
+            if (draft.lifespan > 0)
+
+                return draft.lifespan;
+
+            return (short)PlayerCustomConfigInt(
+
+                "lifespan_default",
+
+                OfficerConfigUtil.IsLoaded ? OfficerConfigUtil.GetDefaultLifespan() : 60);
+
+        }
+
+
+
+        static short ResolvePlayerCustomStamina()
+
+        {
+
+            int fallback = OfficerConfigUtil.IsLoaded
+
+                ? OfficerConfigUtil.GetDefaultStamina()
+
+                : 100;
+
+            return (short)PlayerCustomConfigInt("stamina_default", fallback);
+
+        }
+
+
+
+        static int PlayerCustomConfigInt(string keySuffix, int fallback) =>
+
+            OfficerConfigUtil.IsLoaded
+
+                ? OfficerConfigUtil.GetInt($"officer.player_custom.{keySuffix}", fallback)
+
+                : fallback;
+
+
+
+        static short ClampPlayerCustomStat(short value, short max)
+
+        {
+
+            byte clamped = OfficerPerformanceRules.ClampBaseStat(value);
+
+            return (short)Math.Min(clamped, max);
+
+        }
+
+
+
+        static int[] TrimIds(int[] ids, int max)
+
+        {
+
+            if (ids == null || ids.Length == 0 || max <= 0)
+
+                return Array.Empty<int>();
+
+            if (ids.Length <= max)
+
+                return ids;
+
+            var trimmed = new int[max];
+
+            Array.Copy(ids, trimmed, max);
+
+            return trimmed;
 
         }
 

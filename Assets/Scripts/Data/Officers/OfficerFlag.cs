@@ -32,7 +32,7 @@ namespace ThreeKindoms.Data.Officers
 
 
 
-        public bool Death => !IsAlive;
+        public bool locked;
 
 
 
@@ -49,6 +49,8 @@ namespace ThreeKindoms.Data.Officers
             if (!IsAlive) b |= 1 << 5;
 
             if (Gender == OfficerGender.Female) b |= 1 << 6;
+            
+            if (locked) b |= 1 << 7;
 
             return b;
 
@@ -67,6 +69,8 @@ namespace ThreeKindoms.Data.Officers
             IsAlive = (b & (1 << 5)) == 0,
 
             Gender = (b & (1 << 6)) != 0 ? OfficerGender.Female : OfficerGender.Male
+            
+            locked = (b & (1 << 7)) == 0,
 
         };
 
