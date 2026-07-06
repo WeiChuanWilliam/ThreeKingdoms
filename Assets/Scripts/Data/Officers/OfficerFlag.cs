@@ -68,9 +68,9 @@ namespace ThreeKindoms.Data.Officers
 
             IsAlive = (b & (1 << 5)) == 0,
 
-            Gender = (b & (1 << 6)) != 0 ? OfficerGender.Female : OfficerGender.Male
-            
-            locked = (b & (1 << 7)) == 0,
+            Gender = (b & (1 << 6)) != 0 ? OfficerGender.Female : OfficerGender.Male,
+
+            locked = (b & (1 << 7)) != 0,
 
         };
 

@@ -347,7 +347,7 @@ namespace ThreeKindoms.Core.Officers
 
 
         /// <summary>產生含上下界的隨機整數（個性／劇本判定用）。</summary>
-        public abstract int RollRandom(int minInclusive, int maxInclusive);
+        public abstract int RollRandom(int minInclusive, int maxInclusive, double increament);
 
 
 

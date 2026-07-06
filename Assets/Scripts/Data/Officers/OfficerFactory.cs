@@ -3,8 +3,15 @@ using ThreeKindoms.Data.Battle;
 
 namespace ThreeKindoms.Data.Officers
 {
+    /// <summary>
+    /// 從參數檔資料建立 <see cref="Officer"/> 執行時實例。
+    /// 典型流程：<c>officers.json</c> → <see cref="OfficerDatabase.LoadCatalog"/> →
+    /// <see cref="OfficerDatabase.TryCreateRuntime"/> → <see cref="FromDef"/>。
+    /// 未來新增武將：在 JSON 加一筆 <see cref="OfficerDef"/>，再 materialize 即可。
+    /// </summary>
     public static class OfficerFactory
     {
+        /// <summary>將單筆 <see cref="OfficerDef"/>（來自 officers.json）組裝為執行時武將。</summary>
         public static Officer FromDef(OfficerDef def, PersonalityDatabase personalityDb = null)
         {
             var o = new Officer(def.id);
