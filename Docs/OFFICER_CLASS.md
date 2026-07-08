@@ -7,7 +7,7 @@
 - `Assets/Scripts/Core/Officers/AbstractOfficer.cs`
 - `Assets/Scripts/Core/Officers/Officer.cs`
 - `Assets/Scripts/Core/Officers/OfficerPool.cs`
-- `Assets/Scripts/Core/Officers/OfficerRelationsSync.cs`
+- `Assets/Scripts/Data/Officers/OfficerFactory.cs`
 - `Assets/Scripts/Data/Officers/OfficerFlag.cs`
 
 ---
@@ -61,7 +61,7 @@
 | 生病、傷勢 | `Injury` → `CalculatePerformance` → `*Perform` 下降 |
 | 體力消耗 | `stamina` → `*Perform` 下降 |
 | 個性獲得／替換 | `AddPersonality` / `RemovePersonality` + 新 id |
-| 忠誠、歸屬、人際 | 直接改 Singleton；人際雙向由 `OfficerRelationsSync` |
+| 忠誠、歸屬 | 直接改 Singleton |
 
 **沒有**「部隊複本改完再回寫 Pool」——Pool 就是唯一真相。
 
@@ -349,18 +349,18 @@ OfficerFlag
 
 `TroopAptitudeGrade`：**0＝C … 3＝S**（數字越大越好）。
 
-### 5.7 人際關係（已定案：雙向對稱）
+### 5.7 人際關係（試玩版未實作；規格保留）
 
-人際以 **def id 列表** 存在 Singleton 上，不持有 `Officer` 物件引用。
+試玩版**不實作**任何人際關係欄位與雙向同步。以下為正式版規劃：
 
-| 類型 | 雙向規則 |
-|------|----------|
-| 親愛 `belovedOfficerIds` | A 親愛 B ⇒ B 也親愛 A |
-| 義兄弟 `swornBrotherIds` | A、B 為義兄弟 ⇒ 雙方列表都含對方 id |
-| 配偶 `spouseOfficerIds` | A 配偶 B ⇒ B 配偶 A |
-| 厭惡 `hatedOfficerIds` | A 厭惡 B ⇒ B 也厭惡 A |
+| 類型 | 雙向規則 | 規劃上限 |
+|------|----------|----------|
+| 親愛 `belovedOfficerIds` | A 親愛 B ⇒ B 也親愛 A | 5 |
+| 義兄弟 `swornBrotherIds` | A、B 為義兄弟 ⇒ 雙方列表都含對方 id | 3 |
+| 厭惡 `hatedOfficerIds` | A 厭惡 B ⇒ B 也厭惡 A | 無上限 |
+| 配偶 `spouseOfficerIds` | A 配偶 B ⇒ B 配偶 A | 男 3／女 1 |
 
-**實作**：`Officer.SetRelations` → `OfficerRelationsSync.Apply`；表載入後 `OfficerDatabase.SyncAllRelations()` 補齊對向 id。
+正式版預計：`OfficerRelations` DTO、`SetRelations`、`OfficerRelationsSync` 雙向維護、`OfficerDatabase.SyncAllRelations()`。
 
 ### 5.8 戰法
 

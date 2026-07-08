@@ -5,8 +5,7 @@ namespace ThreeKindoms.Data.Officers
 {
     /// <summary>
     /// 從參數檔資料建立 <see cref="Officer"/> 執行時實例。
-    /// 典型流程：<c>officers.json</c> → <see cref="OfficerDatabase.LoadCatalog"/> →
-    /// <see cref="OfficerDatabase.TryCreateRuntime"/> → <see cref="FromDef"/>。
+    /// 典型流程：<c>officers.json</c> → <see cref="OfficerDatabase.Load"/> → <see cref="FromDef"/>。
     /// 未來新增武將：在 JSON 加一筆 <see cref="OfficerDef"/>，再 materialize 即可。
     /// </summary>
     public static class OfficerFactory
@@ -34,7 +33,6 @@ namespace ThreeKindoms.Data.Officers
             o.SetCompatibility(def.compatibility);
             o.SetTroopAptitude(def.troopAptitude);
             o.SetBattleSkills(def.battleSkills);
-            o.ReplaceLocalRelations(def.relations);
             OfficerPersonalityLoader.ApplyFromIds(o, def.personalityIds, personalityDb);
             OfficerItemLoader.ApplyFromIds(o, def.itemIds);
             return o;

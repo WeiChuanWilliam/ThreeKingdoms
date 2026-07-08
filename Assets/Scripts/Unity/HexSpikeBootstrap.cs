@@ -29,7 +29,7 @@ namespace ThreeKindoms.UnityBridge
             ThreeKindoms.Data.Units.TroopKinds.TroopKindRegistry.EnsureBuilt();
 
             ThreeKindoms.Data.Officers.OfficerConfigUtil.LoadDefault(Application.streamingAssetsPath);
-            OfficerDatabaseUnity.LoadScenarioRuntime();
+            OfficerDatabaseUnity.LoadScenario();
             ThreeKindoms.Data.Skill.SkillPool.Register(101);
             ThreeKindoms.Data.Skill.SkillPool.Register(102);
             var sample = ThreeKindoms.Data.Officers.OfficerDatabase.TryGetRuntime(1);

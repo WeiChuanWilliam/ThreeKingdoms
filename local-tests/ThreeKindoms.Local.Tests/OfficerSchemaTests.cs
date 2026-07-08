@@ -11,11 +11,11 @@ namespace ThreeKindoms.Local.Tests
         public void OfficerDef_loads_birth_year_and_lifespan()
         {
             OfficerConfigUtil.Load(TestPaths.OfficerPropertiesPath);
-            OfficerDatabase.LoadCatalogAndMaterializeAll(
+            OfficerDatabase.Load(
                 TestPaths.OfficersJsonPath,
                 TestPaths.PersonalityTraitsPath);
 
-            Officer guan = OfficerDatabase.TryCreateRuntime(1);
+            Officer guan = OfficerDatabase.TryGet(2);
             Assert.NotNull(guan);
             Assert.Equal(160, guan.BirthYear);
             Assert.Equal(59, guan.Lifespan);
@@ -62,22 +62,6 @@ namespace ThreeKindoms.Local.Tests
         }
 
         [Fact]
-        public void Officer_relations_respect_caps_from_properties()
-        {
-            OfficerConfigUtil.Load(TestPaths.OfficerPropertiesPath);
-            var officer = new Officer(99);
-            officer.SetGender(OfficerGender.Male);
-            officer.SetRelations(new OfficerRelations
-            {
-                BelovedOfficerIds = new[] { 1, 2, 3, 4, 5, 6, 7 },
-                SpouseOfficerIds = new[] { 10, 11, 12, 13 }
-            });
-
-            Assert.Equal(5, officer.BelovedOfficerIds.Count);
-            Assert.Equal(3, officer.SpouseOfficerIds.Count);
-        }
-
-        [Fact]
         public void RemovePersonality_syncs_ids_and_defs_then_can_add_new()
         {
             var officer = new Officer(1);
@@ -113,54 +97,27 @@ namespace ThreeKindoms.Local.Tests
             var officer = new Officer(1);
             for (int i = 0; i < 50; i++)
             {
-                int roll = officer.RollRandom(3, 7);
+                int roll = officer.RollRandom(3, 7, 0);
                 Assert.InRange(roll, 3, 7);
             }
         }
 
         [Fact]
-        public void Relations_sync_bidirectional_after_database_load()
+        public void Load_puts_all_officers_in_single_pool()
         {
             OfficerConfigUtil.Load(TestPaths.OfficerPropertiesPath);
-            OfficerDatabase.LoadCatalogAndMaterializeAll(
-                TestPaths.OfficersJsonPath,
-                TestPaths.PersonalityTraitsPath);
-            OfficerDatabase.SyncAllRelations();
-
-            Officer guan = OfficerDatabase.TryGetRuntime(1);
-            Officer zhang = OfficerDatabase.TryGetRuntime(2);
-            Officer zhuge = OfficerDatabase.TryGetRuntime(3);
-
-            Assert.Contains(2, guan.BelovedOfficerIds);
-            Assert.Contains(3, guan.BelovedOfficerIds);
-            Assert.Contains(1, zhang.BelovedOfficerIds);
-            Assert.Contains(1, zhuge.BelovedOfficerIds);
-            Assert.Contains(2, guan.SwornBrotherIds);
-            Assert.Contains(1, zhang.SwornBrotherIds);
-            Assert.Contains(1, zhuge.SwornBrotherIds);
-        }
-
-        [Fact]
-        public void Catalog_is_static_and_scenario_list_controls_runtime_pool()
-        {
-            OfficerConfigUtil.Load(TestPaths.OfficerPropertiesPath);
-            OfficerDatabase.LoadCatalog(
+            OfficerDatabase.Load(
                 TestPaths.OfficersJsonPath,
                 TestPaths.PersonalityTraitsPath);
 
-            Assert.True(OfficerDatabase.IsCatalogLoaded);
-            Assert.Equal(3, OfficerDatabase.Defs.Count);
+            Assert.True(OfficerDatabase.IsLoaded);
+            Assert.Equal(12, OfficerDatabase.Count);
+            Assert.NotNull(OfficerDatabase.TryGet(1));
+            Assert.Equal("玄德", OfficerDatabase.TryGet(1).AliasName);
+            Assert.NotNull(OfficerDatabase.TryGet(12));
 
-            OfficerDatabase.MaterializeFromScenarioFile(TestPaths.ScenarioOfficersPath);
-            Assert.Equal(3, OfficerDatabase.RuntimeCount);
-            Assert.NotNull(OfficerDatabase.TryGetRuntime(1));
-
-            OfficerDatabase.MaterializeFromIds(new[] { 1 });
-            Assert.Equal(1, OfficerDatabase.RuntimeCount);
-            Assert.Null(OfficerDatabase.TryGetRuntime(2));
-
-            OfficerDatabase.ClearRuntime();
-            Assert.Empty(OfficerDatabase.Runtime);
+            OfficerDatabase.Clear();
+            Assert.Empty(OfficerDatabase.Officers);
         }
     }
 }

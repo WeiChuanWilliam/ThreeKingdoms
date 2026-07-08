@@ -111,16 +111,6 @@ namespace ThreeKindoms.Core.Officers
 
 
 
-        protected readonly List<int> belovedOfficerIds = new();
-
-        protected readonly List<int> hatedOfficerIds = new();
-
-        protected readonly List<int> swornBrotherIds = new();
-
-        protected readonly List<int> spouseOfficerIds = new();
-
-
-
         protected byte[] pictureBuffer = System.Array.Empty<byte>();
 
         protected OfficerBattleSkills battleSkills;
@@ -240,20 +230,6 @@ namespace ThreeKindoms.Core.Officers
 
         /// <summary>查詢指定兵種的適性等級。</summary>
         public TroopAptitudeGrade GetTroopAptitude(TroopType troop) => troopAptitude.Get(troop);
-
-
-
-        /// <summary>親愛武將 id 列表。</summary>
-        public IReadOnlyList<int> BelovedOfficerIds => belovedOfficerIds;
-
-        /// <summary>厭惡武將 id 列表。</summary>
-        public IReadOnlyList<int> HatedOfficerIds => hatedOfficerIds;
-
-        /// <summary>義兄弟武將 id 列表。</summary>
-        public IReadOnlyList<int> SwornBrotherIds => swornBrotherIds;
-
-        /// <summary>配偶武將 id 列表。</summary>
-        public IReadOnlyList<int> SpouseOfficerIds => spouseOfficerIds;
 
 
 

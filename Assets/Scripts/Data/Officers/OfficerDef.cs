@@ -48,8 +48,6 @@ namespace ThreeKindoms.Data.Officers
         /// <summary>道具 id 集合（統一 Set，不細分欄位）。</summary>
         public int[] itemIds;
 
-        public OfficerRelations relations;
-
         /// <summary>出生年（西元或劇情紀年，與劇本一致即可）。</summary>
         public short birthYear;
 

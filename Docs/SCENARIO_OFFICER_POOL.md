@@ -98,7 +98,6 @@ Officer.SetAlive(false)   ← 不 RefreshPerformance；不支援死而復生
 OfficerPool.RemoveOfficer(defId)   ← 劇本級 method（TODO，待實作）
     │
     ├── 從 Pool dictionary 移除 Officer
-    ├── 人際：對稱關係清理（OfficerRelationsSync 反向）
     ├── 若在某 Unit 任主將／副將 → 卸下或部隊解散（規則待訂）
     └── UI／勢力武將列表不再顯示此人
 ```

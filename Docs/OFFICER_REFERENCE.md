@@ -57,7 +57,6 @@ OfficerCombatAbilities.FromOfficer（戰鬥讀取）
 | `troopAptitude` | object | 步騎弓器水 0=C…3=S | `TroopAptitude` |
 | `personalityIds` | int[] | 個性 id | `Personalities` |
 | `itemIds` | int[] | 道具 id | `ItemIds` |
-| `relations` | object | 人際四表 | `SetRelations` |
 | `birthYear` / `lifespan` | short | 出生、壽命 | `DeathYear` = 和 |
 | `title` | string | 官職 | `Title` |
 | `battleSkills` | object | 六槽戰法 | `BattleSkills` |
@@ -76,8 +75,9 @@ OfficerCombatAbilities.FromOfficer（戰鬥讀取）
 | `officer.aptitude.default` | 0 (C) | 兵科預設 |
 | `officer.personality.*_max` | 各槽上限 | 個性合成 |
 | `officer.item.max_count` | 12 | 道具 id 上限 |
-| `officer.relations.*_max` | 親愛/義兄弟/配偶 | 人際上限 |
 | `officer.signature_troop.*` | 兵種鍵,科技 | 特色兵種條件 |
+
+人際上限（`officer.relations.*_max`）試玩版未使用；規格見 OFFICER_CLASS §5.7。
 
 讀取：`OfficerConfigUtil.Load(path)` → `GetDefaultStamina()` 等。
 
@@ -118,7 +118,7 @@ OfficerCombatAbilities.FromOfficer（戰鬥讀取）
 | `Compatibility` | 相性 |
 | `TroopAptitude` / `GetTroopAptitude` | 兵科適性 |
 | `Personalities` / `ItemIds` | 個性、道具 |
-| 人際四表 | Beloved, Hated, SwornBrother, Spouse |
+| 人際 | 試玩版未實作；親愛／義兄弟／厭惡／配偶見 OFFICER_CLASS §5.7 規劃 |
 | `BattleSkills` | 戰法六槽 |
 
 ---

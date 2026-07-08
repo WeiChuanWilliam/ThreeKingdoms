@@ -70,11 +70,6 @@ namespace ThreeKindoms.Data.Officers
         public static TroopAptitudeGrade GetDefaultAptitudeGrade() =>
             (TroopAptitudeGrade)Math.Clamp(GetInt("officer.aptitude.default", 0), 0, 3);
 
-        public static int GetMaxBelovedOfficers() => GetInt("officer.relations.beloved_max", 5);
-        public static int GetMaxSwornBrothers() => GetInt("officer.relations.sworn_brother_max", 3);
-        public static int GetMaxSpousesMale() => GetInt("officer.relations.spouse_max_male", 3);
-        public static int GetMaxSpousesFemale() => GetInt("officer.relations.spouse_max_female", 1);
-
         public static int GetPersonalityGoldMax() => GetInt("officer.personality.gold_max", 3);
         public static int GetPersonalityBlueMax() => GetInt("officer.personality.blue_max", 3);
         public static int GetPersonalityRedMax() => GetInt("officer.personality.red_max", 2);

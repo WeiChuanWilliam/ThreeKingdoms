@@ -24,7 +24,6 @@ namespace ThreeKindoms.Local.Tests.Runners
             sb.Append($" | 勢{o.Belong} 忠{o.Loyalty}");
             sb.Append($" | 適{FormatAptitude(o)}");
             sb.Append($" | 個性{o.Personalities.Count} 道具{o.ItemIds.Count}");
-            sb.Append($" | 親{o.BelovedOfficerIds.Count} 義{o.SwornBrotherIds.Count}");
             if (!o.IsAlive)
                 sb.Append(" [陣亡]");
             else if (o.Injury != OfficerInjuryState.Normal)
