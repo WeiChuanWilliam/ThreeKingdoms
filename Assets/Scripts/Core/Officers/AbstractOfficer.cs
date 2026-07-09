@@ -103,7 +103,7 @@ namespace ThreeKindoms.Core.Officers
 
         protected short birthYear;
 
-        protected short lifespan;
+        protected short deathYear;
 
         protected byte compatibility = 145;
 
@@ -216,11 +216,12 @@ namespace ThreeKindoms.Core.Officers
         /// <summary>出生年份。</summary>
         public short BirthYear => birthYear;
 
-        /// <summary>預期壽命（年）。</summary>
-        public short Lifespan => lifespan;
+        /// <summary>死亡年份；0 表示未定。</summary>
+        public short DeathYear => deathYear;
 
-        /// <summary>預計卒年（出生年＋壽命）。</summary>
-        public short DeathYear => (short)(birthYear + lifespan);
+        /// <summary>享年（死亡年－出生年）；資料不全時為 0。</summary>
+        public short AgeAtDeath =>
+            deathYear > birthYear && birthYear > 0 ? (short)(deathYear - birthYear) : (short)0;
 
         /// <summary>相性基準值（與他將互動用）。</summary>
         public byte Compatibility => compatibility;

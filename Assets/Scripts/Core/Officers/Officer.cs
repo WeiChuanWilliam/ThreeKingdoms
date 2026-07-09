@@ -73,11 +73,7 @@ namespace ThreeKindoms.Core.Officers
 
             troopAptitude = OfficerTroopAptitude.DefaultC;
 
-            lifespan = OfficerConfigUtil.IsLoaded
-
-                ? OfficerConfigUtil.GetDefaultLifespan()
-
-                : (short)60;
+            deathYear = 0;
 
         }
 
@@ -202,8 +198,13 @@ namespace ThreeKindoms.Core.Officers
         /// <summary>設定出生年份。</summary>
         public void SetBirthYear(short year) => birthYear = year;
 
-        /// <summary>設定預期壽命（至少 1 年）。</summary>
-        public void SetLifespan(short years) => lifespan = years < 1 ? (short)1 : years;
+        /// <summary>設定死亡年；0 表示未定。若小於出生年則與出生年齊。</summary>
+        public void SetDeathYear(short year)
+        {
+            deathYear = year;
+            if (birthYear > 0 && deathYear > 0 && deathYear < birthYear)
+                deathYear = birthYear;
+        }
 
         /// <summary>設定官職或稱號。</summary>
         public void SetTitle(string t) => title = t ?? "";

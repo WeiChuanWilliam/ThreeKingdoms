@@ -8,7 +8,7 @@ namespace ThreeKindoms.Local.Tests
     public class OfficerSchemaTests
     {
         [Fact]
-        public void OfficerDef_loads_birth_year_and_lifespan()
+        public void OfficerDef_loads_birth_year_and_death_year()
         {
             OfficerConfigUtil.Load(TestPaths.OfficerPropertiesPath);
             OfficerDatabase.Load(
@@ -18,8 +18,8 @@ namespace ThreeKindoms.Local.Tests
             Officer guan = OfficerDatabase.TryGet(2);
             Assert.NotNull(guan);
             Assert.Equal(160, guan.BirthYear);
-            Assert.Equal(59, guan.Lifespan);
             Assert.Equal(219, guan.DeathYear);
+            Assert.Equal(59, guan.AgeAtDeath);
             Assert.Equal(TroopAptitudeGrade.S, guan.GetTroopAptitude(TroopType.Infantry));
             Assert.Equal(TroopAptitudeGrade.S, guan.GetTroopAptitude(TroopType.Cavalry));
             Assert.Equal(TroopAptitudeGrade.B, guan.GetTroopAptitude(TroopType.Archer));

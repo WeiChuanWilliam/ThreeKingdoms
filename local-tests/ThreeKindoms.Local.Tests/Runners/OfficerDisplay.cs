@@ -20,7 +20,7 @@ namespace ThreeKindoms.Local.Tests.Runners
             sb.Append($" 政{o.PolicyPerform}({o.Policy})");
             sb.Append($" 魅{o.CharismaPerform}({o.Charisma})");
             sb.Append($" | 體{o.Stamina} 相{o.Compatibility}");
-            sb.Append($" 生{o.BirthYear} 壽{o.Lifespan}→{o.DeathYear}");
+            sb.Append($" 生{o.BirthYear} 卒{o.DeathYear}");
             sb.Append($" | 勢{o.Belong} 忠{o.Loyalty}");
             sb.Append($" | 適{FormatAptitude(o)}");
             sb.Append($" | 個性{o.Personalities.Count} 道具{o.ItemIds.Count}");

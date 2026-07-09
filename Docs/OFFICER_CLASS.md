@@ -45,7 +45,7 @@
 劇本當前年份 = scenarioYear
     │
     ▼
-對每位武將：若 birthYear ≤ scenarioYear < birthYear + lifespan（仍存活）
+對每位武將：若 `birthYear ≤ scenarioYear < deathYear`（仍存活；`deathYear=0` 視為未定）
     │ 是                          │ 否
     ▼                             ▼
 建立 Officer 放進本局 Pool        不收录，本局不存在此 defId
@@ -299,7 +299,7 @@ perform = round( base × 傷勢係數 × 體力係數 × 道具係數 )
 | `loyalty` | 忠誠 0～100 |
 | `salary` | 俸祿 |
 | `title` | 官職 |
-| `birthYear` / `lifespan` / `DeathYear` | 出生、壽命、卒年 |
+| `birthYear` / `deathYear` | 出生、死亡年 |
 | `compatibility` | 相性 |
 | `troopAptitude` | 五大兵科適性 |
 

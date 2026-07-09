@@ -61,9 +61,6 @@ namespace ThreeKindoms.Data.Officers
         public static short GetDefaultStamina() =>
             (short)Math.Clamp(GetInt("officer.stamina.default", 100), 0, short.MaxValue);
 
-        public static short GetDefaultLifespan() =>
-            (short)Math.Clamp(GetInt("officer.lifespan.default", 60), 1, short.MaxValue);
-
         public static byte GetDefaultCompatibility() =>
             (byte)Math.Clamp(GetInt("officer.compatibility.default", 145), 0, 255);
 

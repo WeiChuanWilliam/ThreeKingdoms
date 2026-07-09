@@ -51,11 +51,8 @@ namespace ThreeKindoms.Data.Officers
         /// <summary>出生年（西元或劇情紀年，與劇本一致即可）。</summary>
         public short birthYear;
 
-        /// <summary>壽命（年）；卒年＝出生年＋壽命。</summary>
-        public short lifespan;
-
-        /// <summary>相容舊欄位；若 lifespan 為 0 則 fallback 用此值。</summary>
-        public short ageLimit;
+        /// <summary>死亡年；0 表示未定／劇本尚未陣亡。</summary>
+        public short deathYear;
 
         public string title;
 

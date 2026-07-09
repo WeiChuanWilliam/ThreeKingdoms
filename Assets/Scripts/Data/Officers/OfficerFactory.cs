@@ -26,7 +26,7 @@ namespace ThreeKindoms.Data.Officers
                 def.stamina > 0 ? def.stamina : OfficerConfigUtil.GetDefaultStamina());
             o.SetBelong(def.belong, def.loyalty);
             o.SetBirthYear(def.birthYear);
-            o.SetLifespan(ResolveLifespan(def));
+            o.SetDeathYear(def.deathYear);
             o.SetTitle(def.title);
             o.SetGender(def.gender != 1);
             o.SetInjury((OfficerInjuryState)System.Math.Clamp((int)def.injury, 0, 3));
@@ -36,17 +36,6 @@ namespace ThreeKindoms.Data.Officers
             OfficerPersonalityLoader.ApplyFromIds(o, def.personalityIds, personalityDb);
             OfficerItemLoader.ApplyFromIds(o, def.itemIds);
             return o;
-        }
-
-        static short ResolveLifespan(OfficerDef def)
-        {
-            if (def.lifespan > 0)
-                return def.lifespan;
-            if (def.ageLimit > 0)
-                return def.ageLimit;
-            return OfficerConfigUtil.IsLoaded
-                ? OfficerConfigUtil.GetDefaultLifespan()
-                : (short)60;
         }
     }
 }

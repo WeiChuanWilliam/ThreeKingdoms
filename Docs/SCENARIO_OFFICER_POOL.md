@@ -67,7 +67,7 @@ ScenarioOfficerPool
 scenarioYear = 劇本當前年份（ fictive 例：184 ）
 
 對參數表每位武將 def：
-  alive = (birthYear <= scenarioYear) AND (scenarioYear < birthYear + lifespan)
+  alive = (birthYear <= scenarioYear) AND (deathYear == 0 OR scenarioYear < deathYear)
   if alive → 建立 Officer，加入 Pool
   else     → 本局 Pool 無此 defId
 ```

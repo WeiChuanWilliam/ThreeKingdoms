@@ -57,7 +57,7 @@ OfficerCombatAbilities.FromOfficer（戰鬥讀取）
 | `troopAptitude` | object | 步騎弓器水 0=C…3=S | `TroopAptitude` |
 | `personalityIds` | int[] | 個性 id | `Personalities` |
 | `itemIds` | int[] | 道具 id | `ItemIds` |
-| `birthYear` / `lifespan` | short | 出生、壽命 | `DeathYear` = 和 |
+| `birthYear` / `deathYear` | short | 出生、死亡年 | `SetBirthYear` / `SetDeathYear` |
 | `title` | string | 官職 | `Title` |
 | `battleSkills` | object | 六槽戰法 | `BattleSkills` |
 
@@ -71,7 +71,6 @@ OfficerCombatAbilities.FromOfficer（戰鬥讀取）
 |----|------|------|
 | `officer.stamina.default` | 100 | 新建武將體力 |
 | `officer.compatibility.default` | 145 | 預設相性 |
-| `officer.lifespan.default` | 60 | 未填 lifespan 時 |
 | `officer.aptitude.default` | 0 (C) | 兵科預設 |
 | `officer.personality.*_max` | 各槽上限 | 個性合成 |
 | `officer.item.max_count` | 12 | 道具 id 上限 |
@@ -114,7 +113,7 @@ OfficerCombatAbilities.FromOfficer（戰鬥讀取）
 | `Belong` | 勢力 id；0＝在野 |
 | `LegionLeaderId` | 兵團主將 defId |
 | `Loyalty` / `Salary` / `Title` | 忠誠、俸祿、官職 |
-| `BirthYear` / `Lifespan` / `DeathYear` | 生涯 |
+| `BirthYear` / `DeathYear` / `AgeAtDeath` | 生涯（享年＝卒年－生年，唯讀） |
 | `Compatibility` | 相性 |
 | `TroopAptitude` / `GetTroopAptitude` | 兵科適性 |
 | `Personalities` / `ItemIds` | 個性、道具 |
@@ -166,7 +165,7 @@ perform = round( base × 傷勢係數 × 體力係數 × 道具係數 )
 | 項目 | 說明 |
 |------|------|
 | `OfficerPool.RemoveOfficer` | 死亡移出池 |
-| 劇本開局篩選 | birthYear + lifespan vs 劇本年 |
+| 劇本開局篩選 | `birthYear ≤ scenarioYear < deathYear`（`deathYear=0` 視為仍存活） |
 | 未滿 15 不可登場 | `CanDeploy` |
 | 同一 defId 不可多部隊 | 編組檢查 |
 | 道具係數 | `GetItemMultiplier` TODO |

@@ -22,6 +22,7 @@ StreamingAssets/
   scenarios/
     opening.json         # 劇本：開局部隊
   scenario_start.properties   # 可選，舊 Spike 相容
+  # 架空九階段佈防設計見 Docs/SCENARIO_ERAS_ALTERNATE.md
 
 （之後）PersistentData/saves/slot_0.json
 ```
