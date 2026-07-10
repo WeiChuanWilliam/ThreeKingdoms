@@ -20,29 +20,18 @@ namespace ThreeKindoms.Core.Officers
         public const byte StatMin = 1;
 
         /// <summary>六圍基礎值與發揮值上限。</summary>
-        public const byte StatMax = 100;
+        public const byte StatMax = 125;
 
         /// <summary>體力下限。</summary>
         public const byte StaminaMin = 0;
 
         /// <summary>體力上限。</summary>
-        public const byte StaminaMax = 100;
+        public const byte StaminaMax = 200;
 
 
 
         /// <summary>由基礎值、傷勢、體力與道具計算單項發揮值。</summary>
-        public static byte ComputePerform(
-
-            byte baseStat,
-
-            OfficerInjuryState injury,
-
-            bool isAlive,
-
-            byte stamina,
-
-            IReadOnlyCollection<int> itemIds)
-
+        public static byte ComputePerform(Officer officer, OfficerDef officerDef)
         {
 
             if (!isAlive || baseStat == 0)
@@ -74,9 +63,9 @@ namespace ThreeKindoms.Core.Officers
 
             OfficerInjuryState.Light => 0.9f,
 
-            OfficerInjuryState.Medium => 0.75f,
+            OfficerInjuryState.Medium => 0.6f,
 
-            OfficerInjuryState.Severe => 0.55f,
+            OfficerInjuryState.Severe => 0.3f,
 
             _ => 1f
 

@@ -29,7 +29,7 @@ namespace ThreeKindoms.Local.Tests.Runners
             }
 
             TestLog.Line(log, "=== officers.json（本劇本武將池）===");
-            TestLog.Line(log, $"共 {OfficerDatabase.Count} 名（括號內＝表上基礎值，括號外＝發揮值 *Perform）");
+            TestLog.Line(log, $"表 {OfficerDatabase.DefCount} 名、執行時 {OfficerDatabase.Count} 名（括號內＝Defs 原始六維，括號外＝*Perform）");
             TestLog.Line(log, "");
 
             var ids = new List<int>(OfficerDatabase.Officers.Keys);

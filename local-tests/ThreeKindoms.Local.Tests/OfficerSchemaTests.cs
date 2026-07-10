@@ -103,7 +103,7 @@ namespace ThreeKindoms.Local.Tests
         }
 
         [Fact]
-        public void Load_puts_all_officers_in_single_pool()
+        public void Load_keeps_def_and_runtime_pools_with_same_ids()
         {
             OfficerConfigUtil.Load(TestPaths.OfficerPropertiesPath);
             OfficerDatabase.Load(
@@ -111,12 +111,25 @@ namespace ThreeKindoms.Local.Tests
                 TestPaths.PersonalityTraitsPath);
 
             Assert.True(OfficerDatabase.IsLoaded);
+            Assert.Equal(12, OfficerDatabase.DefCount);
             Assert.Equal(12, OfficerDatabase.Count);
-            Assert.NotNull(OfficerDatabase.TryGet(1));
+
+            OfficerDef guanDef = OfficerDatabase.TryGetDef(2);
+            Officer guan = OfficerDatabase.TryGet(2);
+            Assert.NotNull(guanDef);
+            Assert.NotNull(guan);
+            Assert.Equal(97, guanDef.attack);
+            Assert.Equal((byte)97, guan.Attack);
+
+            guan.SetStats(50, 50, 50, 50, 50, 100);
+            Assert.Equal(97, guanDef.attack);
+            Assert.Equal((byte)50, guan.Attack);
+
             Assert.Equal("玄德", OfficerDatabase.TryGet(1).AliasName);
-            Assert.NotNull(OfficerDatabase.TryGet(12));
+            Assert.Equal("玄德", OfficerDatabase.TryGetDef(1).aliasName);
 
             OfficerDatabase.Clear();
+            Assert.Empty(OfficerDatabase.Defs);
             Assert.Empty(OfficerDatabase.Officers);
         }
     }

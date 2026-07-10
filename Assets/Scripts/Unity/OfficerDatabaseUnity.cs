@@ -7,7 +7,7 @@ namespace ThreeKindoms.UnityBridge
     /// <summary>Unity 端自 StreamingAssets 載入本劇本武將池。</summary>
     public static class OfficerDatabaseUnity
     {
-        /// <summary>載入 officers.json 內全部武將至單一 Pool。</summary>
+        /// <summary>載入 officers.json：表資料池 Defs ＋ 執行時池 Officers。</summary>
         public static void LoadScenario(
             string officersFile = "officers.json",
             string personalityFile = "personality_traits.json")
@@ -19,7 +19,7 @@ namespace ThreeKindoms.UnityBridge
             OfficerDatabase.Load(
                 Path.Combine(root, officersFile),
                 Path.Combine(root, personalityFile));
-            Debug.Log($"[OfficerDatabase] 劇本武將池 {OfficerDatabase.Count} 名（{officersFile}）");
+            Debug.Log($"[OfficerDatabase] 表 {OfficerDatabase.DefCount} 名、執行時 {OfficerDatabase.Count} 名（{officersFile}）");
         }
     }
 }

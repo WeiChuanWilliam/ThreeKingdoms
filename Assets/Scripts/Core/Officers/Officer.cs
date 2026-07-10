@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 
+using ThreeKindoms.Core;
 using ThreeKindoms.Core.Units;
 
 using ThreeKindoms.Data.Battle;
@@ -169,7 +170,7 @@ namespace ThreeKindoms.Core.Officers
 
             belong = factionId;
 
-            loyalty = loyaltyValue;
+            loyalty = NumericUtil.ClampToTarget(loyaltyValue, 0, 100);
 
             salary = factionId == 0 ? (short)0 : (short)10;
 
@@ -186,7 +187,7 @@ namespace ThreeKindoms.Core.Officers
 
             loyalty += value;
 
-            loyalty = Clamp0To100(loyalty);
+            loyalty = NumericUtil.ClampToTarget(loyalty, 0, 100);
 
         }
 
@@ -412,7 +413,7 @@ namespace ThreeKindoms.Core.Officers
 
 
         /// <inheritdoc/>
-        public override int RollRandom(int minInclusive, int maxInclusive, double increament)
+        public override int RollRandom(int minInclusive, int maxInclusive, double change)
 
         {
 
@@ -430,19 +431,6 @@ namespace ThreeKindoms.Core.Officers
 
         }
 
-
-
-        static short Clamp0To100(short v)
-
-        {
-
-            if (v < 0) return 0;
-
-            if (v > 100) return 100;
-
-            return v;
-
-        }
 
     }
 

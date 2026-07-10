@@ -12,13 +12,15 @@ namespace ThreeKindoms.Local.Tests.Runners
         {
             if (o == null) return "ERROR (null officer)";
 
+            OfficerDef catalog = OfficerPool.GetDef(o.RuntimeId);
+
             var sb = new StringBuilder();
             sb.Append($"id={o.RuntimeId} {o.DisplayName}");
-            sb.Append($" | 統{o.LeadershipPerform}({o.Leadership})");
-            sb.Append($" 武{o.AttackPerform}({o.Attack})");
-            sb.Append($" 智{o.IntelligencePerform}({o.Intelligence})");
-            sb.Append($" 政{o.PolicyPerform}({o.Policy})");
-            sb.Append($" 魅{o.CharismaPerform}({o.Charisma})");
+            sb.Append($" | 統{o.LeadershipPerform}({CatalogStat(catalog?.leadership, o.Leadership)})");
+            sb.Append($" 武{o.AttackPerform}({CatalogStat(catalog?.attack, o.Attack)})");
+            sb.Append($" 智{o.IntelligencePerform}({CatalogStat(catalog?.intelligence, o.Intelligence)})");
+            sb.Append($" 政{o.PolicyPerform}({CatalogStat(catalog?.policy, o.Policy)})");
+            sb.Append($" 魅{o.CharismaPerform}({CatalogStat(catalog?.charisma, o.Charisma)})");
             sb.Append($" | 體{o.Stamina} 相{o.Compatibility}");
             sb.Append($" 生{o.BirthYear} 卒{o.DeathYear}");
             sb.Append($" | 勢{o.Belong} 忠{o.Loyalty}");
@@ -36,6 +38,9 @@ namespace ThreeKindoms.Local.Tests.Runners
             OfficerTroopAptitude a = o.TroopAptitude;
             return $"步{Grade(a.Infantry)}騎{Grade(a.Cavalry)}弓{Grade(a.Archer)}器{Grade(a.Siege)}水{Grade(a.Navy)}";
         }
+
+        static short CatalogStat(short? catalog, byte runtime) =>
+            catalog ?? runtime;
 
         static char Grade(TroopAptitudeGrade g) => g switch
         {

@@ -159,10 +159,10 @@ namespace ThreeKindoms.Core.Units
             Commander = OfficerPool.Get(officerDefId);
 
         /// <summary>設定士氣並限制在 0～100。</summary>
-        public void SetMorale(short value) => Morale = Clamp0To100(value);
+        public void SetMorale(short value) => Morale = NumericUtil.ClampToTarget(value, 0, 100);
 
         /// <summary>設定體力並限制在 0～100。</summary>
-        public void SetStamina(short value) => Stamina = Clamp0To100(value);
+        public void SetStamina(short value) => Stamina = NumericUtil.ClampToTarget(value, 0, 100);
 
         /// <summary>設定攜帶金錢（負值視為 0）。</summary>
         public void SetMoney(int value) => Money = value < 0 ? 0 : value;
@@ -240,13 +240,6 @@ namespace ThreeKindoms.Core.Units
         protected int BaseFoodByHeadCount() =>
             System.Math.Max(1, Soldiers / 100);
 
-        /// <summary>將數值限制在 0～100。</summary>
-        protected static short Clamp0To100(short v)
-        {
-            if (v < 0) return 0;
-            if (v > 100) return 100;
-            return v;
-        }
     }
 
     /// <summary>地圖部隊類型：兵團、戰鬥隊、運輸隊。</summary>
