@@ -20,11 +20,10 @@ namespace ThreeKindoms.Core.Units
         /// <summary>部隊類型：運輸隊。</summary>
         public override UnitKind Kind => UnitKind.Transport;
 
-        /// <summary>從表資料建立運輸隊。</summary>
-        public Transport(TransportUnitDef def)
-            : base(UnitNameBuilder.Resolve(def, UnitKind.Transport), def.Belonged)
+        /// <summary>建立空運輸隊（組隊欄位請用 Set*）。</summary>
+        public Transport(string unitName, int factionBelonged)
+            : base(unitName ?? "", factionBelonged)
         {
-            def.ApplyTo(this);
         }
 
         /// <summary>是否已裝備指定 id 的計略戰法。</summary>
@@ -56,12 +55,8 @@ namespace ThreeKindoms.Core.Units
             return false;
         }
 
-        /// <summary>計算本日應耗糧數（殲滅或駐紮時為 0）。</summary>
-        public override int CalculateFoodConsumption()
-        {
-            if (IsAnnihilated || IsStationed) return 0;
-            return System.Math.Max(1, (int)(BaseFoodByHeadCount() * FoodConsumptionFactor));
-        }
+        /// <summary>暫定兵糧無限：每日應耗糧恒為 0。</summary>
+        public override int CalculateFoodConsumption() => 0;
 
         /// <summary>匯出裝備計略戰法至存檔條目清單。</summary>
         internal void CollectEquippedSkills(System.Collections.Generic.List<Data.Persistence.SkillSaveEntry> strategy)
@@ -77,8 +72,12 @@ namespace ThreeKindoms.Core.Units
             }
         }
 
-        /// <summary>運輸隊幾乎無作戰能力。</summary>
-        public override int CalculateCombatPower() =>
+        /// <summary>野戰：幾乎無作戰能力。</summary>
+        protected override int CalculateNonGarrisonCombatPower() =>
             UnitCombatPowerRules.CalculateTransportPower(this);
+
+        /// <summary>駐紮：偏提高防禦（守輜重）。</summary>
+        protected override int CalculateGarrisonCombatPower() =>
+            UnitCombatPowerRules.CalculateGarrisonTransportPower(this);
     }
 }

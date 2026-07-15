@@ -159,9 +159,9 @@ Unit.AddViceOfficer(officer)    同上
 ```text
 AbstractOfficer（abstract）
     │
-    ├── 欄位：姓名、六圍、發揮值、狀態旗標、歸屬、個性、人際、戰法等
+    ├── 欄位：姓名、六圍、發揮值、狀態旗標、歸屬、個性、人際、道具等
     ├── 唯讀屬性：UI / 戰鬥系統讀取
-    └── 虛方法：體力、傷病、交涉、防禦戰法、發揮值計算
+    └── 虛方法：體力、傷病、交涉、防禦戰法判定（stub）、發揮值計算
 
 Officer（sealed，目前唯一實作）
     │
@@ -303,15 +303,16 @@ perform = round( base × 傷勢係數 × 體力係數 × 道具係數 )
 | `compatibility` | 相性 |
 | `troopAptitude` | 五大兵科適性 |
 
-### 5.3 勢力、兵團主將與 `OfficerFlag`
+### 5.3 勢力、兵團主將、出戰與 `OfficerFlag`
 
 | 欄位 | 說明 |
 |------|------|
-| `belong` | **勢力** id；`0` = 在野 |
-| `legionLeaderId` | **兵團（Legion）主將** defId（Leader）；自領兵團＝自身 id；見 [`LEGION_TERMINOLOGY.md`](LEGION_TERMINOLOGY.md) |
+| `belong` | **勢力 id**；`0`＝在野。**約定：勢力 id＝執掌該勢力的武將 defId** |
+| `legionLeaderId` | **暫定＝`belong`**；日後可改為所屬兵團主將 defId。見 [`LEGION_TERMINOLOGY.md`](LEGION_TERMINOLOGY.md) |
+| `isDeployed` | **是否出戰**：Combat／Transport＝true；僅兵團或待命＝false |
 | `officerFlag.Show` | 登場／可見狀態（見下表） |
 
-**Legion＝兵團**（出征部隊），**軍團**留給後方城市管理（英文待定）。
+**Legion＝兵團**（編制單位），**軍團**留給後方城市管理（英文待定）。
 
 ```text
 OfficerFlag
@@ -332,6 +333,7 @@ OfficerFlag
 
 - `IsDead`：`!IsAlive`
 - `IsBelonged`：`belong != 0` 且 `Show == Belonged`
+- `IsDeployed`：是否在戰鬥／運輸部隊出戰（≠是否在兵團）
 
 ### 5.4 個性：單一 `HashSet<PersonalityDef>`
 
@@ -364,7 +366,7 @@ OfficerFlag
 
 ### 5.8 戰法
 
-`battleSkills`：六槽（盾／騎／槍／弓／水／器），各 `SkillId`。與兵科適性分開；適性管能帶什麼兵，戰法槽管技能。
+武將無戰法欄位；戰法僅裝備於戰鬥部隊（`Combat` 四槽）。兵科適性管能帶什麼兵。
 
 ### 5.9 C++ 遺留虛方法（說明）
 

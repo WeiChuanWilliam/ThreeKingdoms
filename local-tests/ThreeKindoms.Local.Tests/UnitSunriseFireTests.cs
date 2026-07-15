@@ -24,7 +24,7 @@ namespace ThreeKindoms.Local.Tests
             var loc = grid.GetOrCreate(new HexCoord(0, 0), terrain);
             loc.SetOnFire();
 
-            var combat = new Combat(new CombatUnitDef(1, "blade", soldiers: 1000));
+            var combat = UnitUtil.CreateCombat(1, "blade", 1000, commanderOfficerId: 0);
             combat.Location.BindToWorld(grid, loc.Hex, terrain);
 
             loc.CountFire(roll0To99: 0);
@@ -46,7 +46,7 @@ namespace ThreeKindoms.Local.Tests
             var loc = grid.GetOrCreate(new HexCoord(0, 0), terrain);
             loc.SetOnFire();
 
-            var combat = new Combat(new CombatUnitDef(1, "blade", soldiers: 1000));
+            var combat = UnitUtil.CreateCombat(1, "blade", 1000, commanderOfficerId: 0);
             combat.Location.BindToWorld(grid, loc.Hex, terrain);
 
             loc.CountFire(roll0To99: 99);

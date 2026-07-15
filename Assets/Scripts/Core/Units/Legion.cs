@@ -17,43 +17,29 @@ namespace ThreeKindoms.Core.Units
         public override UnitKind Kind => UnitKind.Legion;
 
         /// <summary>兵團僅在駐紮據點內可正常作戰；野戰中不可。</summary>
-        public override bool CanFightInField => IsStationed;
+        public override bool CanFightInField => IsGarrison;
 
-        public Legion(LegionUnitDef def)
-            : base(UnitNameBuilder.Resolve(def, UnitKind.Legion), def.Belonged)
+        public Legion(string unitName, int factionBelonged)
+            : base(unitName ?? "", factionBelonged)
         {
-            def.ApplyTo(this);
         }
 
         public void SetCarriedFood(int value) => CarriedFood = value < 0 ? 0 : value;
 
-        /// <summary>扣除兵糧；餘量不足回傳 false（斷糧）。</summary>
-        public bool TryConsumeFood(int amount)
-        {
-            if (amount <= 0) return true;
-            if (CarriedFood < amount) return false;
-            CarriedFood -= amount;
-            return true;
-        }
+        /// <summary>暫定兵糧無限：每日應耗糧恒為 0。</summary>
+        public override int CalculateFoodConsumption() => 0;
 
-        public override int CalculateFoodConsumption()
-        {
-            if (IsAnnihilated || IsStationed) return 0;
-            return System.Math.Max(1, (int)(BaseFoodByHeadCount() * FoodConsumptionFactor));
-        }
+        /// <summary>暫定兵糧無限：不扣糧，恒成功。</summary>
+        public override bool TryConsumeDailyFood() => true;
 
-        public override bool TryConsumeDailyFood()
-        {
-            int cost = CalculateFoodConsumption();
-            return TryConsumeFood(cost);
-        }
+        /// <summary>暫定兵糧無限：不實際扣除 <see cref="CarriedFood"/>。</summary>
+        public bool TryConsumeFood(int amount) => true;
 
-        /// <summary>未駐紮時戰鬥力為 0（無法野戰）；駐紮時接近戰鬥部隊量級。</summary>
-        public override int CalculateCombatPower()
-        {
-            if (IsAnnihilated) return 0;
-            if (!IsStationed) return 0;
-            return UnitCombatPowerRules.CalculateStationedLegionPower(this);
-        }
+        /// <summary>野戰：無法正常作戰，戰鬥力 0。</summary>
+        protected override int CalculateNonGarrisonCombatPower() => 0;
+
+        /// <summary>駐紮：高攻高防（接近戰鬥部隊量級）。</summary>
+        protected override int CalculateGarrisonCombatPower() =>
+            UnitCombatPowerRules.CalculateStationedLegionPower(this);
     }
 }

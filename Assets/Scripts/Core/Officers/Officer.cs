@@ -4,8 +4,6 @@ using System.Collections.Generic;
 using ThreeKindoms.Core;
 using ThreeKindoms.Core.Units;
 
-using ThreeKindoms.Data.Battle;
-
 using ThreeKindoms.Data.Officers;
 
 
@@ -163,20 +161,31 @@ namespace ThreeKindoms.Core.Officers
 
 
 
-        /// <summary>登用或釋放武將：設定勢力、忠誠與登場狀態。</summary>
-        public void SetBelong(short factionId, short loyaltyValue = 80)
-
+        /// <summary>
+        /// 登用或釋放武將：設定勢力、忠誠與登場狀態。
+        /// 暫定同步 <see cref="LegionLeaderId"/>＝勢力 id（勢力 id＝領袖武將 id）。
+        /// </summary>
+        public void SetBelong(short factionId, short loyaltyValue = 75)
         {
-
             belong = factionId;
-
-            loyalty = NumericUtil.ClampToTarget(loyaltyValue, 0, 100);
-
+            loyalty = NumericUtil.ClampToTarget(loyaltyValue, (short)0, (short)100);
             salary = factionId == 0 ? (short)0 : (short)10;
-
             officerFlag.Show = factionId == 0 ? OfficerShowState.OpenShow : OfficerShowState.Belonged;
-
+            // 暫定：LegionLeaderId 與勢力 id 相同
+            legionLeaderId = factionId;
         }
+
+        /// <summary>
+        /// 設定兵團主將 id。暫定語意同勢力 id；日後可與 <see cref="Belong"/> 分離。
+        /// </summary>
+        public void SetLegionLeader(int leaderOfficerId) =>
+            legionLeaderId = leaderOfficerId < 0 ? 0 : leaderOfficerId;
+
+        /// <summary>
+        /// 設定是否出戰（戰鬥／運輸部隊任職＝true；兵團或待命＝false）。
+        /// 一般由 <see cref="Units.Unit"/> 指派主副將時自動呼叫。
+        /// </summary>
+        public void SetDeployed(bool deployed) => isDeployed = deployed;
 
 
 
@@ -187,7 +196,7 @@ namespace ThreeKindoms.Core.Officers
 
             loyalty += value;
 
-            loyalty = NumericUtil.ClampToTarget(loyalty, 0, 100);
+            loyalty = NumericUtil.ClampToTarget(loyalty, (short)0, (short)100);
 
         }
 
@@ -263,9 +272,6 @@ namespace ThreeKindoms.Core.Officers
         public void SetTroopAptitude(OfficerTroopAptitude aptitude) =>
 
             troopAptitude = OfficerTroopAptitude.Normalize(aptitude);
-
-        /// <summary>覆寫戰法技能資料。</summary>
-        public void SetBattleSkills(OfficerBattleSkills skills) => battleSkills = skills;
 
 
 
@@ -389,46 +395,36 @@ namespace ThreeKindoms.Core.Officers
 
 
             attackPerform = OfficerPerformanceRules.ComputePerform(
-
-                attack, officerFlag.Injury, true, stamina, itemIds);
+                attack, officerFlag.Injury, true, stamina, false, itemIds);
 
             intelligencePerform = OfficerPerformanceRules.ComputePerform(
-
-                intelligence, officerFlag.Injury, true, stamina, itemIds);
+                intelligence, officerFlag.Injury, true, stamina, false, itemIds);
 
             leadershipPerform = OfficerPerformanceRules.ComputePerform(
-
-                leadership, officerFlag.Injury, true, stamina, itemIds);
+                leadership, officerFlag.Injury, true, stamina, false, itemIds);
 
             policyPerform = OfficerPerformanceRules.ComputePerform(
-
-                policy, officerFlag.Injury, true, stamina, itemIds);
+                policy, officerFlag.Injury, true, stamina, false, itemIds);
 
             charismaPerform = OfficerPerformanceRules.ComputePerform(
-
-                charisma, officerFlag.Injury, true, stamina, itemIds);
+                charisma, officerFlag.Injury, true, stamina, false, itemIds);
 
         }
 
 
 
         /// <inheritdoc/>
-        public override int RollRandom(int minInclusive, int maxInclusive, double change)
-
+        public override int RollRandom(int minInclusive, int maxInclusive, double increament)
         {
-
             if (minInclusive > maxInclusive)
-
                 (minInclusive, maxInclusive) = (maxInclusive, minInclusive);
 
             int result = Random.Shared.Next(minInclusive, maxInclusive + 1);
 
             if (increament != 0)
-
                 result = (int)(result * (1 + increament));
 
             return result;
-
         }
 
 

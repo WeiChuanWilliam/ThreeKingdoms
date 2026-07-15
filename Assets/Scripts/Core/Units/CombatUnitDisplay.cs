@@ -64,7 +64,7 @@ namespace ThreeKindoms.Core.Units
 
             var e = CombatStatMath.GetEffectiveTroopStats(statContext, source);
 
-            if (string.IsNullOrEmpty(stationedSite) && unit.IsStationed && unit.Building != null)
+            if (string.IsNullOrEmpty(stationedSite) && unit.IsGarrison && unit.Building != null)
 
                 stationedSite = StationRules.GetSiteLabel(unit.Building.SiteKind);
 

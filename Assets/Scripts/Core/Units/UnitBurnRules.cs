@@ -1,4 +1,5 @@
 using System;
+using ThreeKindoms.Core;
 using ThreeKindoms.Core.Locations;
 using ThreeKindoms.Core.Officers;
 using ThreeKindoms.Data.Units;
@@ -137,7 +138,7 @@ namespace ThreeKindoms.Core.Units
             if (deaths > 0)
             {
                 short baseMorale = UnitConfigUtil.GetFireBaseMoraleLossPerDay();
-                moraleLoss = (short)Math.Clamp((int)MathF.Round(baseMorale * levelMult), 0, 100);
+                moraleLoss = (short)NumericUtil.ClampToTarget((int)MathF.Round(baseMorale * levelMult), 0, 100);
             }
 
             if (deaths == 0 && moraleLoss == 0)

@@ -24,7 +24,6 @@ namespace ThreeKindoms.Core.Units
         readonly HashSet<Skill> strategySkills = new(SkillByIdComparer.Instance);
         readonly HashSet<Skill> mobilitySkills = new(SkillByIdComparer.Instance);
         readonly HashSet<Skill> defenceSkills = new(SkillByIdComparer.Instance);
-        readonly HashSet<int> officerSkillIds = new();
 
         /// <summary>兵科大類（步／騎／弓等）。</summary>
         public TroopType TroopType { get; private set; }
@@ -58,12 +57,6 @@ namespace ThreeKindoms.Core.Units
 
         /// <summary>副將（戰鬥部隊至多一位）。</summary>
         public Officer ViceOfficer => ViceOfficers.Count > 0 ? ViceOfficers[0] : null;
-
-        /// <summary>主將+副將合併後的技能 id（HashSet 去重）。</summary>
-        public IReadOnlyCollection<int> OfficerSkillIds => officerSkillIds;
-
-        /// <summary>主將／副將合併技能 id 的可變集合（組裝與存檔用）。</summary>
-        internal HashSet<int> OfficerSkillIdSet => officerSkillIds;
 
         /// <summary>兵種表六圍（初始值）。</summary>
         public CombatTroopStatBlock BaseTroopStats => CombatStatMath.GetBaseTroopStats(this);
@@ -105,28 +98,14 @@ namespace ThreeKindoms.Core.Units
         /// <summary>部隊類型：戰鬥部隊。</summary>
         public override UnitKind Kind => UnitKind.Combat;
 
-        /// <summary>所屬兵團；戰鬥部隊耗糧由此兵團的 <see cref="Legion.CarriedFood"/> 扣除。</summary>
+        /// <summary>所屬兵團（暫保留掛載；兵糧目前視為無限，不由此扣糧）。</summary>
         public Legion ParentLegion { get; private set; }
 
-        /// <summary>從表資料建立（對應 Java：{@code new Combat(combatDef)}）。</summary>
-        public Combat(CombatUnitDef def)
-            : base(UnitNameBuilder.Resolve(def, UnitKind.Combat), def.Belonged)
+        /// <summary>建立空戰鬥部隊；組隊請用 <see cref="Data.Units.UnitUtil.Create"/>。</summary>
+        public Combat(string unitName, int factionBelonged)
+            : base(unitName ?? "", factionBelonged)
         {
-            def.ApplyTo(this);
-        }
-
-        /// <summary>指派主將並重新彙整武將技能。</summary>
-        public new void SetCommander(Officer unitCopy)
-        {
-            base.SetCommander(unitCopy);
-            RefreshSkillsFromOfficers();
-        }
-
-        /// <summary>從武將池指派主將並重新彙整武將技能。</summary>
-        public new void SetCommanderFromPool(int officerDefId)
-        {
-            base.SetCommanderFromPool(officerDefId);
-            RefreshSkillsFromOfficers();
+            SetGarrison(false);
         }
 
         /// <summary>設定唯一副將（取代既有副將）。</summary>
@@ -134,49 +113,26 @@ namespace ThreeKindoms.Core.Units
         {
             ClearViceOfficers();
             if (unitCopy == null)
-            {
-                RefreshSkillsFromOfficers();
                 return true;
-            }
 
-            bool ok = base.AddViceOfficer(unitCopy);
-            RefreshSkillsFromOfficers();
-            return ok;
+            return base.AddViceOfficer(unitCopy);
         }
 
         /// <summary>從武將池設定唯一副將（id≤0 則清空）。</summary>
         public bool SetViceOfficerFromPool(int officerDefId) =>
             SetViceOfficer(officerDefId > 0 ? OfficerPool.Get(officerDefId) : null);
 
-        /// <summary>新增副將（至多一位）；成功後重新彙整武將技能。</summary>
-        public new bool AddViceOfficer(Officer unitCopy)
+        /// <summary>新增副將（至多一位）。</summary>
+        public override bool AddViceOfficer(Officer unitCopy)
         {
             if (ViceOfficers.Count >= 1)
                 return false;
-            bool ok = base.AddViceOfficer(unitCopy);
-            if (ok)
-                RefreshSkillsFromOfficers();
-            return ok;
+            return base.AddViceOfficer(unitCopy);
         }
 
-        /// <summary>從主將／副將重新彙整技能 id 至 <see cref="OfficerSkillIds"/>。</summary>
-        public void RefreshSkillsFromOfficers() => CombatSkillAssembler.RefreshEquippedSkills(this);
-
-        /// <summary>建立戰鬥力計算用上下文（含武將能力、技能組、士氣、體力）。</summary>
+        /// <summary>建立戰鬥力計算用上下文（含武將能力、部隊戰法、士氣、體力）。</summary>
         public bool TryGetCombatPowerContext(out CombatPowerContext context) =>
             CombatPowerRules.TryCreateContext(this, out context);
-
-        /// <summary>清空主將／副將合併後的技能 id 集合。</summary>
-        internal void ClearOfficerSkillIds() => officerSkillIds.Clear();
-
-        /// <summary>清空四類裝備戰法技能集合（重新組裝前）。</summary>
-        internal void ClearEquippedSkillSets()
-        {
-            battleSkills.Clear();
-            strategySkills.Clear();
-            mobilitySkills.Clear();
-            defenceSkills.Clear();
-        }
 
         /// <summary>設定兵科大類。</summary>
         public void SetTroopType(TroopType type) => TroopType = type;
@@ -212,9 +168,6 @@ namespace ThreeKindoms.Core.Units
 
         /// <summary>是否已裝備指定 id 的防禦戰法。</summary>
         public bool ContainsDefenceSkill(int skillId) => FindSkill(defenceSkills, skillId) != null;
-
-        /// <summary>主將或副將是否擁有指定技能 id。</summary>
-        public bool ContainsOfficerSkill(int skillId) => skillId > 0 && officerSkillIds.Contains(skillId);
 
         /// <summary>取得已裝備的戰鬥戰法實例。</summary>
         public Skill? GetBattleSkill(int skillId) => FindSkill(battleSkills, skillId);
@@ -252,24 +205,19 @@ namespace ThreeKindoms.Core.Units
         /// <summary>脫離兵團歸屬。</summary>
         public void DetachFromLegion() => ParentLegion = null;
 
-        /// <summary>計算本日應耗糧數（殲滅或駐紮時為 0）。</summary>
-        public override int CalculateFoodConsumption()
-        {
-            if (IsAnnihilated || IsStationed) return 0;
-            return System.Math.Max(1, (int)(BaseFoodByHeadCount() * FoodConsumptionFactor));
-        }
+        /// <summary>暫定兵糧無限：每日應耗糧恒為 0。</summary>
+        public override int CalculateFoodConsumption() => 0;
 
-        /// <summary>計算本日耗糧並向 <see cref="ParentLegion"/> 申請扣除；無兵團或糧盡回傳 false。</summary>
-        public override bool TryConsumeDailyFood()
-        {
-            int cost = CalculateFoodConsumption();
-            if (cost <= 0) return true;
-            if (ParentLegion == null) return false;
-            return ParentLegion.TryConsumeFood(cost);
-        }
+        /// <summary>暫定兵糧無限：不扣糧，恒成功。</summary>
+        public override bool TryConsumeDailyFood() => true;
 
-        /// <summary>依武將、技能、六圍、士氣、體力與有效兵力計算戰鬥力。</summary>
-        public override int CalculateCombatPower() => CombatPowerRules.GetCombatPower(this);
+        /// <summary>野戰戰鬥力（武將、技能、六圍、士氣、體力與有效兵力）。</summary>
+        protected override int CalculateNonGarrisonCombatPower() =>
+            CombatPowerRules.GetCombatPower(this);
+
+        /// <summary>駐紮戰鬥力（目前同野戰公式；之後可疊據點攻防加成）。</summary>
+        protected override int CalculateGarrisonCombatPower() =>
+            CombatPowerRules.GetCombatPower(this);
 
         /// <summary>匯出四槽裝備戰法至存檔條目清單。</summary>
         internal void CollectEquippedSkills(

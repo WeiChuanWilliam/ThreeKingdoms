@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using ThreeKindoms.Core.Officers;
 using ThreeKindoms.Data.Units;
 
@@ -16,9 +15,6 @@ namespace ThreeKindoms.Core.Units
 
         /// <summary>主副將加權合併後的能力。</summary>
         public OfficerCombatAbilities BlendedOfficerAbilities { get; }
-
-        /// <summary>主將與副將合併後的技能 id。</summary>
-        public IReadOnlyCollection<int> OfficerSkillIds { get; }
 
         /// <summary>四槽已裝備戰法總數。</summary>
         public int EquippedSkillCount { get; }
@@ -46,7 +42,6 @@ namespace ThreeKindoms.Core.Units
             OfficerCombatAbilities commander,
             OfficerCombatAbilities vice,
             OfficerCombatAbilities blended,
-            IReadOnlyCollection<int> officerSkillIds,
             int equippedSkillCount,
             short morale,
             short stamina,
@@ -58,7 +53,6 @@ namespace ThreeKindoms.Core.Units
             CommanderAbilities = commander;
             ViceAbilities = vice;
             BlendedOfficerAbilities = blended;
-            OfficerSkillIds = officerSkillIds ?? Array.Empty<int>();
             EquippedSkillCount = equippedSkillCount < 0 ? 0 : equippedSkillCount;
             Morale = morale;
             Stamina = stamina;
@@ -102,7 +96,6 @@ namespace ThreeKindoms.Core.Units
                 commanderAbilities,
                 viceAbilities,
                 blended,
-                combat.OfficerSkillIds,
                 combat.CountEquippedSkills(),
                 combat.Morale,
                 combat.Stamina,
@@ -126,7 +119,7 @@ namespace ThreeKindoms.Core.Units
             float officerCore = context.BlendedOfficerAbilities.SumCombatRelevant();
             float officerFactor = 1f + officerCore * UnitConfigUtil.GetCombatPowerOfficerScale();
 
-            int skillCount = context.OfficerSkillIds.Count + context.EquippedSkillCount;
+            int skillCount = context.EquippedSkillCount;
             float skillFactor = 1f + skillCount * UnitConfigUtil.GetCombatPowerSkillBonusPerSkill();
 
             float moraleFactor = context.Morale / 100f * UnitConfigUtil.GetCombatPowerMoraleWeight();

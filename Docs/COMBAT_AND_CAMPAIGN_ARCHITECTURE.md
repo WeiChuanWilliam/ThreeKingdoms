@@ -162,7 +162,7 @@ float GetAdjacentCombatModifier(Legion legion, int battleNodeId);
 
 ## 4. 戰術層：向量（Facing）與塗格
 
-> **駐紮例外**：`Unit.IsStationed == true` 時**不套用**面向／背面半防；改依據點防禦加成，見 [`SETTLEMENT_SITES.md`](SETTLEMENT_SITES.md) §7。
+> **駐紮例外**：`Unit.IsGarrison == true` 時**不套用**面向／背面半防；改依據點防禦加成，見 [`SETTLEMENT_SITES.md`](SETTLEMENT_SITES.md) §7。
 
 ### 4.1 概念（類三國志塗格，加朝向）
 

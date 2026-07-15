@@ -20,7 +20,7 @@ namespace ThreeKindoms.Local.Tests.Runners
                 return Fail(log, "無法載入 unit.properties", unitPropertiesPath);
 
             TroopKindRegistry.EnsureBuilt();
-            TestLog.Line(log, $"=== new Combat(CombatUnitDef) × {soldiers} 兵，預設士气/体力 100、金 0 ===");
+            TestLog.Line(log, $"=== UnitUtil.Create(Combat) × {soldiers} 兵，預設士气/体力 100、金 0 ===");
 
             var keys = new List<string>(TroopKindRegistry.All.Keys);
             keys.Sort(StringComparer.Ordinal);
@@ -34,11 +34,16 @@ namespace ThreeKindoms.Local.Tests.Runners
                     if (!UnitConfigUtil.TryGetKindBaseStats(kindKey, out _))
                         throw new InvalidOperationException("properties 缺少六圍");
 
-                    CombatUnitDef def = CombatUnitDef.FromTroopKind(factionId, kindKey, soldiers);
-                    Combat unit = new Combat(def);
+                    string expectedName = UnitUtil.ResolveUnitName(null, 0, kindKey, UnitKind.Combat);
+                    Combat unit = (Combat)UnitUtil.Create(
+                        UnitKind.Combat,
+                        factionId,
+                        commanderOfficerId: 0,
+                        kindKey,
+                        soldiers: soldiers);
 
-                    if (unit.UnitName != def.CustomUnitName)
-                        throw new InvalidOperationException($"部隊名 {unit.UnitName}");
+                    if (unit.UnitName != expectedName)
+                        throw new InvalidOperationException($"部隊名 {unit.UnitName} ≠ {expectedName}");
                     if (unit.Soldiers != soldiers) throw new InvalidOperationException("兵力");
                     if (unit.Morale != 100 || unit.Stamina != 100) throw new InvalidOperationException("士气/体力");
                     if (unit.Money != 0) throw new InvalidOperationException("金錢");

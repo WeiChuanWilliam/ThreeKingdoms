@@ -16,7 +16,7 @@ namespace ThreeKindoms.Core.Units
         /// <summary>用于 <see cref="UnitLocationBinding.MoveAlongPath"/>；≤0 表示不能移动。</summary>
         public static float GetMarchSpeedMultiplier(Unit unit)
         {
-            if (unit == null || unit.IsStationed)
+            if (unit == null || unit.IsGarrison)
                 return 0f;
 
             float baseline = MobilityBaseline;

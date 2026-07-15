@@ -51,7 +51,7 @@ OfficerCombatAbilities.FromOfficer（戰鬥讀取）
 | `leadership` … `charisma` | short | 五維基礎 1～100 | `Attack` … `Charisma` |
 | `stamina` | short | 體力 0～100 | `Stamina` |
 | `gender` | byte | 0 男、1 女 | `OfficerFlag.Gender` |
-| `loyalty` / `belong` | short | 忠誠、勢力 | `SetBelong` |
+| `belong` | short | 勢力 | `SetBelong`（忠誠導入時預設 75，見 `officer.loyalty.default`） |
 | `injury` | byte | 0～3 傷勢 | `SetInjury` |
 | `compatibility` | byte | 相性 | `Compatibility` |
 | `troopAptitude` | object | 步騎弓器水 0=C…3=S | `TroopAptitude` |
@@ -59,7 +59,8 @@ OfficerCombatAbilities.FromOfficer（戰鬥讀取）
 | `itemIds` | int[] | 道具 id | `ItemIds` |
 | `birthYear` / `deathYear` | short | 出生、死亡年 | `SetBirthYear` / `SetDeathYear` |
 | `title` | string | 官職 | `Title` |
-| `battleSkills` | object | 六槽戰法 | `BattleSkills` |
+
+**戰法**：僅戰鬥部隊（`Combat`）四槽裝備；武將無戰法欄位。
 
 **執行時另有、JSON 可後補**：`legionLeaderId`（兵團主將）、`OfficerFlag.Show`（登場狀態）、`salary`。
 
@@ -110,15 +111,15 @@ OfficerCombatAbilities.FromOfficer（戰鬥讀取）
 | 屬性 | 說明 |
 |------|------|
 | `OfficerFlag` | Injury, Show, Gender, IsAlive |
-| `Belong` | 勢力 id；0＝在野 |
-| `LegionLeaderId` | 兵團主將 defId |
+| `Belong` | 勢力 id；0＝在野；**＝領袖武將 defId** |
+| `LegionLeaderId` | 暫定＝`Belong` |
+| `IsDeployed` | 出戰：Combat／Transport＝true；兵團／待命＝false |
 | `Loyalty` / `Salary` / `Title` | 忠誠、俸祿、官職 |
 | `BirthYear` / `DeathYear` / `AgeAtDeath` | 生涯（享年＝卒年－生年，唯讀） |
 | `Compatibility` | 相性 |
 | `TroopAptitude` / `GetTroopAptitude` | 兵科適性 |
 | `Personalities` / `ItemIds` | 個性、道具 |
 | 人際 | 試玩版未實作；親愛／義兄弟／厭惡／配偶見 OFFICER_CLASS §5.7 規劃 |
-| `BattleSkills` | 戰法六槽 |
 
 ---
 

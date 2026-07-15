@@ -5,8 +5,8 @@ namespace ThreeKindoms.Core.Units
 {
     /// <summary>
     /// 部隊駐紮規則。
-    /// 駐紮不是獨立部隊類型：仍是 <see cref="Combat"/> 或 <see cref="Legion"/>，
-    /// 僅透過 <see cref="Unit.IsStationed"/> 布林值切換狀態。
+    /// 駐紮不是獨立部隊類型：仍是 <see cref="Combat"/>／<see cref="Legion"/>／<see cref="Transport"/>，
+    /// 僅透過 <see cref="Unit.IsGarrison"/> 布林值切換狀態。
     /// </summary>
     public static class StationRules
     {
@@ -19,21 +19,21 @@ namespace ThreeKindoms.Core.Units
             SettlementSiteRules.GetDisplayName(kind);
 
         /// <summary>
-        /// 部隊進入可駐紮據點格時，自動設 <see cref="Unit.IsStationed"/> = true。
+        /// 部隊進入可駐紮據點格時，自動設 <see cref="Unit.IsGarrison"/> = true。
         /// 由 <see cref="UnitLocationBinding"/> 在進格時呼叫。
         /// </summary>
         public static void TryAutoStation(Unit unit, MapLocation location)
         {
-            if (unit == null || location == null || unit.IsStationed)
+            if (unit == null || location == null || unit.IsGarrison)
                 return;
-            if (unit is not Combat and not Legion)
+            if (unit is not Combat and not Legion and not Transport)
                 return;
 
             AbstractBuilding site = location.Building ?? unit.Building;
             if (!IsStationSite(site))
                 return;
 
-            unit.SetStationed(true);
+            unit.SetGarrison(true);
             if (site != null)
                 unit.SetBuilding(site);
         }
@@ -42,7 +42,7 @@ namespace ThreeKindoms.Core.Units
         public static void DepartStation(Unit unit)
         {
             if (unit == null) return;
-            unit.SetStationed(false);
+            unit.SetGarrison(false);
         }
     }
 }

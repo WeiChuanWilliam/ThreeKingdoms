@@ -52,7 +52,7 @@ namespace ThreeKindoms.Core.Units
             return System.Math.Max(0, (int)System.MathF.Round(raw, System.MidpointRounding.AwayFromZero));
         }
 
-        /// <summary>運輸隊：幾乎無作戰能力。</summary>
+        /// <summary>運輸隊野戰：幾乎無作戰能力。</summary>
         public static int CalculateTransportPower(Transport transport)
         {
             if (transport == null || transport.IsAnnihilated)
@@ -60,6 +60,19 @@ namespace ThreeKindoms.Core.Units
 
             float scale = UnitConfigUtil.GetFloat("unit.combat_power.transport_scale", 0.05f);
             return System.Math.Max(0, (int)(transport.EffectiveCombatStrength * scale));
+        }
+
+        /// <summary>運輸隊駐紮：偏提高防禦（守輜重），評分高於野戰。</summary>
+        public static int CalculateGarrisonTransportPower(Transport transport)
+        {
+            if (transport == null || transport.IsAnnihilated)
+                return 0;
+
+            float fieldScale = UnitConfigUtil.GetFloat("unit.combat_power.transport_scale", 0.05f);
+            float garrisonScale = UnitConfigUtil.GetFloat("unit.combat_power.transport_garrison_scale", 0.25f);
+            float scale = System.Math.Max(fieldScale, garrisonScale);
+            float defenseBoost = StationedCombatRules.GetDefenseMultiplier(transport);
+            return System.Math.Max(0, (int)(transport.EffectiveCombatStrength * scale * defenseBoost));
         }
     }
 }

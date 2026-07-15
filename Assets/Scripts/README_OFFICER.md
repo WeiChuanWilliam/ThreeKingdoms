@@ -9,7 +9,7 @@
 | `Personality` | `Data/Officers/PersonalityDef.cs` + `PersonalityDatabase.cs` |
 | 個性表 | `StreamingAssets/personality_traits.json`（來源 `Docs/PERSONALITY_TRAITS_TABLES.md`） |
 | `Item` | `Data/Items/ItemDef.cs`（佔位） |
-| `BattleSkill` | `Data/Battle/BattleSkill.cs` |
+| 戰法（部隊四槽） | `Core/Units/Combat.cs` + `Data/Skill/Skill.cs` |
 | `Unit::AbstractUnit` | `Core/Units/AbstractUnit.cs` |
 | `Unit::ActualUnit` | `Core/Units/MapUnit.cs` |
 | 表資料 | `Data/Officers/OfficerDef.cs` + `StreamingAssets/officers.json` |
@@ -32,8 +32,8 @@ var guan = db.GetOrCreateRuntime(1);
 Debug.Log(guan.FullName + " 武 " + guan.Attack);
 ```
 
-## C++ 標頭未完成部分
+## 戰法歸屬
 
-原檔末尾 `BattleSkill::shieldForceSkill` 語法不完整，C# 改為 `OfficerBattleSkills` 六個槽位。
+武將（`OfficerDef` / `Officer`）**無**戰法欄位；戰法僅裝備於戰鬥部隊 `Combat` 四槽，由 `UnitUtil.CreateCombat` 組隊後再 `AddBattleSkill` 等設定。
 
 請繼續貼：`City`、`Unit`（完整）、`Faction` 等 .h，可同樣轉成 C#。

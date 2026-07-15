@@ -20,7 +20,7 @@ namespace ThreeKindoms.Tests.Runners
                 return Fail(log, "無法載入 unit.properties", unitPropertiesPath);
 
             TroopKindRegistry.EnsureBuilt();
-            log.AppendLine($"=== new Combat(CombatUnitDef) × {soldiers} 兵 ===");
+            log.AppendLine($"=== UnitUtil.Create(Combat) × {soldiers} 兵 ===");
 
             var keys = new List<string>(TroopKindRegistry.All.Keys);
             keys.Sort(StringComparer.Ordinal);
@@ -34,8 +34,12 @@ namespace ThreeKindoms.Tests.Runners
                     if (!UnitConfigUtil.TryGetKindBaseStats(kindKey, out _))
                         throw new InvalidOperationException("properties 缺少六圍");
 
-                    CombatUnitDef def = CombatUnitDef.FromTroopKind(factionId, kindKey, soldiers);
-                    Combat unit = new Combat(def);
+                    Combat unit = (Combat)UnitUtil.Create(
+                        UnitKind.Combat,
+                        factionId,
+                        commanderOfficerId: 0,
+                        kindKey,
+                        soldiers: soldiers);
 
                     if (unit.TroopAttack != kind.Attack || unit.TroopDefense != kind.Defense)
                         throw new InvalidOperationException("六圍");

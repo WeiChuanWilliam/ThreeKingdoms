@@ -55,8 +55,8 @@ namespace ThreeKindoms.Local.Tests
 
         static Combat CreateCombatWithTrait(string traitName)
         {
-            var def = new CombatUnitDef(1, "blade", soldiers: 1000);
-            var combat = new Combat(def);
+            UnitConfigUtil.Load(TestPaths.UnitPropertiesPath);
+            var combat = UnitUtil.CreateCombat(1, "blade", 1000, commanderOfficerId: 0);
             var cmd = new Officer(1);
             cmd.AddPersonality(0, traitName, traitName);
             combat.SetCommander(cmd);

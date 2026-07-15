@@ -1,5 +1,5 @@
 using ThreeKindoms.Core.Officers;
-using ThreeKindoms.Data.Battle;
+using ThreeKindoms.Core;
 
 namespace ThreeKindoms.Data.Officers
 {
@@ -24,15 +24,14 @@ namespace ThreeKindoms.Data.Officers
                 def.policy,
                 def.charisma,
                 def.stamina > 0 ? def.stamina : OfficerConfigUtil.GetDefaultStamina());
-            o.SetBelong(def.belong, def.loyalty);
+            o.SetBelong(def.belong, OfficerConfigUtil.GetDefaultLoyalty());
             o.SetBirthYear(def.birthYear);
             o.SetDeathYear(def.deathYear);
             o.SetTitle(def.title);
             o.SetGender(def.gender != 1);
-            o.SetInjury((OfficerInjuryState)System.Math.Clamp((int)def.injury, 0, 3));
+            o.SetInjury((OfficerInjuryState)NumericUtil.ClampToTarget((int)def.injury, 0, 3));
             o.SetCompatibility(def.compatibility);
             o.SetTroopAptitude(def.troopAptitude);
-            o.SetBattleSkills(def.battleSkills);
             OfficerPersonalityLoader.ApplyFromIds(o, def.personalityIds, personalityDb);
             OfficerItemLoader.ApplyFromIds(o, def.itemIds);
             return o;

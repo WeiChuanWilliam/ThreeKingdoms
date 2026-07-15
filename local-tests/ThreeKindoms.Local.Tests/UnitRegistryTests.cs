@@ -19,7 +19,7 @@ namespace ThreeKindoms.Local.Tests
             var grid = new LocationGrid();
             var terrain = TerrainDefinition.FromTerrainType(TerrainType.Plain);
             var hex = new HexCoord(2, 3);
-            var combat = new Combat(new CombatUnitDef(1, "blade", soldiers: 1000));
+            var combat = UnitUtil.CreateCombat(1, "blade", 1000, commanderOfficerId: 0);
             combat.Location.BindToWorld(grid, hex, terrain);
 
             Assert.Equal(1, UnitRegistry.Count);
@@ -44,9 +44,9 @@ namespace ThreeKindoms.Local.Tests
             grid.GetOrCreate(fireHex, terrain).SetOnFire();
             grid.GetOrCreate(safeHex, TerrainDefinition.FromTerrainType(TerrainType.Plain));
 
-            var onFire = new Combat(new CombatUnitDef(1, "blade", soldiers: 1000));
+            var onFire = UnitUtil.CreateCombat(1, "blade", 1000, commanderOfficerId: 0);
             onFire.Location.BindToWorld(grid, fireHex, terrain);
-            var safe = new Combat(new CombatUnitDef(1, "blade", soldiers: 1000));
+            var safe = UnitUtil.CreateCombat(1, "blade", 1000, commanderOfficerId: 0);
             safe.Location.BindToWorld(grid, safeHex, TerrainDefinition.FromTerrainType(TerrainType.Plain));
 
             int before = onFire.Soldiers;
@@ -67,7 +67,7 @@ namespace ThreeKindoms.Local.Tests
             var loc = grid.GetOrCreate(new HexCoord(0, 0), terrain);
             loc.SetOnFire();
 
-            var combat = new Combat(new CombatUnitDef(1, "blade", soldiers: 1000));
+            var combat = UnitUtil.CreateCombat(1, "blade", 1000, commanderOfficerId: 0);
             combat.Location.BindToWorld(grid, loc.Hex, terrain);
 
             loc.CountFire(roll0To99: 0);

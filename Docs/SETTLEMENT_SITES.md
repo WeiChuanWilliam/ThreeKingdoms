@@ -1,15 +1,16 @@
 # 據點與駐紮（Settlement Sites）
 
 **狀態**：類型與駐紮防禦加成定案；建造消耗、耐久待參數表。  
-程式：`SettlementSiteKind`、`SettlementSiteRules`、`StationedCombatRules`、`Unit.IsStationed`。
+程式：`SettlementSiteKind`、`SettlementSiteRules`、`StationedCombatRules`、`Unit.IsGarrison`。
 
 ---
 
 ## 1. 共通規則
 
-- **駐紮** = `Unit.IsStationed == true`；部隊仍是 `Combat` 或 `Legion`，不換類別。
+- **駐紮** = `Unit.IsGarrison == true`；部隊仍是 `Combat`／`Legion`／`Transport`，**不換類別**。
 - 進入有據點的格子 → `StationRules.TryAutoStation` 自動駐紮。
 - 下列 **八種** 據點皆可駐紮。
+- 駐紮時戰鬥力走「駐紮公式」（依 `UnitKind`：運輸偏防、兵團高攻高防、戰鬥部隊駐紮強化）— 見 [`UNIT_TYPES.md`](UNIT_TYPES.md)。
 
 ---
 
@@ -48,14 +49,15 @@
 
 ---
 
-## 4. 與兵團／戰鬥隊
+## 4. 與兵團／戰鬥／運輸
 
-| 部隊 | 野戰 | 駐紮於上表任一地點 |
-|------|------|-------------------|
-| **Combat** | 正常作戰 | 可駐紮；耗糧為 0 |
-| **Legion** | **不可**野戰（戰力 0） | 駐紮後可正常作戰 |
+| 部隊 | 野戰 | 駐紮（`IsGarrison`） |
+|------|------|----------------------|
+| **Combat** | 一般戰鬥力 | 駐紮戰鬥力（攻防強化，參數另訂） |
+| **Legion** | 一般戰鬥力（既有規則） | 駐紮戰鬥力：**高攻高防** |
+| **Transport** | 一般戰鬥力（既有規則） | 駐紮戰鬥力：**偏提高防禦** |
 
-見 [`UNIT_AND_LOCATION.md`](UNIT_AND_LOCATION.md) 駐紮一節。
+完整規則：[`UNIT_TYPES.md`](UNIT_TYPES.md)。地格銜接：[`UNIT_AND_LOCATION.md`](UNIT_AND_LOCATION.md)。
 
 ---
 
@@ -77,13 +79,13 @@
 
 ### 7.1 駐紮時沒有「面向／向量」
 
-部隊 **`IsStationed == true`** 時：
+部隊 **`IsGarrison == true`** 時：
 
 - **不套用** 野戰 Facing（正面全防／背面半防）。
 - 不會因被從背後攻擊而降低攻擊或防禦。
 - 等同據點內駐防，四面視為依托工事，而非野戰隊形。
 
-野戰移動、塗格、面向規則僅在 **`IsStationed == false`** 時生效。
+野戰移動、塗格、面向規則僅在 **`IsGarrison == false`** 時生效。
 
 ### 7.2 據點防禦加成（全軍防禦率）
 

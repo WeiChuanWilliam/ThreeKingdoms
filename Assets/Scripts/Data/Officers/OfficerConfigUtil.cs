@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using ThreeKindoms.Core;
 using ThreeKindoms.Data.Scenario;
 using ThreeKindoms.Data.Units;
 
@@ -58,14 +59,17 @@ namespace ThreeKindoms.Data.Officers
         public static int GetInt(string key, int defaultValue = 0) =>
             int.TryParse(Get(key), out int n) ? n : defaultValue;
 
+        public static short GetDefaultLoyalty() =>
+            NumericUtil.ClampToTarget((short)GetInt("officer.loyalty.default", 75), (short)0, (short)100);
+
         public static short GetDefaultStamina() =>
-            (short)Math.Clamp(GetInt("officer.stamina.default", 100), 0, short.MaxValue);
+            NumericUtil.ClampToTarget((short)GetInt("officer.stamina.default", 100), (short)0, short.MaxValue);
 
         public static byte GetDefaultCompatibility() =>
-            (byte)Math.Clamp(GetInt("officer.compatibility.default", 145), 0, 255);
+            (byte)NumericUtil.ClampToTarget(GetInt("officer.compatibility.default", 145), 0, 255);
 
         public static TroopAptitudeGrade GetDefaultAptitudeGrade() =>
-            (TroopAptitudeGrade)Math.Clamp(GetInt("officer.aptitude.default", 0), 0, 3);
+            (TroopAptitudeGrade)NumericUtil.ClampToTarget(GetInt("officer.aptitude.default", 0), 0, 3);
 
         public static int GetPersonalityGoldMax() => GetInt("officer.personality.gold_max", 3);
         public static int GetPersonalityBlueMax() => GetInt("officer.personality.blue_max", 3);
