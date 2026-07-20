@@ -22,5 +22,8 @@ namespace ThreeKindoms.UnityBridge
 
         public static string ChineseUnitProperties =>
             Path.Combine(StreamingAssets, "chinese", "unit.properties");
+
+        public static string ChineseSkillProperties =>
+            Path.Combine(StreamingAssets, "chinese", "skill.properties");
     }
 }

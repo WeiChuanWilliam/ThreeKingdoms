@@ -22,9 +22,8 @@ namespace ThreeKindoms.Data.Units
         public static bool IsLoaded => loaded;
         public static string Locale { get; private set; } = "zh";
 
-        /// <summary>戰鬥部隊後綴（properties: suffix.company, suffix.combat）。</summary>
+        /// <summary>戰鬥部隊後綴（properties: suffix.company）。</summary>
         public static string SuffixCompany => Get("suffix.company", Get("suffix.combat", "隊"));
-        public static string SuffixCombat => Get("suffix.company", Get("suffix.combat", "隊"));        
 
         public static string SuffixLegion => Get("suffix.legion", "軍");
         public static string SuffixTransport => Get("suffix.transport", "運輸隊");

@@ -39,6 +39,8 @@ UnitManpower.MinSoldiers; // 10
 
 部隊由 `UnitUtil.CreateCombat`／`DeployCombat` 直接產生執行時 `Combat`（**無**類似武將的 Def／執行時雙層）。不讀部隊 JSON。
 
+> **兵種戰法（B／A／S）**：見 [`SKILL_DESIGN.md`](SKILL_DESIGN.md)。行為寫死在 code；`skill.properties` 只當規劃備忘。戰法自有射程（≠ 普攻）、結算吃部隊攻擊係數；與上列四槽 API 尚未合併。
+
 ## 組隊入口
 
 `UnitUtil.CreateCombat(factionId, troopKindKey, soldiers, commanderId, viceIds…)`
