@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using ThreeKindoms.Core;
 using ThreeKindoms.Core.Units;
 using ThreeKindoms.Data.Scenario;
 
@@ -41,7 +42,7 @@ namespace ThreeKindoms.Data.Units
 
         /// <summary>每日續燃：n×step%（step 預設 25）；n=0 不續燃。</summary>
         public static int GetFireBurnContinuationStepPercent() =>
-            System.Math.Clamp(GetInt("unit.fire.burn_continuation_step", 25), 0, 100);
+            NumericUtil.ClampToTarget(GetInt("unit.fire.burn_continuation_step", 25), 0, 100);
         public static string StatusOnTrap => Get("status.on_trap", "止步");
         public static string StatusOnMess => Get("status.on_mess", "混亂");
         public static string StatusOnDeceive => Get("status.on_deceive", "偽報");
@@ -137,7 +138,7 @@ namespace ThreeKindoms.Data.Units
 
         /// <summary>日出灼燒：基礎士氣下降（再乘 FlameLevel）。</summary>
         public static short GetFireBaseMoraleLossPerDay() =>
-            (short)System.Math.Clamp(GetInt("unit.fire.base_morale_loss_per_day", 2), 0, 100);
+            (short)NumericUtil.ClampToTarget(GetInt("unit.fire.base_morale_loss_per_day", 2), 0, 100);
 
         public static float GetCombatPowerOfficerScale() =>
             GetFloat("unit.combat_power.officer_scale", 0.002f);

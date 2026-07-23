@@ -26,7 +26,7 @@ namespace ThreeKindoms.Data.Persistence
         public int wounded;
         public short morale;
         public short stamina;
-        public bool isStationed;
+        public bool isGarrison;
 
         public OfficerSaveEntry commander;
         public OfficerSaveEntry[] vice = Array.Empty<OfficerSaveEntry>();

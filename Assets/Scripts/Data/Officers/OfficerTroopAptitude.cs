@@ -1,5 +1,5 @@
 using System;
-
+using ThreeKindoms.Core;
 using ThreeKindoms.Data.Units;
 
 
@@ -83,8 +83,7 @@ namespace ThreeKindoms.Data.Officers
 
 
         static TroopAptitudeGrade ClampGrade(TroopAptitudeGrade grade) =>
-
-            grade > TroopAptitudeGrade.S ? TroopAptitudeGrade.S : grade;
+            (TroopAptitudeGrade)NumericUtil.ClampToTarget((byte)grade, (byte)TroopAptitudeGrade.C, (byte)TroopAptitudeGrade.S);
 
     }
 

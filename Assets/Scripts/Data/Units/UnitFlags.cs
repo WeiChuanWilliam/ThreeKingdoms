@@ -1,4 +1,5 @@
 using System;
+using ThreeKindoms.Core;
 
 namespace ThreeKindoms.Data.Units
 {
@@ -19,11 +20,8 @@ namespace ThreeKindoms.Data.Units
         public HazardDamageLevel FlameDamage;
         public HazardDamageLevel TrapDamage;
 
-        public static HazardDamageLevel ClampHazard(HazardDamageLevel value)
-        {
-            if ((byte)value > 3) return HazardDamageLevel.Serious;
-            return value;
-        }
+        public static HazardDamageLevel ClampHazard(HazardDamageLevel value) =>
+            (HazardDamageLevel)NumericUtil.ClampToTarget((byte)value, (byte)0, (byte)3);
 
         public static HazardDamageLevel FromByte(byte value) =>
             ClampHazard((HazardDamageLevel)value);

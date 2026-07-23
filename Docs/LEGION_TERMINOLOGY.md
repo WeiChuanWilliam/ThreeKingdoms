@@ -9,24 +9,33 @@
 
 **不要**再把 `Legion` 翻成「軍團」。舊文件若寫「軍團＝Legion」請改為「兵團」。
 
-## 武將 `LegionLeaderId`（Leader）
+## 勢力 id、`Belong`、`LegionLeaderId`（暫定）
 
-與 **`Belong`（勢力）** 不同：
+| 欄位 | 暫定語意 |
+|------|----------|
+| **勢力 id**／`Belong` | **＝執掌該勢力的武將 defId**（劉備軍＝劉備 id＝1） |
+| `LegionLeaderId` | **暫定與 `Belong` 相同**；日後可改回「所屬兵團主將 defId」 |
 
-| 欄位 | 意思 |
-|------|------|
-| `belong` | 武將屬於哪個**勢力**（劉備軍、曹操軍…） |
-| `legionLeaderId` | 武將所屬**兵團**的**主將** defId |
+`SetBelong` 時會同步寫入 `LegionLeaderId`。
 
-範例：劉備勢力，關羽率兵團出征：
+範例：
 
-- 關羽：`belong`＝劉備勢力 id；`legionLeaderId`＝關羽自己的 id（自領兵團）
-- 副將張飛（同兵團）：`belong`＝劉備；`legionLeaderId`＝關羽 id
+- 劉備：`Belong`＝1，`LegionLeaderId`＝1  
+- 關羽（同勢力）：`Belong`＝1，`LegionLeaderId`＝1  
 
-指派主將／副將時由編組邏輯呼叫 `SetLegionLeader`（待與 `Unit` 編組一併接線）。
+## 出戰 `IsDeployed`
+
+| 任職於 | 出戰？ |
+|--------|--------|
+| **Combat**／**Transport** | **是**（`IsDeployed = true`） |
+| **Legion**（兵團） | **否** |
+| 無部隊（城內待命／在野） | **否** |
+
+組隊指派主將／副將時由 `Unit` 自動 `SetDeployed`；卸任則清回 false。
 
 ## 相關程式
 
 - `Assets/Scripts/Core/Units/Legion.cs`
-- `AbstractOfficer.LegionLeaderId` / `Officer.SetLegionLeader`
+- `AbstractOfficer.Belong`／`LegionLeaderId`／`IsDeployed`
+- `Officer.SetBelong`／`SetLegionLeader`／`SetDeployed`
 - `UnitNamingSettings` 後綴：`兵團`

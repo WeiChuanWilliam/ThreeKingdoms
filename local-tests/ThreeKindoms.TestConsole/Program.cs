@@ -12,6 +12,7 @@ namespace ThreeKindoms.TestConsole
             int failed = 0;
 
             failed += Run(CombatTroopKindTestRunner.Run(props));
+            failed += Run(CombatMusterTestRunner.Run());
             failed += Run(UnitPropertiesTestRunner.Run(props));
             failed += Run(TroopKindTreeTestRunner.Run());
             failed += Run(TroopKindRegistryTestRunner.Run());

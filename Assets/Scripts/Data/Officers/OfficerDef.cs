@@ -1,5 +1,4 @@
 using System;
-using ThreeKindoms.Data.Battle;
 
 namespace ThreeKindoms.Data.Officers
 {
@@ -31,7 +30,6 @@ namespace ThreeKindoms.Data.Officers
         /// <summary>0 男、1 女（表資料）；執行時以 <see cref="OfficerGender"/> 表示。</summary>
         public byte gender;
 
-        public short loyalty = 100;
         public short belong;
 
         /// <summary>傷勢 0～3：正常／輕／中／重；死亡另用執行時 <see cref="OfficerFlag.IsAlive"/>。</summary>
@@ -55,8 +53,6 @@ namespace ThreeKindoms.Data.Officers
         public short deathYear;
 
         public string title;
-
-        public OfficerBattleSkills battleSkills;
     }
 
     [Serializable]

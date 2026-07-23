@@ -47,10 +47,21 @@ namespace ThreeKindoms.Core.Units
         }
 
         /// <summary>進入地圖世界：掛載格網、落點並登記至 <see cref="UnitRegistry"/>。</summary>
-        public void BindToWorld(LocationGrid locationGrid, HexCoord startHex, AbstractTerrain terrainAtStart)
+        /// <param name="autoGarrison">
+        /// true＝腳下有據點時自動駐紮（一般進格）；
+        /// false＝出征／剛產生時不駐紮，保持可立即移動。
+        /// </param>
+        public void BindToWorld(
+            LocationGrid locationGrid,
+            HexCoord startHex,
+            AbstractTerrain terrainAtStart,
+            bool autoGarrison = true)
         {
             _locationGrid = locationGrid;
-            EnterHex(startHex, terrainAtStart);
+            EnterHex(startHex, terrainAtStart, autoGarrison);
+            // 出征部署：強制非駐紮，產生後即可行動並移出據點格
+            if (!autoGarrison)
+                StationRules.DepartStation(_unit);
             UnitRegistry.Register(_unit);
         }
 
@@ -86,10 +97,11 @@ namespace ThreeKindoms.Core.Units
         }
 
         /// <summary>進入指定六角格；駐紮中或格不可進入時失敗。</summary>
-        public bool EnterHex(HexCoord hex, AbstractTerrain terrainIfCreate = null)
+        /// <param name="autoGarrison">進格後是否自動駐紮（出征落點請傳 false）。</param>
+        public bool EnterHex(HexCoord hex, AbstractTerrain terrainIfCreate = null, bool autoGarrison = true)
         {
             if (_locationGrid == null) return false;
-            if (_unit.IsStationed)
+            if (_unit.IsGarrison)
                 return false;
 
             LeaveCurrentHex();
@@ -103,14 +115,14 @@ namespace ThreeKindoms.Core.Units
             Position = hex;
             _currentLocation = loc;
             loc.SetFightingUnit(_unit);
-            SyncFromLocation(loc);
+            SyncFromLocation(loc, autoGarrison);
             return true;
         }
 
         /// <summary>沿路徑逐步移動並扣除進格成本；駐紮中無法移動。</summary>
         public bool MoveAlongPath(HexGrid pathGrid, System.Collections.Generic.IReadOnlyList<HexCoord> path)
         {
-            if (_unit.IsStationed)
+            if (_unit.IsGarrison)
                 return false;
             if (path == null || path.Count <= 1) return false;
             float speed = UnitMarchSpeed.GetMarchSpeedMultiplier(_unit);
@@ -137,12 +149,13 @@ namespace ThreeKindoms.Core.Units
             return true;
         }
 
-        void SyncFromLocation(MapLocation loc)
+        void SyncFromLocation(MapLocation loc, bool autoGarrison = true)
         {
             if (loc.Building != null)
                 _unit.SetBuilding(loc.Building);
 
-            StationRules.TryAutoStation(_unit, loc);
+            if (autoGarrison)
+                StationRules.TryAutoStation(_unit, loc);
 
             ApplyFireAndMoraleFromLocation();
         }

@@ -9,7 +9,7 @@ namespace ThreeKindoms.Core.Buildings
         /// <summary>建築顯示名稱。</summary>
         public string Name { get; protected set; }
 
-        /// <summary>非 <see cref="SettlementSiteKind.None"/> 時可駐紮（<see cref="Units.Unit.IsStationed"/>）。</summary>
+        /// <summary>非 <see cref="SettlementSiteKind.None"/> 時可駐紮（<see cref="Units.Unit.IsGarrison"/>）。</summary>
         public SettlementSiteKind SiteKind { get; protected set; }
 
         /// <summary>地圖內建據點（城池、縣城、港灣、關口）。</summary>

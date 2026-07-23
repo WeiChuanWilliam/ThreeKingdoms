@@ -11,12 +11,12 @@ namespace ThreeKindoms.Core.Units
     {
         /// <summary>駐紮中不計算面向／背面半防；野戰才套用 Facing 修正。</summary>
         public static bool UsesFacingVector(Unit unit) =>
-            unit != null && !unit.IsStationed;
+            unit != null && !unit.IsGarrison;
 
         /// <summary>駐紮且腳下有據點時，依據點類型回傳防禦乘數；否則 1.0。</summary>
         public static float GetDefenseMultiplier(Unit unit)
         {
-            if (unit == null || !unit.IsStationed)
+            if (unit == null || !unit.IsGarrison)
                 return 1f;
 
             SettlementSiteKind kind = unit.Building?.SiteKind ?? SettlementSiteKind.None;
@@ -26,7 +26,7 @@ namespace ThreeKindoms.Core.Units
         /// <summary>駐紮且腳下有據點時，回傳防禦加成百分比；否則 0。</summary>
         public static int GetDefenseBonusPercent(Unit unit)
         {
-            if (unit == null || !unit.IsStationed)
+            if (unit == null || !unit.IsGarrison)
                 return 0;
 
             SettlementSiteKind kind = unit.Building?.SiteKind ?? SettlementSiteKind.None;

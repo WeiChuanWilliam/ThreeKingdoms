@@ -13,5 +13,35 @@ namespace ThreeKindoms.Core
             if (v > max) return max;
             return v;
         }
+
+        public static int ClampToTarget(int v, int min, int max)
+        {
+            if (min > max)
+                (min, max) = (max, min);
+
+            if (v < min) return min;
+            if (v > max) return max;
+            return v;
+        }
+
+        public static byte ClampToTarget(byte v, byte min, byte max)
+        {
+            if (min > max)
+                (min, max) = (max, min);
+
+            if (v < min) return min;
+            if (v > max) return max;
+            return v;
+        }
+
+        public static float ClampToTarget(float v, float min, float max)
+        {
+            if (min > max)
+                (min, max) = (max, min);
+
+            if (v < min) return min;
+            if (v > max) return max;
+            return v;
+        }
     }
 }

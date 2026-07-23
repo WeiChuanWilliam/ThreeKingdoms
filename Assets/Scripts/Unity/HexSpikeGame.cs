@@ -36,15 +36,14 @@ namespace ThreeKindoms.UnityBridge
 
         static Unit CreateFallbackPlayerUnit(HexCoord start)
         {
-            var def = new LegionUnitDef(1)
-            {
-                CommanderOfficerId = 1,
-                Soldiers = 1000,
-                Wounded = 500,
-                Food = 3000
-            };
-            def.AddViceOfficer(3);
-            return new Legion(def);
+            var legion = new Legion(
+                UnitNameBuilder.Resolve(null, commanderOfficerId: 1, UnitKind.Legion),
+                factionBelonged: 1);
+            legion.SetCommanderFromPool(1);
+            legion.AddViceOfficerFromPool(3);
+            legion.SetManpower(1000, 500);
+            legion.SetCarriedFood(3000);
+            return legion;
         }
 
         static LocationGrid BuildLocationGrid(HexGrid grid)

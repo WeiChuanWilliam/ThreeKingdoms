@@ -1,7 +1,7 @@
 namespace ThreeKindoms.Core.Buildings
 {
     /// <summary>
-    /// 可駐紮據點類型（<see cref="Units.Unit.IsStationed"/>）。
+    /// 可駐紮據點類型（<see cref="Units.Unit.IsGarrison"/>）。
     /// 地圖內建 1～9；玩家可建造 10～19。
     /// </summary>
     public enum SettlementSiteKind : byte

@@ -35,10 +35,12 @@ UnitManpower.MinSoldiers; // 10
 
 **Legion**
 
-- 本身不帶戰鬥技能表；靠 `Escort`（Combat）  
+- 本身不帶戰鬥技能表；戰法在隸屬的 `Combat` 上  
 
-`UnitDef` 是**遊戲內組隊**用的記憶體草稿（玩家選武將、兵力、金錢後填入），再 `new Combat(def)`。不讀部隊 JSON。
+部隊由 `UnitUtil.CreateCombat`／`DeployCombat` 直接產生執行時 `Combat`（**無**類似武將的 Def／執行時雙層）。不讀部隊 JSON。
 
-## UnitDef
+> **兵種戰法（B／A／S）**：見 [`SKILL_DESIGN.md`](SKILL_DESIGN.md)。行為寫死在 code；`skill.properties` 只當規劃備忘。戰法自有射程（≠ 普攻）、結算吃部隊攻擊係數；與上列四槽 API 尚未合併。
 
-- 耗糧在執行期 `unit.CalculateFoodConsumption()`，不在 Def 寫死
+## 組隊入口
+
+`UnitUtil.CreateCombat(factionId, troopKindKey, soldiers, commanderId, viceIds…)`

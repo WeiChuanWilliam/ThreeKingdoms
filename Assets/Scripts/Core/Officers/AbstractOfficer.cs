@@ -2,8 +2,6 @@ using System.Collections.Generic;
 
 using ThreeKindoms.Core.Units;
 
-using ThreeKindoms.Data.Battle;
-
 using ThreeKindoms.Data.Officers;
 
 using ThreeKindoms.Data.Units;
@@ -78,8 +76,14 @@ namespace ThreeKindoms.Core.Officers
 
         protected short belong;
 
-        /// <summary>所屬兵團（<see cref="Units.Legion"/>）主將 defId（Leader）；自領兵團時＝自身 id；0＝未編入兵團。</summary>
+        /// <summary>
+        /// 暫定＝勢力 id（<see cref="belong"/>）；勢力 id＝執掌該勢力的武將 defId。
+        /// 日後可與 belong 分離，改表「所屬兵團主將」。
+        /// </summary>
         protected int legionLeaderId;
+
+        /// <summary>是否出戰：在戰鬥／運輸部隊任職為 true；僅在兵團或待命為 false。</summary>
+        protected bool isDeployed;
 
         protected short loyalty;
 
@@ -112,8 +116,6 @@ namespace ThreeKindoms.Core.Officers
 
 
         protected byte[] pictureBuffer = System.Array.Empty<byte>();
-
-        protected OfficerBattleSkills battleSkills;
 
 
 
@@ -188,11 +190,23 @@ namespace ThreeKindoms.Core.Officers
         /// <summary>旗標集合：性別、傷勢、存活、登場狀態等。</summary>
         public OfficerFlag OfficerFlag => officerFlag;
 
-        /// <summary>所屬勢力 id；0 表示在野。</summary>
+        /// <summary>
+        /// 所屬勢力 id；0＝在野。
+        /// 約定：勢力 id＝執掌該勢力的武將 defId（例：劉備軍＝1）。
+        /// </summary>
         public short Belong => belong;
 
-        /// <summary>兵團主將（Leader）武將 defId；與 <see cref="Belong"/>（勢力）不同。</summary>
+        /// <summary>
+        /// 暫定與 <see cref="Belong"/> 相同（勢力領袖武將 id）。
+        /// 日後可改為「所屬兵團主將 defId」。
+        /// </summary>
         public int LegionLeaderId => legionLeaderId;
+
+        /// <summary>
+        /// 是否出戰：任職於 <see cref="Units.Combat"/>／<see cref="Units.Transport"/> 為 true；
+        /// 僅在兵團（<see cref="Units.Legion"/>）或城內待命為 false。
+        /// </summary>
+        public bool IsDeployed => isDeployed;
 
         /// <summary>對所屬勢力的忠誠度（0～100）。</summary>
         public short Loyalty => loyalty;
@@ -250,11 +264,6 @@ namespace ThreeKindoms.Core.Officers
 
         /// <summary>頭像二進位快取（載入用）。</summary>
         public byte[] PictureBuffer => pictureBuffer;
-
-        /// <summary>戰法技能資料（可變 ref 存取）。</summary>
-        public ref OfficerBattleSkills BattleSkills => ref battleSkills;
-
-
 
         /// <summary>是否已死亡（<see cref="IsAlive"/> 的反義）。</summary>
         public bool IsDead => !officerFlag.IsAlive;

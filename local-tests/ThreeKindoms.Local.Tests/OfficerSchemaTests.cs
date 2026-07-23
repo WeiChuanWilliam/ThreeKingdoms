@@ -127,6 +127,8 @@ namespace ThreeKindoms.Local.Tests
 
             Assert.Equal("玄德", OfficerDatabase.TryGet(1).AliasName);
             Assert.Equal("玄德", OfficerDatabase.TryGetDef(1).aliasName);
+            Assert.Equal((short)75, OfficerDatabase.TryGet(1).Loyalty);
+            Assert.Equal((short)75, OfficerDatabase.TryGet(2).Loyalty);
 
             OfficerDatabase.Clear();
             Assert.Empty(OfficerDatabase.Defs);

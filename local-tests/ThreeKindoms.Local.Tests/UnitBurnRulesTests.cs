@@ -96,7 +96,8 @@ namespace ThreeKindoms.Local.Tests
             var loc = grid.GetOrCreate(new HexCoord(0, 0), terrain);
             loc.SetOnFire();
 
-            var transport = new Transport(new TransportUnitDef(1, soldiers: 1000));
+            var transport = new Transport("運輸", 1);
+            transport.SetManpower(1000);
             transport.Location.BindToWorld(grid, loc.Hex, terrain);
             transport.Location.SyncFireFromLocation();
 
@@ -125,7 +126,7 @@ namespace ThreeKindoms.Local.Tests
 
         static Combat CreateCombatOnLocation(LocationGrid grid, MapLocation loc, TerrainDefinition terrain)
         {
-            var combat = new Combat(new CombatUnitDef(1, "blade", soldiers: 1000));
+            var combat = UnitUtil.CreateCombat(1, "blade", 1000, commanderOfficerId: 0);
             combat.Location.BindToWorld(grid, loc.Hex, terrain);
             return combat;
         }
