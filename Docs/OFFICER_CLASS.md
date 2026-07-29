@@ -229,7 +229,7 @@ Pool 內每個 defId 一個 Officer（Singleton）
 發揮值（attackPerform, leadershipPerform, …）
         │
         ▼
-戰鬥讀取（OfficerCombatAbilities.FromOfficer）
+戰鬥讀取（Officer.EffectiveAttack 等／BlendedCombatRelevantSum）
 ```
 
 ### 4.2 計算入口（單一）
@@ -260,22 +260,20 @@ perform = round( base × 傷勢係數 × 體力係數 × 道具係數 )
 - 基礎六圍、發揮值皆 **`byte`**，設計區間 **1～100**；體力 **0～100**。
 - 傷勢 **1～3** 與 **死亡（`IsAlive`）分離**；`HealthChange` 只升降傷勢，不直接設死亡。
 
-### 4.3 戰鬥讀取與 `OfficerCombatAbilities`（白話）
+### 4.3 戰鬥讀取（白話）
 
-戰鬥不應直接散落讀 `officer.Attack` 或 `officer.AttackPerform`，而是走 **`OfficerCombatAbilities.FromOfficer(officer)`**，把「該讀哪個數」集中在一處。
-
-`FromOfficer` 內部用 `PickPerform(perform, baseStat)`：
+戰鬥應讀 **`Officer.EffectiveAttack`／`EffectiveIntelligence`／`EffectiveLeadership`**（有發揮值用發揮值，否則基礎值），主副將合算用 **`Officer.BlendedCombatRelevantSum(commander, vice)`**。
 
 ```text
-若 attackPerform > 0  →  戰鬥用 attackPerform（已反映傷病、體力）
-若 attackPerform == 0 →  才退回 attack（基礎值；防禦用，正常不應發生）
+若 AttackPerform > 0  →  用 AttackPerform
+若 AttackPerform == 0 →  退回 Attack
 ```
 
-**白話**：關羽表上武力 97（`attack`），重傷又疲勞後可能只剩 70（`attackPerform`）。戰鬥算傷害應讀 70，不是 97。`OfficerCombatAbilities` 就是幫你自動選「該用發揮值還是基礎值」的薄封裝，避免每個戰鬥公式重複寫 if。
+**白話**：關羽表上武力 97（`Attack`），重傷疲勞後可能只剩 70（`AttackPerform`）。戰鬥應讀 `EffectiveAttack`＝70。
 
-程式位置：`Assets/Scripts/Core/Units/OfficerCombatAbilities.cs` 的 `FromOfficer` / `PickPerform`。
+程式位置：`AbstractOfficer` 的 `Effective*`／`CombatRelevantSum`／`BlendedCombatRelevantSum`。
 
-統率部隊加成（`CombatStatMath`）目前仍用主將 `Leadership`（基礎統率）；是否改為 `LeadershipPerform` 待戰鬥規則一併調整（見 §10.3）。
+統率部隊加成（`CombatStatMath`）目前仍用主將 `Leadership`（基礎統率）；是否改為 `EffectiveLeadership` 待戰鬥規則一併調整（見 §10.3）。
 
 ---
 
@@ -405,7 +403,7 @@ Unit
   AddViceOfficerFromPool(defId) →  Get(defId) → AddViceOfficer（須通過「未在其他部隊」檢查）
 ```
 
-主副將能力混合（`OfficerCombatAbilities.BlendCommanderAndVice`）仍用各將的 **發揮值** 合算。
+主副將能力混合（`Officer.BlendedCombatRelevantSum`）仍用各將的 **Effective*** 合算。
 
 ---
 
@@ -488,4 +486,4 @@ public abstract int RollRandom(int minInclusive, int maxInclusive);
 | 讀表上武力 | `officer.Attack` |
 | 體力變化後更新發揮 | `officer.StaminaChange(delta)`（內部 Refresh） |
 | 派主將 | `unit.SetCommanderFromPool(defId)` → 綁定 Singleton |
-| 戰鬥合算五維 | `OfficerCombatAbilities.FromOfficer(officer)` |
+| 戰鬥合算三維 | `Officer.CombatRelevantSum`／`BlendedCombatRelevantSum` |

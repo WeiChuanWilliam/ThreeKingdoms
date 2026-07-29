@@ -185,6 +185,39 @@ namespace ThreeKindoms.Core.Officers
         /// <summary>魅力發揮值（傷勢、體力、道具等修正後）。</summary>
         public byte CharismaPerform => charismaPerform;
 
+        /// <summary>戰鬥用武力：有發揮值用發揮值，否則用基礎值。</summary>
+        public byte EffectiveAttack => PickPerform(attackPerform, attack);
+
+        /// <summary>戰鬥用智力。</summary>
+        public byte EffectiveIntelligence => PickPerform(intelligencePerform, intelligence);
+
+        /// <summary>戰鬥用統率。</summary>
+        public byte EffectiveLeadership => PickPerform(leadershipPerform, leadership);
+
+        /// <summary>戰鬥力相關三維合計（武＋智＋統，皆用 Effective*）。</summary>
+        public int CombatRelevantSum =>
+            EffectiveAttack + EffectiveIntelligence + EffectiveLeadership;
+
+        /// <summary>
+        /// 主將權重 2、副將權重 1 合算後的戰鬥三維合計。
+        /// 僅副將時回傳副將；皆無則 0。
+        /// </summary>
+        public static int BlendedCombatRelevantSum(Officer commander, Officer vice)
+        {
+            if (commander == null)
+                return vice?.CombatRelevantSum ?? 0;
+            if (vice == null)
+                return commander.CombatRelevantSum;
+
+            int atk = (commander.EffectiveAttack * 2 + vice.EffectiveAttack) / 3;
+            int intel = (commander.EffectiveIntelligence * 2 + vice.EffectiveIntelligence) / 3;
+            int lead = (commander.EffectiveLeadership * 2 + vice.EffectiveLeadership) / 3;
+            return atk + intel + lead;
+        }
+
+        static byte PickPerform(byte perform, byte baseStat) =>
+            perform > 0 ? perform : baseStat;
+
 
 
         /// <summary>旗標集合：性別、傷勢、存活、登場狀態等。</summary>

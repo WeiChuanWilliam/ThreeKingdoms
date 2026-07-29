@@ -7,7 +7,7 @@ using ThreeKindoms.Data.Units;
 namespace ThreeKindoms.Data.Skill
 {
     /// <summary>
-    /// 讀取 <c>chinese/skill.properties</c>（規劃備忘：顯示名）。
+    /// 讀取 <c>chinese/skill.properties</c>（多語言文案：顯示名；說明見 <c>.desc</c> 鍵）。
     /// 戰法行為寫死在 code；本 util 不驅動結算。B／A 共用、S 特色；器械每種 1 招。
     /// </summary>
     public static class SkillConfigUtil

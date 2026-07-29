@@ -19,7 +19,7 @@ namespace ThreeKindoms.Core.Units
 
             Officer cmd = legion.Commander;
             float officerBonus = cmd != null
-                ? OfficerCombatAbilities.FromOfficer(cmd).SumCombatRelevant() * 0.01f
+                ? cmd.CombatRelevantSum * 0.01f
                 : 0f;
 
             int rating = (int)System.MathF.Round(
@@ -35,8 +35,7 @@ namespace ThreeKindoms.Core.Units
                 return 0;
 
             Officer cmd = legion.Commander;
-            var abilities = OfficerCombatAbilities.FromOfficer(cmd);
-            float officerCore = abilities.SumCombatRelevant();
+            float officerCore = cmd?.CombatRelevantSum ?? 0;
             float officerFactor = 1f + officerCore * UnitConfigUtil.GetCombatPowerOfficerScale();
 
             float moraleFactor = legion.Morale / 100f * UnitConfigUtil.GetCombatPowerMoraleWeight();

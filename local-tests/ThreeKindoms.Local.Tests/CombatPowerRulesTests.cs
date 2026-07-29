@@ -8,7 +8,7 @@ namespace ThreeKindoms.Local.Tests
     public class CombatPowerRulesTests
     {
         [Fact]
-        public void TryCreateContext_includes_officer_morale_stamina_and_unit_skills()
+        public void TryCreateContext_includes_officer_morale_stamina_and_troop_stats()
         {
             UnitConfigUtil.Load(TestPaths.UnitPropertiesPath);
 
@@ -24,15 +24,11 @@ namespace ThreeKindoms.Local.Tests
             vice.SetStats(atk: 70, intel: 80, lead: 60, pol: 40, charm: 55);
             combat.SetViceOfficer(vice);
 
-            combat.AddBattleSkill(101);
-            combat.AddStrategySkill(201);
-
             Assert.True(combat.TryGetCombatPowerContext(out var ctx));
-            Assert.Equal(90, ctx.CommanderAbilities.Attack);
-            Assert.Equal(80, ctx.ViceAbilities.Intelligence);
+            Assert.Equal(90, ctx.Commander.EffectiveAttack);
+            Assert.Equal(80, ctx.Vice.EffectiveIntelligence);
             Assert.Equal(80, ctx.Morale);
             Assert.Equal(70, ctx.Stamina);
-            Assert.Equal(2, ctx.EquippedSkillCount);
             Assert.True(ctx.EffectiveTroopStats.Attack > 0);
             Assert.Equal(5000, ctx.EffectiveManpower);
         }
@@ -49,16 +45,22 @@ namespace ThreeKindoms.Local.Tests
         }
 
         [Fact]
-        public void CombatPower_counts_unit_equipped_skills_only_once()
+        public void CombatBattleFormulas_attack_defense_and_normal_attack_pipeline()
         {
             UnitConfigUtil.Load(TestPaths.UnitPropertiesPath);
 
-            var combat = UnitUtil.CreateCombat(1, "blade", 1000, commanderOfficerId: 0);
-            combat.AddBattleSkill(101);
-            Assert.False(combat.AddBattleSkill(101));
+            var attacker = UnitUtil.CreateCombat(1, "blade", 1000, commanderOfficerId: 0);
+            var defender = UnitUtil.CreateCombat(1, "blade", 1000, commanderOfficerId: 0);
 
-            Assert.True(combat.TryGetCombatPowerContext(out var ctx));
-            Assert.Equal(1, ctx.EquippedSkillCount);
+            Assert.Equal(attacker.EffectiveAttack, attacker.CalculateAttack());
+            Assert.Equal(defender.EffectiveDefense, defender.CalculateDefense());
+
+            var damage = CombatBattleFormulas.CalculateNormalAttackDamage(attacker, defender);
+            Assert.False(damage.HasEffect);
+
+            var resolved = CombatBattleFormulas.ResolveNormalAttack(attacker, defender);
+            Assert.False(resolved.HasEffect);
+            Assert.Equal(1000, defender.Soldiers);
         }
 
         static Combat BuildCombat(short morale, short stamina, short attack, short leadership)

@@ -35,7 +35,7 @@ OfficerPool（static）
 OfficerDef（JSON 表）
 OfficerFactory.FromDef → Officer
 OfficerPerformanceRules（靜態公式）
-OfficerCombatAbilities.FromOfficer（戰鬥讀取）
+Officer.EffectiveAttack 等（戰鬥讀取）
 ```
 
 ---
@@ -144,7 +144,7 @@ perform = round( base × 傷勢係數 × 體力係數 × 道具係數 )
 
 ### 5.2 戰鬥讀取五維 — ✅
 
-`OfficerCombatAbilities.FromOfficer(officer)`  
+`Officer.EffectiveAttack`／`CombatRelevantSum`／`BlendedCombatRelevantSum`  
 → 優先 `*Perform`，若 Perform==0 才退回基礎值  
 主副將合算：`BlendCommanderAndVice`（主×2 + 副）/ 3
 

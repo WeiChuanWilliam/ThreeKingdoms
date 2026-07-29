@@ -1,6 +1,4 @@
-using System.Collections.Generic;
 using ThreeKindoms.Core.Officers;
-using ThreeKindoms.Data.Skill;
 using ThreeKindoms.Data.Units;
 using ThreeKindoms.Data.Units.TroopKinds;
 
@@ -20,10 +18,11 @@ namespace ThreeKindoms.Core.Units
         /// <summary>行军用：参数倍率 × 兵种表 mobility。</summary>
         public float MarchMobilityRating => MarchSpeedFactor * TroopMobility;
 
-        readonly HashSet<Skill> battleSkills = new(SkillByIdComparer.Instance);
-        readonly HashSet<Skill> strategySkills = new(SkillByIdComparer.Instance);
-        readonly HashSet<Skill> mobilitySkills = new(SkillByIdComparer.Instance);
-        readonly HashSet<Skill> defenceSkills = new(SkillByIdComparer.Instance);
+        // ----- 戰法四槽：暫不使用（之後接 skill.properties／戰法 class 再打開）-----
+        // readonly HashSet<Skill> battleSkills = new(SkillByIdComparer.Instance);
+        // readonly HashSet<Skill> strategySkills = new(SkillByIdComparer.Instance);
+        // readonly HashSet<Skill> mobilitySkills = new(SkillByIdComparer.Instance);
+        // readonly HashSet<Skill> defenceSkills = new(SkillByIdComparer.Instance);
 
         /// <summary>兵科大類（步／騎／弓等）。</summary>
         public TroopType TroopType { get; private set; }
@@ -61,7 +60,7 @@ namespace ThreeKindoms.Core.Units
         /// <summary>兵種表六圍（初始值）。</summary>
         public CombatTroopStatBlock BaseTroopStats => CombatStatMath.GetBaseTroopStats(this);
 
-        /// <summary>武將／科技／戰法後、尚未乘地勢。</summary>
+        /// <summary>武將／科技後、尚未乘地勢（戰法暫不納入）。</summary>
         public CombatTroopStatBlock TroopStatsAfterOfficerAndResearch =>
             CombatStatMath.GetStatsAfterOfficerAndResearch(this);
 
@@ -94,6 +93,27 @@ namespace ThreeKindoms.Core.Units
 
         /// <summary>戰鬥力評分；等同 <see cref="CalculateCombatPower"/>。</summary>
         public int CombatPower => CalculateCombatPower();
+
+        /// <summary>攻擊力（結算用；見 <see cref="CombatBattleFormulas"/>）。</summary>
+        public int CalculateAttack() => CombatBattleFormulas.CalculateAttack(this);
+
+        /// <summary>防禦力（結算用；見 <see cref="CombatBattleFormulas"/>）。</summary>
+        public int CalculateDefense() => CombatBattleFormulas.CalculateDefense(this);
+
+        /// <summary>機動力（結算用）。</summary>
+        public int CalculateMobility() => CombatBattleFormulas.CalculateMobility(this);
+
+        /// <summary>破甲（結算用）。</summary>
+        public int CalculateJipo() => CombatBattleFormulas.CalculateJipo(this);
+
+        /// <summary>攻城（結算用）。</summary>
+        public int CalculateGongcheng() => CombatBattleFormulas.CalculateGongcheng(this);
+
+        /// <summary>部隊耐力（結算用）。</summary>
+        public int CalculateTroopStaminaStat() => CombatBattleFormulas.CalculateTroopStamina(this);
+
+        /// <summary>普攻攻擊距離（結算用）。</summary>
+        public int CalculateAttackRange() => CombatBattleFormulas.CalculateAttackRange(this);
 
         /// <summary>部隊類型：戰鬥部隊。</summary>
         public override UnitKind Kind => UnitKind.Combat;
@@ -130,7 +150,7 @@ namespace ThreeKindoms.Core.Units
             return base.AddViceOfficer(unitCopy);
         }
 
-        /// <summary>建立戰鬥力計算用上下文（含武將能力、部隊戰法、士氣、體力）。</summary>
+        /// <summary>建立戰鬥力計算用上下文（士氣、體力、六圍等；戰法暫不納入）。</summary>
         public bool TryGetCombatPowerContext(out CombatPowerContext context) =>
             CombatPowerRules.TryCreateContext(this, out context);
 
@@ -153,51 +173,14 @@ namespace ThreeKindoms.Core.Units
             TroopStage = kind.Stage;
         }
 
-        /// <summary>已裝備戰法技能總數（四槽合計）。</summary>
-        public int CountEquippedSkills() =>
-            battleSkills.Count + strategySkills.Count + mobilitySkills.Count + defenceSkills.Count;
+        /// <summary>戰法暫停：恒為 0。</summary>
+        public int CountEquippedSkills() => 0;
 
-        /// <summary>是否已裝備指定 id 的戰鬥戰法。</summary>
-        public bool ContainsBattleSkill(int skillId) => FindSkill(battleSkills, skillId) != null;
-
-        /// <summary>是否已裝備指定 id 的計略戰法。</summary>
-        public bool ContainsStrategySkill(int skillId) => FindSkill(strategySkills, skillId) != null;
-
-        /// <summary>是否已裝備指定 id 的機動戰法。</summary>
-        public bool ContainsMobilitySkill(int skillId) => FindSkill(mobilitySkills, skillId) != null;
-
-        /// <summary>是否已裝備指定 id 的防禦戰法。</summary>
-        public bool ContainsDefenceSkill(int skillId) => FindSkill(defenceSkills, skillId) != null;
-
-        /// <summary>取得已裝備的戰鬥戰法實例。</summary>
-        public Skill? GetBattleSkill(int skillId) => FindSkill(battleSkills, skillId);
-
-        /// <summary>取得已裝備的計略戰法實例。</summary>
-        public Skill? GetStrategySkill(int skillId) => FindSkill(strategySkills, skillId);
-
-        /// <summary>裝備戰鬥戰法（複製技能池副本至部隊）。</summary>
-        public bool AddBattleSkill(int skillId) => AddSkillCopy(battleSkills, skillId);
-
-        /// <summary>卸下戰鬥戰法。</summary>
-        public bool RemoveBattleSkill(int skillId) => RemoveSkillById(battleSkills, skillId);
-
-        /// <summary>裝備計略戰法。</summary>
-        public bool AddStrategySkill(int skillId) => AddSkillCopy(strategySkills, skillId);
-
-        /// <summary>卸下計略戰法。</summary>
-        public bool RemoveStrategySkill(int skillId) => RemoveSkillById(strategySkills, skillId);
-
-        /// <summary>裝備機動戰法。</summary>
-        public bool AddMobilitySkill(int skillId) => AddSkillCopy(mobilitySkills, skillId);
-
-        /// <summary>卸下機動戰法。</summary>
-        public bool RemoveMobilitySkill(int skillId) => RemoveSkillById(mobilitySkills, skillId);
-
-        /// <summary>裝備防禦戰法。</summary>
-        public bool AddDefenceSkill(int skillId) => AddSkillCopy(defenceSkills, skillId);
-
-        /// <summary>卸下防禦戰法。</summary>
-        public bool RemoveDefenceSkill(int skillId) => RemoveSkillById(defenceSkills, skillId);
+        // ----- 戰法 API 暫註解 -----
+        // public bool ContainsBattleSkill(int skillId) => ...
+        // public bool AddBattleSkill(int skillId) => ...
+        // public bool RemoveBattleSkill(int skillId) => ...
+        // （strategy／mobility／defence 同）
 
         /// <summary>掛載至所屬兵團（耗糧由兵團糧草扣除）。</summary>
         public void AttachToLegion(Legion legion) => ParentLegion = legion;
@@ -211,7 +194,7 @@ namespace ThreeKindoms.Core.Units
         /// <summary>暫定兵糧無限：不扣糧，恒成功。</summary>
         public override bool TryConsumeDailyFood() => true;
 
-        /// <summary>野戰戰鬥力（武將、技能、六圍、士氣、體力與有效兵力）。</summary>
+        /// <summary>野戰戰鬥力（武將、六圍、士氣、體力與有效兵力；戰法暫不納入）。</summary>
         protected override int CalculateNonGarrisonCombatPower() =>
             CombatPowerRules.GetCombatPower(this);
 
@@ -219,54 +202,23 @@ namespace ThreeKindoms.Core.Units
         protected override int CalculateGarrisonCombatPower() =>
             CombatPowerRules.GetCombatPower(this);
 
-        /// <summary>匯出四槽裝備戰法至存檔條目清單。</summary>
+        /// <summary>戰法暫停：不匯出裝備戰法。</summary>
         internal void CollectEquippedSkills(
             System.Collections.Generic.List<Data.Persistence.SkillSaveEntry> battle,
             System.Collections.Generic.List<Data.Persistence.SkillSaveEntry> strategy,
             System.Collections.Generic.List<Data.Persistence.SkillSaveEntry> mobility,
             System.Collections.Generic.List<Data.Persistence.SkillSaveEntry> defence)
         {
-            CollectSkillSet(battleSkills, battle);
-            CollectSkillSet(strategySkills, strategy);
-            CollectSkillSet(mobilitySkills, mobility);
-            CollectSkillSet(defenceSkills, defence);
+            // 戰法暫不存檔
         }
-
-        static void CollectSkillSet(
-            HashSet<Skill> set,
-            System.Collections.Generic.List<Data.Persistence.SkillSaveEntry> target)
+        
+        
+        /// <summary>攻擊力。待填兵力／士氣等；目前 Combat 暫回傳六圍最終攻擊。</summary>
+        public static int CalculateAttack(Unit unit)
         {
-            foreach (Skill s in set)
-            {
-                target.Add(new Data.Persistence.SkillSaveEntry
-                {
-                    skillId = s.SkillId,
-                    level = s.Level,
-                    enabled = s.Enabled
-                });
-            }
-        }
-
-        static bool AddSkillCopy(HashSet<Skill> set, int skillId)
-        {
-            if (skillId <= 0) return false;
-            return set.Add(SkillPool.CopyForUnit(skillId));
-        }
-
-        static bool RemoveSkillById(HashSet<Skill> set, int skillId)
-        {
-            Skill? found = FindSkill(set, skillId);
-            return found.HasValue && set.Remove(found.Value);
-        }
-
-        static Skill? FindSkill(HashSet<Skill> set, int skillId)
-        {
-            if (skillId <= 0) return null;
-            foreach (Skill s in set)
-            {
-                if (s.SkillId == skillId) return s;
-            }
-            return null;
+            if (unit is Combat combat)
+                return CalculateAttack(combat);
+            return 0;
         }
     }
 }

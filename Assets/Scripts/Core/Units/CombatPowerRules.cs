@@ -4,20 +4,14 @@ using ThreeKindoms.Data.Units;
 
 namespace ThreeKindoms.Core.Units
 {
-    /// <summary>戰鬥力計算輸入（武將能力、技能組、士氣、體力、部隊六圍與兵力）。</summary>
+    /// <summary>戰鬥力計算輸入（武將、士氣、體力、部隊六圍與兵力）。</summary>
     public readonly struct CombatPowerContext
     {
-        /// <summary>主將戰鬥相關能力。</summary>
-        public OfficerCombatAbilities CommanderAbilities { get; }
+        /// <summary>主將（可為 null）。</summary>
+        public Officer Commander { get; }
 
-        /// <summary>副將戰鬥相關能力。</summary>
-        public OfficerCombatAbilities ViceAbilities { get; }
-
-        /// <summary>主副將加權合併後的能力。</summary>
-        public OfficerCombatAbilities BlendedOfficerAbilities { get; }
-
-        /// <summary>四槽已裝備戰法總數。</summary>
-        public int EquippedSkillCount { get; }
+        /// <summary>副將（可為 null）。</summary>
+        public Officer Vice { get; }
 
         /// <summary>當前士氣。</summary>
         public short Morale { get; }
@@ -39,10 +33,8 @@ namespace ThreeKindoms.Core.Units
 
         /// <summary>從戰鬥部隊快照建立戰鬥力計算輸入。</summary>
         internal CombatPowerContext(
-            OfficerCombatAbilities commander,
-            OfficerCombatAbilities vice,
-            OfficerCombatAbilities blended,
-            int equippedSkillCount,
+            Officer commander,
+            Officer vice,
             short morale,
             short stamina,
             CombatTroopStatBlock effectiveTroopStats,
@@ -50,10 +42,8 @@ namespace ThreeKindoms.Core.Units
             int wounded,
             int effectiveManpower)
         {
-            CommanderAbilities = commander;
-            ViceAbilities = vice;
-            BlendedOfficerAbilities = blended;
-            EquippedSkillCount = equippedSkillCount < 0 ? 0 : equippedSkillCount;
+            Commander = commander;
+            Vice = vice;
             Morale = morale;
             Stamina = stamina;
             EffectiveTroopStats = effectiveTroopStats;
@@ -76,7 +66,10 @@ namespace ThreeKindoms.Core.Units
         }
     }
 
-    /// <summary>戰鬥部隊戰鬥力：武將能力 × 技能組 × 士氣 × 體力 × 六圍 × 有效兵力。</summary>
+    /// <summary>
+    /// 戰鬥部隊戰鬥力評分：武將 × 士氣 × 體力 × 六圍 × 有效兵力。
+    /// 戰法暫不計入。武將數值直接讀 <see cref="Officer"/> 的 Effective*／合算。
+    /// </summary>
     public static class CombatPowerRules
     {
         /// <summary>從戰鬥部隊組裝戰鬥力計算上下文。</summary>
@@ -86,17 +79,9 @@ namespace ThreeKindoms.Core.Units
             if (combat == null || combat.IsAnnihilated)
                 return false;
 
-            Officer cmd = combat.Commander;
-            Officer vice = combat.ViceOfficer;
-            var commanderAbilities = OfficerCombatAbilities.FromOfficer(cmd);
-            var viceAbilities = OfficerCombatAbilities.FromOfficer(vice);
-            var blended = OfficerCombatAbilities.BlendCommanderAndVice(cmd, vice);
-
             context = new CombatPowerContext(
-                commanderAbilities,
-                viceAbilities,
-                blended,
-                combat.CountEquippedSkills(),
+                combat.Commander,
+                combat.ViceOfficer,
                 combat.Morale,
                 combat.Stamina,
                 combat.EffectiveTroopStats,
@@ -116,11 +101,10 @@ namespace ThreeKindoms.Core.Units
                               + context.EffectiveTroopStats.Defense
                               + context.EffectiveTroopStats.Mobility;
 
-            float officerCore = context.BlendedOfficerAbilities.SumCombatRelevant();
+            float officerCore = Officer.BlendedCombatRelevantSum(context.Commander, context.Vice);
             float officerFactor = 1f + officerCore * UnitConfigUtil.GetCombatPowerOfficerScale();
 
-            int skillCount = context.EquippedSkillCount;
-            float skillFactor = 1f + skillCount * UnitConfigUtil.GetCombatPowerSkillBonusPerSkill();
+            float skillFactor = 1f;
 
             float moraleFactor = context.Morale / 100f * UnitConfigUtil.GetCombatPowerMoraleWeight();
             float staminaFactor = context.Stamina / 100f * UnitConfigUtil.GetCombatPowerStaminaWeight();
