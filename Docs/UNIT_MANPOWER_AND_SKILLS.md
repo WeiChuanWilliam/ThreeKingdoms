@@ -1,45 +1,39 @@
-# 兵力、傷兵、技能（依你最新說明）
+## 兵力與傷兵
 
-## Unit 父類（所有子類共有）
+- `Soldiers`：總兵力（含傷兵）
+- `Wounded`：傷兵（仍屬部隊，**不計入**戰鬥人力）
+- `EffectiveCombatStrength`／`FightingStrength`＝總兵 − 傷兵
 
-| 欄位 | 說明 |
-|------|------|
-| `commanderOfficerId` | 主將 → officers 表 id |
-| `viceOfficerIds` | 副將 id 列表 |
-| `morale` / `stamina` | 士氣、體力 0～100 |
-| `soldiers` / `wounded` | 總兵力、傷兵數 |
-| `CalculateFoodConsumption()` | 抽象；子類實作 |
-
-## 兵力規則
-
-- **最少 10 人**：`soldiers < 10` → `IsAnnihilated` 團滅  
-- **有效戰力**：`healthy + wounded × 0.5`  
-  - 例：1000 人、500 傷 → `500 + 250 = 750`
-
-```csharp
-UnitManpower.EffectiveCombatStrength(soldiers, wounded);
+```
+UnitManpower.FightingStrength(soldiers, wounded);
 UnitManpower.MinSoldiers; // 10
 ```
 
-## 技能：為何不單獨 `UnitCombatAbilitySlots`？
+## 戰鬥部隊屬性（`CombatStatMath` → `Combat.Stats`）
 
-每支部隊 **自己帶** 技能 id 集合，放在子類欄位上：
+```
+主／副將 → 部隊整體五維（統／武／智／政／魅）
+         → ＋兵力／士氣／體力
+         → CombatTroopStatBlock（攻／防／擊破／破城／策略／建設）
+         → 寫入 Combat.Stats
+```
 
-**Combat**
+| `Stats` 欄位 | 中文 |
+|------|------|
+| `Attack` | 攻擊 |
+| `Defense` | 防禦 |
+| `Jipo` | 擊破 |
+| `Gongcheng` | 破城 |
+| `Strategy` | 策略 |
+| `Construction` | 建設 |
 
-- `AddBattleSkill` / `RemoveBattleSkill` 等（不暴露 HashSet 本身）  
+五維為計算用（`UnitLeadership` 等），最終只存 `Stats` 一包。兵種表 `Troop*` 仍為兵種定義原始值。
 
-**Transport**
+## 技能
 
-- `AddStrategySkill` / `RemoveStrategySkill`  
+戰法 API 暫暫停；見 [`SKILL_DESIGN.md`](SKILL_DESIGN.md)。
 
-**Legion**
-
-- 本身不帶戰鬥技能表；戰法在隸屬的 `Combat` 上  
-
-部隊由 `UnitUtil.CreateCombat`／`DeployCombat` 直接產生執行時 `Combat`（**無**類似武將的 Def／執行時雙層）。不讀部隊 JSON。
-
-> **兵種戰法（B／A／S）**：見 [`SKILL_DESIGN.md`](SKILL_DESIGN.md)。行為寫死在 code；`chinese/skill.properties` 放名稱／說明／**`.front`／`.end`**／**`.stamina`**／**`.damage`**。戰法射程 ≠ 普攻；傷害＝普攻基準 × (damage/100) × 部隊攻擊係數等。
+部隊由 `UnitUtil.CreateCombat`／`DeployCombat` 直接產生執行時 `Combat`。
 
 ## 組隊入口
 

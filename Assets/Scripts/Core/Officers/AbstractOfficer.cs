@@ -194,6 +194,12 @@ namespace ThreeKindoms.Core.Officers
         /// <summary>戰鬥用統率。</summary>
         public byte EffectiveLeadership => PickPerform(leadershipPerform, leadership);
 
+        /// <summary>戰鬥用政治。</summary>
+        public byte EffectivePolicy => PickPerform(policyPerform, policy);
+
+        /// <summary>戰鬥用魅力。</summary>
+        public byte EffectiveCharisma => PickPerform(charismaPerform, charisma);
+
         /// <summary>戰鬥力相關三維合計（武＋智＋統，皆用 Effective*）。</summary>
         public int CombatRelevantSum =>
             EffectiveAttack + EffectiveIntelligence + EffectiveLeadership;

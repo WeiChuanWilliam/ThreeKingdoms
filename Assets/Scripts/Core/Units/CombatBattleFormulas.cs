@@ -31,82 +31,42 @@ namespace ThreeKindoms.Core.Units
 
     /// <summary>
     /// 戰鬥結算靜態入口（普攻／攻防；戰法暫不納入）。
+    /// 攻防等讀 <see cref="Combat.Stats"/>。
     /// </summary>
     public static class CombatBattleFormulas
     {
-        /// <summary>攻擊力。</summary>
-        public static int CalculateAttack(Unit unit)
-        {
-            if (unit is Combat combat)
-                return CalculateAttack(combat);
-            return 0;
-        }
+        public static int CalculateAttack(Unit unit) =>
+            unit is Combat combat ? CalculateAttack(combat) : 0;
 
-        /// <summary>攻擊力（Combat）。</summary>
-        public static int CalculateAttack(Combat combat)
-        {
-            if (combat == null || combat.IsAnnihilated)
-                return 0;
-            // TODO: 實作攻擊力公式（兵力、士氣、體力、武將…）
-            return combat.EffectiveAttack;
-        }
+        public static int CalculateAttack(Combat combat) =>
+            combat == null || combat.IsAnnihilated ? 0 : combat.Stats.Attack;
 
-        /// <summary>防禦力。</summary>
-        public static int CalculateDefense(Unit unit)
-        {
-            if (unit is Combat combat)
-                return CalculateDefense(combat);
-            return 0;
-        }
+        public static int CalculateDefense(Unit unit) =>
+            unit is Combat combat ? CalculateDefense(combat) : 0;
 
-        /// <summary>防禦力（Combat）。</summary>
-        public static int CalculateDefense(Combat combat)
-        {
-            if (combat == null || combat.IsAnnihilated)
-                return 0;
-            // TODO: 實作防禦力公式
-            return combat.EffectiveDefense;
-        }
+        public static int CalculateDefense(Combat combat) =>
+            combat == null || combat.IsAnnihilated ? 0 : combat.Stats.Defense;
 
-        /// <summary>機動力（Combat）。</summary>
-        public static int CalculateMobility(Combat combat)
-        {
-            if (combat == null || combat.IsAnnihilated)
-                return 0;
-            return combat.EffectiveMobility;
-        }
+        public static int CalculateJipo(Combat combat) =>
+            combat == null || combat.IsAnnihilated ? 0 : combat.Stats.Jipo;
 
-        /// <summary>破甲（Combat）。</summary>
-        public static int CalculateJipo(Combat combat)
-        {
-            if (combat == null || combat.IsAnnihilated)
-                return 0;
-            return combat.EffectiveJipo;
-        }
+        public static int CalculateGongcheng(Combat combat) =>
+            combat == null || combat.IsAnnihilated ? 0 : combat.Stats.Gongcheng;
 
-        /// <summary>攻城（Combat）。</summary>
-        public static int CalculateGongcheng(Combat combat)
-        {
-            if (combat == null || combat.IsAnnihilated)
-                return 0;
-            return combat.EffectiveGongcheng;
-        }
+        public static int CalculateStrategy(Combat combat) =>
+            combat == null || combat.IsAnnihilated ? 0 : combat.Stats.Strategy;
 
-        /// <summary>部隊耐力（Combat）。</summary>
-        public static int CalculateTroopStamina(Combat combat)
-        {
-            if (combat == null || combat.IsAnnihilated)
-                return 0;
-            return combat.EffectiveTroopStamina;
-        }
+        public static int CalculateConstruction(Combat combat) =>
+            combat == null || combat.IsAnnihilated ? 0 : combat.Stats.Construction;
 
-        /// <summary>普攻攻擊距離（格）。</summary>
-        public static int CalculateAttackRange(Combat combat)
-        {
-            if (combat == null || combat.IsAnnihilated)
-                return 0;
-            return combat.EffectiveAttackRange;
-        }
+        public static int CalculateMobility(Combat combat) =>
+            combat == null || combat.IsAnnihilated ? 0 : combat.TroopMobility;
+
+        public static int CalculateTroopStamina(Combat combat) =>
+            combat == null || combat.IsAnnihilated ? 0 : combat.TroopStamina;
+
+        public static int CalculateAttackRange(Combat combat) =>
+            combat == null || combat.IsAnnihilated ? 0 : combat.TroopAttackRange;
 
         /// <summary>計算一次普攻傷害（不改狀態）。空殼。</summary>
         public static BattleDamageResult CalculateNormalAttackDamage(Unit attacker, Unit defender)
@@ -115,23 +75,19 @@ namespace ThreeKindoms.Core.Units
                 return BattleDamageResult.None;
             if (attacker.IsAnnihilated || defender.IsAnnihilated)
                 return BattleDamageResult.None;
-
-            int atk = CalculateAttack(attacker);
-            int def = CalculateDefense(defender);
-            _ = atk;
-            _ = def;
+            // TODO: 用 Stats.Attack / Stats.Defense 等實作
             return BattleDamageResult.None;
         }
 
-        /// <summary>將傷害結果寫入防守方。空殼。</summary>
+        /// <summary>將傷害結果套用到防守方。</summary>
         public static void ApplyDamage(Unit defender, in BattleDamageResult damage)
         {
             if (defender == null || !damage.HasEffect)
                 return;
-            // TODO: 扣 Soldiers、加 Wounded、扣 Morale
+            // TODO: 寫回兵力／傷兵／士氣
         }
 
-        /// <summary>一次普攻：計算＋套用。</summary>
+        /// <summary>計算並套用一次普攻。</summary>
         public static BattleDamageResult ResolveNormalAttack(Unit attacker, Unit defender)
         {
             BattleDamageResult damage = CalculateNormalAttackDamage(attacker, defender);

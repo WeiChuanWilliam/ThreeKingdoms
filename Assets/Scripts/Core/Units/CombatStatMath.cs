@@ -1,180 +1,151 @@
 using System;
 using ThreeKindoms.Core.Officers;
-using ThreeKindoms.Core.Terrain;
 
 namespace ThreeKindoms.Core.Units
 {
     /// <summary>
-    /// 兵種表初始六圍 → 武將／科技／戰法加權 → 地勢加權 → 最終值。
+    /// 部隊屬性計算：
+    /// 1) 主／副將 → 部隊整體五維（統／武／智／政／魅）；
+    /// 2) 五維 ＋ 兵力／士氣／體力 → 攻／防／擊破／破城／策略／建設；
+    /// 3) 寫入 <see cref="Combat.Stats"/>（<see cref="CombatTroopStatBlock"/>）。
     /// </summary>
     public static class CombatStatMath
     {
-        /// <summary>統率基準值（低於此無加成、高於則按比例提升攻防）。</summary>
-        public const int LeadershipBaseline = 50;
-
-        /// <summary>統率每點偏離基準時的攻防倍率增量。</summary>
-        public const float LeadershipScalePerPoint = 0.01f;
-
-        static readonly CombatStatKind[] AllKinds =
+        /// <summary>重算並寫入部隊；全滅則清零。</summary>
+        public static void Recalculate(Combat combat)
         {
-            CombatStatKind.Attack,
-            CombatStatKind.Defense,
-            CombatStatKind.Mobility,
-            CombatStatKind.Jipo,
-            CombatStatKind.Gongcheng,
-            CombatStatKind.Stamina,
-            CombatStatKind.AttackRange
-        };
+            if (combat == null)
+                return;
 
-        /// <summary>兵種表原始值（括號內數字）。來自 <see cref="ICombatTroopStatsSource"/>／<see cref="Combat.TroopAttack"/> 等。</summary>
-        public static CombatTroopStatBlock GetBaseTroopStats(ICombatTroopStatsSource source)
+            if (combat.IsAnnihilated)
+            {
+                combat.ApplyStats(CombatTroopStatBlock.Zero);
+                return;
+            }
+
+            combat.ApplyStats(Calculate(combat));
+        }
+
+        /// <summary>只計算不寫回。</summary>
+        public static CombatTroopStatBlock Calculate(Combat combat)
         {
-            if (source == null) return default;
+            if (combat == null || combat.IsAnnihilated)
+                return CombatTroopStatBlock.Zero;
+
             return new CombatTroopStatBlock(
-                source.TroopAttack,
-                source.TroopDefense,
-                source.TroopMobility,
-                source.TroopJipo,
-                source.TroopGongcheng,
-                source.TroopStamina,
-                source.TroopAttackRange);
+                CalculateAttack(combat),
+                CalculateDefense(combat),
+                CalculateJipo(combat),
+                CalculateGongcheng(combat),
+                CalculateStrategy(combat),
+                CalculateConstruction(combat));
         }
 
-        /// <summary>從戰鬥部隊取得兵種表原始六圍。</summary>
-        public static CombatTroopStatBlock GetBaseTroopStats(Combat unit) => GetBaseTroopStats((ICombatTroopStatsSource)unit);
+        // ----- 部隊整體五維（統／武／智／政／魅）-----
+        // 公式本體：BlendOfficerStat。要改合成權重／取副將規則，改那個方法即可。
+        // Combat.Unit* 只是轉呼叫，不算另一套公式。
 
-        /// <summary>經武將／科技／戰法，尚未乘地勢（括號前數字的前一階，若地勢為 1 則與最終相同）。</summary>
-        public static CombatTroopStatBlock GetStatsAfterOfficerAndResearch(Unit unit, ICombatTroopStatsSource source) =>
-            CombatStatModifierHooks.ModifyByOfficerSkillAndResearch(unit, source, GetBaseTroopStats(source));
+        /// <summary>統率。公式見 <see cref="BlendOfficerStat"/>。</summary>
+        public static short GetUnitLeadership(Unit unit) =>
+            BlendOfficerStat(unit, o => o.EffectiveLeadership);
 
-        /// <summary>從戰鬥部隊取得經武將／科技／戰法後的六圍。</summary>
-        public static CombatTroopStatBlock GetStatsAfterOfficerAndResearch(Combat unit) =>
-            GetStatsAfterOfficerAndResearch(unit, unit);
+        /// <summary>武力。公式見 <see cref="BlendOfficerStat"/>。</summary>
+        public static short GetUnitForce(Unit unit) =>
+            BlendOfficerStat(unit, o => o.EffectiveAttack);
 
-        /// <summary>最終六圍（括號前數字）。</summary>
-        public static CombatTroopStatBlock GetEffectiveTroopStats(Unit unit, ICombatTroopStatsSource source) =>
-            CombatStatModifierHooks.ModifyByTerrain(unit, source, GetStatsAfterOfficerAndResearch(unit, source));
+        /// <summary>智力。公式見 <see cref="BlendOfficerStat"/>。</summary>
+        public static short GetUnitIntelligence(Unit unit) =>
+            BlendOfficerStat(unit, o => o.EffectiveIntelligence);
 
-        /// <summary>從戰鬥部隊取得含地勢的最終六圍。</summary>
-        public static CombatTroopStatBlock GetEffectiveTroopStats(Combat unit) =>
-            GetEffectiveTroopStats(unit, unit);
+        /// <summary>政治。公式見 <see cref="BlendOfficerStat"/>。</summary>
+        public static short GetUnitPolicy(Unit unit) =>
+            BlendOfficerStat(unit, o => o.EffectivePolicy);
 
-        /// <summary>取得指定維度的最終數值。</summary>
-        public static short GetEffective(Unit unit, ICombatTroopStatsSource source, CombatStatKind kind) =>
-            GetEffectiveTroopStats(unit, source).Get(kind);
+        /// <summary>魅力。公式見 <see cref="BlendOfficerStat"/>。</summary>
+        public static short GetUnitCharisma(Unit unit) =>
+            BlendOfficerStat(unit, o => o.EffectiveCharisma);
 
-        /// <summary>最終攻擊。</summary>
-        public static short GetEffectiveAttack(Combat unit) => GetEffective(unit, unit, CombatStatKind.Attack);
-
-        /// <summary>最終防禦。</summary>
-        public static short GetEffectiveDefense(Combat unit) => GetEffective(unit, unit, CombatStatKind.Defense);
-
-        /// <summary>最終機動。</summary>
-        public static short GetEffectiveMobility(Combat unit) => GetEffective(unit, unit, CombatStatKind.Mobility);
-
-        /// <summary>最終破甲。</summary>
-        public static short GetEffectiveJipo(Combat unit) => GetEffective(unit, unit, CombatStatKind.Jipo);
-
-        /// <summary>最終攻城。</summary>
-        public static short GetEffectiveGongcheng(Combat unit) => GetEffective(unit, unit, CombatStatKind.Gongcheng);
-
-        /// <summary>最終耐力。</summary>
-        public static short GetEffectiveTroopStamina(Combat unit) => GetEffective(unit, unit, CombatStatKind.Stamina);
-
-        /// <summary>最終攻擊距離。</summary>
-        public static short GetEffectiveAttackRange(Combat unit) => GetEffective(unit, unit, CombatStatKind.AttackRange);
-
-        /// <summary>主將統率換算為攻防倍率係數。</summary>
-        public static float GetLeadershipFactor(Officer commander)
-        {
-            if (commander == null) return 1f;
-            return 1f + (commander.Leadership - LeadershipBaseline) * LeadershipScalePerPoint;
-        }
-
-        /// <summary>套用武將戰法與科技倍率至基礎六圍。</summary>
-        internal static CombatTroopStatBlock ApplyOfficerAndResearchMultipliers(
-            Unit unit,
-            ICombatTroopStatsSource source,
-            CombatTroopStatBlock baseStats)
-        {
-            var result = baseStats;
-            foreach (CombatStatKind kind in AllKinds)
-            {
-                float mult = CombatStatModifierHooks.GetOfficerSkillMultiplier(unit, source, kind)
-                             * CombatStatModifierHooks.GetResearchMultiplier(unit, source, kind);
-                if (kind == CombatStatKind.Attack || kind == CombatStatKind.Defense)
-                    mult *= GetLeadershipFactorForUnit(unit);
-                result = result.With(kind, ScaleStat(baseStats.Get(kind), mult));
-            }
-            return result;
-        }
-
-        /// <summary>套用地勢倍率至六圍。</summary>
-        internal static CombatTroopStatBlock ApplyTerrainMultipliers(
-            Unit unit,
-            ICombatTroopStatsSource source,
-            CombatTroopStatBlock stats)
-        {
-            AbstractTerrain terrain = unit?.Location?.CurrentTerrain;
-            var result = stats;
-            foreach (CombatStatKind kind in AllKinds)
-            {
-                float mult = CombatStatModifierHooks.GetTerrainMultiplier(unit, source, terrain, kind);
-                result = result.With(kind, ScaleStat(stats.Get(kind), mult));
-            }
-            return result;
-        }
-
-        /// <summary>部隊智力（主將與最強副將加權合算）。</summary>
-        public static short GetUnitIntelligence(Unit unit)
+        /// <summary>
+        /// 【五維合成公式｜之後改這裡】
+        /// 主將權重 2、該屬性最強副將權重 1：結果 = (主將×2 + 最佳副將) / 3。
+        /// 僅主將→主將；僅副將→最佳副將；皆無→0。
+        /// selector：從武將取出要合成的那一維（例：政治 = o.EffectivePolicy）。
+        /// </summary>
+        static short BlendOfficerStat(Unit unit, Func<Officer, byte> selector)
         {
             if (unit == null) return 0;
             Officer cmd = unit.Commander;
             if (cmd == null && unit.ViceOfficers.Count == 0)
                 return 0;
 
-            int cmdIntel = cmd?.Intelligence ?? 0;
             int bestVice = 0;
             foreach (Officer v in unit.ViceOfficers)
             {
-                if (v.Intelligence > bestVice)
-                    bestVice = v.Intelligence;
+                int s = selector(v);
+                if (s > bestVice)
+                    bestVice = s;
             }
 
             if (cmd == null)
                 return (short)bestVice;
+
+            int cmdStat = selector(cmd);
             if (bestVice <= 0)
-                return (short)cmdIntel;
+                return (short)cmdStat;
 
-            return (short)((cmdIntel * 2 + bestVice) / 3);
+            return (short)((cmdStat * 2 + bestVice) / 3);
         }
 
-        static float GetLeadershipFactorForUnit(Unit unit)
-        {
-            float factor = GetLeadershipFactor(unit?.Commander);
-            ApplyViceLeadershipBonus(unit, ref factor);
-            return factor;
-        }
+        // -------------------------------------------------------------------------
+        // 最終六項（寫入 Combat.Stats）：各自改下方 Calculate*。
+        // -------------------------------------------------------------------------
 
-        static void ApplyViceLeadershipBonus(Unit unit, ref float factor)
-        {
-            if (unit == null || unit.ViceOfficers.Count == 0) return;
-            short bestLead = 0;
-            foreach (Officer v in unit.ViceOfficers)
-            {
-                if (v.Leadership > bestLead)
-                    bestLead = v.Leadership;
-            }
-            if (bestLead <= LeadershipBaseline) return;
-            factor += (bestLead - LeadershipBaseline) * LeadershipScalePerPoint * 0.5f;
-        }
+        /// <summary>攻擊（暫代：武力 × 兵力／士氣／體力）。</summary>
+        public static int CalculateAttack(Combat combat) =>
+            Placeholder(GetUnitForce(combat), combat);
 
-        static short ScaleStat(short baseStat, float multiplier)
+        /// <summary>防禦（暫代：統率 × 兵力／士氣／體力）。</summary>
+        public static int CalculateDefense(Combat combat) =>
+            Placeholder(GetUnitLeadership(combat), combat);
+
+        /// <summary>擊破（暫代：武力 × 兵力／士氣／體力）。</summary>
+        public static int CalculateJipo(Combat combat) =>
+            Placeholder(GetUnitForce(combat), combat);
+
+        /// <summary>破城（暫代：武力 × 兵力／士氣／體力）。</summary>
+        public static int CalculateGongcheng(Combat combat) =>
+            Placeholder(GetUnitForce(combat), combat);
+
+        /// <summary>策略（暫代：智力 × 兵力／士氣／體力）。</summary>
+        public static int CalculateStrategy(Combat combat) =>
+            Placeholder(GetUnitIntelligence(combat), combat);
+
+        /// <summary>
+        /// 【建設公式｜之後改這裡】
+        /// 暫代：政治(GetUnitPolicy／BlendOfficerStat) × 健康兵力/100 × 士氣/100 × 體力/100。
+        /// 與五維合成無關；要換基數或算法直接改本方法，勿改 UnitPolicy 名稱含義。
+        /// </summary>
+        public static int CalculateConstruction(Combat combat) =>
+            Placeholder(GetUnitPolicy(combat), combat);
+
+        /// <summary>
+        /// 【暫代共同倍率｜之後可刪】屬性 × 健康兵力/100 × 士氣/100 × 體力/100。
+        /// 各 Calculate* 正式公式寫好後可不再呼叫。
+        /// </summary>
+        static int Placeholder(int officerStat, Combat combat)
         {
-            int scaled = (int)Math.Round(baseStat * multiplier, MidpointRounding.AwayFromZero);
-            if (scaled < 0) return 0;
-            if (scaled > short.MaxValue) return short.MaxValue;
-            return (short)scaled;
+            if (combat == null || officerStat <= 0)
+                return 0;
+
+            int fighting = combat.EffectiveCombatStrength;
+            if (fighting <= 0)
+                return 0;
+
+            float raw = officerStat
+                        * (fighting / 100f)
+                        * (combat.Morale / 100f)
+                        * (combat.Stamina / 100f);
+            return Math.Max(0, (int)MathF.Round(raw, MidpointRounding.AwayFromZero));
         }
     }
 }

@@ -163,18 +163,19 @@ namespace ThreeKindoms.Local.Tests.Runners
                 throw new System.InvalidOperationException("主將應為劉備 (id=1)");
             if (combat.ViceOfficer == null || combat.ViceOfficer.RuntimeId != ViceId)
                 throw new System.InvalidOperationException("副將應為關羽 (id=2)");
-            if (combat.CombatPower <= 0)
-                throw new System.InvalidOperationException("戰鬥力應 > 0");
+            if (combat.Stats.Attack <= 0)
+                throw new System.InvalidOperationException("攻擊力應 > 0");
         }
 
         static string FormatOfficerDetail(Combat combat)
         {
             Officer cmd = combat.Commander;
             Officer vice = combat.ViceOfficer;
+            var s = combat.Stats;
             return
                 $"     主將 {cmd.FullName} 統{cmd.LeadershipPerform} 武{cmd.AttackPerform} | " +
                 $"副將 {vice.FullName} 統{vice.LeadershipPerform} 武{vice.AttackPerform} | " +
-                $"戰鬥力{combat.CombatPower}";
+                $"攻{s.Attack} 防{s.Defense} 城{s.Gongcheng} 破{s.Jipo} 策{s.Strategy} 建{s.Construction}";
         }
 
         static void Check(StringBuilder log, ref int ok, ref int err, string name, System.Action action)

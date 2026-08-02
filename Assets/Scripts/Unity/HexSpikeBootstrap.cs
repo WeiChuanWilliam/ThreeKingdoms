@@ -236,7 +236,9 @@ namespace ThreeKindoms.UnityBridge
             GUILayout.Label("ThreeKindoms — Hex Spike");
             GUILayout.Label($"第 {clock.TotalDay} 天（旬內第 {clock.DayInXun} 天）");
             GUILayout.Label($"[{core.Kind}] {core.UnitName} 士氣{core.Morale} 體力{core.Stamina}");
-            GUILayout.Label($"兵{core.Soldiers} 傷{core.Wounded} 戰力{core.EffectiveCombatStrength}" + (core.IsAnnihilated ? " 團滅" : ""));
+            GUILayout.Label($"兵{core.Soldiers} 傷{core.Wounded} 戰{core.EffectiveCombatStrength}" + (core.IsAnnihilated ? " 團滅" : ""));
+            if (core is Combat combatPower)
+                GUILayout.Label($"攻{combatPower.Stats.Attack} 防{combatPower.Stats.Defense} 城{combatPower.Stats.Gongcheng} 破{combatPower.Stats.Jipo} 策{combatPower.Stats.Strategy} 建{combatPower.Stats.Construction}");
             GUILayout.Label($"@ {loc.Position}  行動力 {loc.MovementPointsLeft}/15  糧/日{core.CalculateFoodConsumption()}");
             if (loc.IsOnFire) GUILayout.Label("狀態：腳下格著火");
             if (loc.StationedBuilding != null) GUILayout.Label($"建築：{loc.StationedBuilding.Name}");

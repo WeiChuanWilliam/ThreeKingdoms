@@ -18,107 +18,64 @@ namespace ThreeKindoms.Core.Units
         /// <summary>行军用：参数倍率 × 兵种表 mobility。</summary>
         public float MarchMobilityRating => MarchSpeedFactor * TroopMobility;
 
-        // ----- 戰法四槽：暫不使用（之後接 skill.properties／戰法 class 再打開）-----
-        // readonly HashSet<Skill> battleSkills = new(SkillByIdComparer.Instance);
-        // readonly HashSet<Skill> strategySkills = new(SkillByIdComparer.Instance);
-        // readonly HashSet<Skill> mobilitySkills = new(SkillByIdComparer.Instance);
-        // readonly HashSet<Skill> defenceSkills = new(SkillByIdComparer.Instance);
-
         /// <summary>兵科大類（步／騎／弓等）。</summary>
         public TroopType TroopType { get; private set; }
 
         /// <summary>兵種表鍵值（對應 properties 兵種定義）。</summary>
         public string TroopKindKey { get; private set; }
 
-        /// <summary>兵種表攻擊（初始六圍）。</summary>
+        /// <summary>兵種表攻擊。</summary>
         public short TroopAttack { get; private set; }
 
-        /// <summary>兵種表防禦（初始六圍）。</summary>
+        /// <summary>兵種表防禦。</summary>
         public short TroopDefense { get; private set; }
 
-        /// <summary>兵種表機動（初始六圍）。</summary>
+        /// <summary>兵種表機動。</summary>
         public short TroopMobility { get; private set; }
 
-        /// <summary>兵種表破甲（初始六圍）。</summary>
+        /// <summary>兵種表擊破。</summary>
         public short TroopJipo { get; private set; }
 
-        /// <summary>兵種表攻城（初始六圍）。</summary>
+        /// <summary>兵種表破城。</summary>
         public short TroopGongcheng { get; private set; }
 
-        /// <summary>兵種表耐力（初始六圍）。</summary>
+        /// <summary>兵種表耐力。</summary>
         public short TroopStamina { get; private set; }
 
-        /// <summary>兵種表攻擊距離（初始值）。</summary>
+        /// <summary>兵種表攻擊距離。</summary>
         public short TroopAttackRange { get; private set; }
 
-        /// <summary>兵種階段／世代（兵種表 stage）。</summary>
+        /// <summary>兵種階段／世代。</summary>
         public int TroopStage { get; private set; }
+
+        /// <summary>
+        /// 最終戰鬥屬性（攻／防／擊破／破城／策略／建設）。
+        /// 由 <see cref="CombatStatMath.Recalculate"/> 寫入。
+        /// </summary>
+        public CombatTroopStatBlock Stats { get; private set; }
 
         /// <summary>副將（戰鬥部隊至多一位）。</summary>
         public Officer ViceOfficer => ViceOfficers.Count > 0 ? ViceOfficers[0] : null;
 
-        /// <summary>兵種表六圍（初始值）。</summary>
-        public CombatTroopStatBlock BaseTroopStats => CombatStatMath.GetBaseTroopStats(this);
+        /// <summary>部隊整體統率。合成公式：<see cref="CombatStatMath.GetUnitLeadership"/> → BlendOfficerStat。</summary>
+        public short UnitLeadership => CombatStatMath.GetUnitLeadership(this);
 
-        /// <summary>武將／科技後、尚未乘地勢（戰法暫不納入）。</summary>
-        public CombatTroopStatBlock TroopStatsAfterOfficerAndResearch =>
-            CombatStatMath.GetStatsAfterOfficerAndResearch(this);
+        /// <summary>部隊整體武力。合成公式：<see cref="CombatStatMath.GetUnitForce"/> → BlendOfficerStat。</summary>
+        public short UnitForce => CombatStatMath.GetUnitForce(this);
 
-        /// <summary>最終六圍（含地勢）。</summary>
-        public CombatTroopStatBlock EffectiveTroopStats => CombatStatMath.GetEffectiveTroopStats(this);
-
-        /// <summary>最終攻擊（含武將、科技、地勢）。</summary>
-        public short EffectiveAttack => CombatStatMath.GetEffectiveAttack(this);
-
-        /// <summary>最終防禦（含武將、科技、地勢）。</summary>
-        public short EffectiveDefense => CombatStatMath.GetEffectiveDefense(this);
-
-        /// <summary>最終機動（含武將、科技、地勢）。</summary>
-        public short EffectiveMobility => CombatStatMath.GetEffectiveMobility(this);
-
-        /// <summary>最終破甲（含武將、科技、地勢）。</summary>
-        public short EffectiveJipo => CombatStatMath.GetEffectiveJipo(this);
-
-        /// <summary>最終攻城（含武將、科技、地勢）。</summary>
-        public short EffectiveGongcheng => CombatStatMath.GetEffectiveGongcheng(this);
-
-        /// <summary>最終耐力（含武將、科技、地勢）。</summary>
-        public short EffectiveTroopStamina => CombatStatMath.GetEffectiveTroopStamina(this);
-
-        /// <summary>最終攻擊距離（含武將、科技、地勢）。</summary>
-        public short EffectiveAttackRange => CombatStatMath.GetEffectiveAttackRange(this);
-
-        /// <summary>部隊智力（主將／副將相合，公式可調）。</summary>
+        /// <summary>部隊整體智力。合成公式：<see cref="CombatStatMath.GetUnitIntelligence"/> → BlendOfficerStat。</summary>
         public short UnitIntelligence => CombatStatMath.GetUnitIntelligence(this);
 
-        /// <summary>戰鬥力評分；等同 <see cref="CalculateCombatPower"/>。</summary>
-        public int CombatPower => CalculateCombatPower();
+        /// <summary>部隊整體政治。合成公式：<see cref="CombatStatMath.GetUnitPolicy"/> → BlendOfficerStat。</summary>
+        public short UnitPolicy => CombatStatMath.GetUnitPolicy(this);
 
-        /// <summary>攻擊力（結算用；見 <see cref="CombatBattleFormulas"/>）。</summary>
-        public int CalculateAttack() => CombatBattleFormulas.CalculateAttack(this);
-
-        /// <summary>防禦力（結算用；見 <see cref="CombatBattleFormulas"/>）。</summary>
-        public int CalculateDefense() => CombatBattleFormulas.CalculateDefense(this);
-
-        /// <summary>機動力（結算用）。</summary>
-        public int CalculateMobility() => CombatBattleFormulas.CalculateMobility(this);
-
-        /// <summary>破甲（結算用）。</summary>
-        public int CalculateJipo() => CombatBattleFormulas.CalculateJipo(this);
-
-        /// <summary>攻城（結算用）。</summary>
-        public int CalculateGongcheng() => CombatBattleFormulas.CalculateGongcheng(this);
-
-        /// <summary>部隊耐力（結算用）。</summary>
-        public int CalculateTroopStaminaStat() => CombatBattleFormulas.CalculateTroopStamina(this);
-
-        /// <summary>普攻攻擊距離（結算用）。</summary>
-        public int CalculateAttackRange() => CombatBattleFormulas.CalculateAttackRange(this);
+        /// <summary>部隊整體魅力。合成公式：<see cref="CombatStatMath.GetUnitCharisma"/> → BlendOfficerStat。</summary>
+        public short UnitCharisma => CombatStatMath.GetUnitCharisma(this);
 
         /// <summary>部隊類型：戰鬥部隊。</summary>
         public override UnitKind Kind => UnitKind.Combat;
 
-        /// <summary>所屬兵團（暫保留掛載；兵糧目前視為無限，不由此扣糧）。</summary>
+        /// <summary>所屬兵團（暫保留掛載）。</summary>
         public Legion ParentLegion { get; private set; }
 
         /// <summary>建立空戰鬥部隊；組隊請用 <see cref="Data.Units.UnitUtil.Create"/>。</summary>
@@ -128,14 +85,25 @@ namespace ThreeKindoms.Core.Units
             SetGarrison(false);
         }
 
+        /// <summary>重算最終戰鬥屬性並寫入 <see cref="Stats"/>。</summary>
+        public void RecalculateStats() => CombatStatMath.Recalculate(this);
+
+        /// <summary>由 <see cref="CombatStatMath"/> 寫入最終屬性。</summary>
+        internal void ApplyStats(in CombatTroopStatBlock stats) => Stats = stats;
+
         /// <summary>設定唯一副將（取代既有副將）。</summary>
         public bool SetViceOfficer(Officer unitCopy)
         {
             ClearViceOfficers();
             if (unitCopy == null)
+            {
+                RecalculateStats();
                 return true;
+            }
 
-            return base.AddViceOfficer(unitCopy);
+            bool ok = base.AddViceOfficer(unitCopy);
+            RecalculateStats();
+            return ok;
         }
 
         /// <summary>從武將池設定唯一副將（id≤0 則清空）。</summary>
@@ -147,17 +115,51 @@ namespace ThreeKindoms.Core.Units
         {
             if (ViceOfficers.Count >= 1)
                 return false;
-            return base.AddViceOfficer(unitCopy);
+            bool ok = base.AddViceOfficer(unitCopy);
+            if (ok)
+                RecalculateStats();
+            return ok;
         }
 
-        /// <summary>建立戰鬥力計算用上下文（士氣、體力、六圍等；戰法暫不納入）。</summary>
-        public bool TryGetCombatPowerContext(out CombatPowerContext context) =>
-            CombatPowerRules.TryCreateContext(this, out context);
+        /// <summary>設定主將後重算。</summary>
+        public override void SetCommander(Officer officer)
+        {
+            base.SetCommander(officer);
+            RecalculateStats();
+        }
+
+        /// <summary>從武將池設定主將後重算。</summary>
+        public override void SetCommanderFromPool(int officerDefId)
+        {
+            base.SetCommanderFromPool(officerDefId);
+            RecalculateStats();
+        }
+
+        /// <inheritdoc />
+        public override void SetManpower(int totalSoldiers, int woundedCount = 0)
+        {
+            base.SetManpower(totalSoldiers, woundedCount);
+            RecalculateStats();
+        }
+
+        /// <inheritdoc />
+        public override void SetMorale(short value)
+        {
+            base.SetMorale(value);
+            RecalculateStats();
+        }
+
+        /// <inheritdoc />
+        public override void SetStamina(short value)
+        {
+            base.SetStamina(value);
+            RecalculateStats();
+        }
 
         /// <summary>設定兵科大類。</summary>
         public void SetTroopType(TroopType type) => TroopType = type;
 
-        /// <summary>六圍與攻擊距離取自兵種表（properties → <see cref="AbstractTroopKind"/>）。</summary>
+        /// <summary>綁定兵種表後重算。</summary>
         public void BindTroopKind(AbstractTroopKind kind)
         {
             if (kind == null) return;
@@ -171,54 +173,42 @@ namespace ThreeKindoms.Core.Units
             TroopStamina = kind.Stamina;
             TroopAttackRange = kind.AttackRange;
             TroopStage = kind.Stage;
+            RecalculateStats();
         }
 
         /// <summary>戰法暫停：恒為 0。</summary>
         public int CountEquippedSkills() => 0;
 
-        // ----- 戰法 API 暫註解 -----
-        // public bool ContainsBattleSkill(int skillId) => ...
-        // public bool AddBattleSkill(int skillId) => ...
-        // public bool RemoveBattleSkill(int skillId) => ...
-        // （strategy／mobility／defence 同）
-
-        /// <summary>掛載至所屬兵團（耗糧由兵團糧草扣除）。</summary>
+        /// <summary>掛載至所屬兵團。</summary>
         public void AttachToLegion(Legion legion) => ParentLegion = legion;
 
-        /// <summary>脫離兵團歸屬。</summary>
-        public void DetachFromLegion() => ParentLegion = null;
-
-        /// <summary>暫定兵糧無限：每日應耗糧恒為 0。</summary>
+        /// <summary>暫定兵糧無限。</summary>
         public override int CalculateFoodConsumption() => 0;
 
-        /// <summary>暫定兵糧無限：不扣糧，恒成功。</summary>
+        /// <summary>暫定兵糧無限。</summary>
         public override bool TryConsumeDailyFood() => true;
 
-        /// <summary>野戰戰鬥力（武將、六圍、士氣、體力與有效兵力；戰法暫不納入）。</summary>
-        protected override int CalculateNonGarrisonCombatPower() =>
-            CombatPowerRules.GetCombatPower(this);
+        /// <summary>野戰：回傳攻擊（詳見 <see cref="Stats"/>）。</summary>
+        protected override int CalculateNonGarrisonCombatPower()
+        {
+            RecalculateStats();
+            return Stats.Attack;
+        }
 
-        /// <summary>駐紮戰鬥力（目前同野戰公式；之後可疊據點攻防加成）。</summary>
-        protected override int CalculateGarrisonCombatPower() =>
-            CombatPowerRules.GetCombatPower(this);
+        /// <summary>駐紮：同野戰（之後可疊據點加成）。</summary>
+        protected override int CalculateGarrisonCombatPower()
+        {
+            RecalculateStats();
+            return Stats.Attack;
+        }
 
-        /// <summary>戰法暫停：不匯出裝備戰法。</summary>
+        /// <summary>戰法暫停：不匯出。</summary>
         internal void CollectEquippedSkills(
             System.Collections.Generic.List<Data.Persistence.SkillSaveEntry> battle,
             System.Collections.Generic.List<Data.Persistence.SkillSaveEntry> strategy,
             System.Collections.Generic.List<Data.Persistence.SkillSaveEntry> mobility,
             System.Collections.Generic.List<Data.Persistence.SkillSaveEntry> defence)
         {
-            // 戰法暫不存檔
-        }
-        
-        
-        /// <summary>攻擊力。待填兵力／士氣等；目前 Combat 暫回傳六圍最終攻擊。</summary>
-        public static int CalculateAttack(Unit unit)
-        {
-            if (unit is Combat combat)
-                return CalculateAttack(combat);
-            return 0;
         }
     }
 }

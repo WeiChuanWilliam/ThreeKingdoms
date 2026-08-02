@@ -55,10 +55,10 @@ namespace ThreeKindoms.Core.Units
         /// <summary>主將（直接引用劇本 <see cref="OfficerPool"/> 內武將）。</summary>
         public Officer Commander { get; private set; }
 
-        /// <summary>士兵總數（含傷兵）。</summary>
+        /// <summary>士兵總數（含傷兵；傷兵仍屬部隊）。</summary>
         public int Soldiers { get; private set; }
 
-        /// <summary>傷兵數。</summary>
+        /// <summary>傷兵數（計入部隊，但不計入戰鬥人力 <see cref="EffectiveCombatStrength"/>）。</summary>
         public int Wounded { get; private set; }
 
         /// <summary>部隊與地圖格的綁定（座標、行動力、進出格）。</summary>
@@ -79,8 +79,8 @@ namespace ThreeKindoms.Core.Units
         /// <summary>副將列表（戰鬥部隊至多一位，其他類型依設計）。</summary>
         public IReadOnlyList<Officer> ViceOfficers => viceOfficers;
 
-        /// <summary>可作戰的有效兵力（總兵 − 傷兵）。</summary>
-        public int EffectiveCombatStrength => UnitManpower.EffectiveCombatStrength(Soldiers, Wounded);
+        /// <summary>可作戰兵力＝總兵 − 傷兵（傷兵不計入）。</summary>
+        public int EffectiveCombatStrength => UnitManpower.FightingStrength(Soldiers, Wounded);
 
         /// <summary>是否已全滅（兵力歸零）。</summary>
         public bool IsAnnihilated => annihilated || UnitManpower.IsAnnihilated(Soldiers);
@@ -177,7 +177,7 @@ namespace ThreeKindoms.Core.Units
         }
 
         /// <summary>設定主將；會更新出戰狀態（Combat／Transport＝出戰）。</summary>
-        public void SetCommander(Officer unitCopy)
+        public virtual void SetCommander(Officer unitCopy)
         {
             if (Commander != null && !ReferenceEquals(Commander, unitCopy))
                 SyncOfficerDeployed(Commander, assigned: false);
@@ -186,7 +186,7 @@ namespace ThreeKindoms.Core.Units
         }
 
         /// <summary>從武將池依 defId 設定主將。</summary>
-        public void SetCommanderFromPool(int officerDefId) =>
+        public virtual void SetCommanderFromPool(int officerDefId) =>
             SetCommander(officerDefId > 0 ? OfficerPool.Get(officerDefId) : null);
 
         /// <summary>
@@ -203,10 +203,10 @@ namespace ThreeKindoms.Core.Units
         }
 
         /// <summary>設定士氣並限制在 0～100。</summary>
-        public void SetMorale(short value) => Morale = NumericUtil.ClampToTarget(value, (short)0, (short)100);
+        public virtual void SetMorale(short value) => Morale = NumericUtil.ClampToTarget(value, (short)0, (short)100);
 
         /// <summary>設定體力並限制在 0～100。</summary>
-        public void SetStamina(short value) => Stamina = NumericUtil.ClampToTarget(value, (short)0, (short)100);
+        public virtual void SetStamina(short value) => Stamina = NumericUtil.ClampToTarget(value, (short)0, (short)100);
 
         /// <summary>設定攜帶金錢（負值視為 0）。</summary>
         public void SetMoney(int value) => Money = value < 0 ? 0 : value;
