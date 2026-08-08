@@ -9,25 +9,24 @@ UnitManpower.FightingStrength(soldiers, wounded);
 UnitManpower.MinSoldiers; // 10
 ```
 
-## 戰鬥部隊屬性（`CombatStatMath` → `Combat.Stats`）
+## 戰鬥部隊屬性兩段式
 
 ```
-主／副將 → 部隊整體五維（統／武／智／政／魅）
-         → ＋兵力／士氣／體力
-         → CombatTroopStatBlock（攻／防／擊破／破城／策略／建設）
-         → 寫入 Combat.Stats
+武將狀態變（傷病／體力／換將）
+  → RefreshOfficerFive
+  → 寫入 Combat.OfficerFive（統／武／智／政／魅）← 隨時更新的物件
+
+戰鬥或玩家查看
+  → RecalculateStats / 讀 Stats（dirty 時重算）
+  → Combat.Stats（CombatTroopStatBlock：攻／防／擊破／破城／策略／建設）
 ```
 
-| `Stats` 欄位 | 中文 |
-|------|------|
-| `Attack` | 攻擊 |
-| `Defense` | 防禦 |
-| `Jipo` | 擊破 |
-| `Gongcheng` | 破城 |
-| `Strategy` | 策略 |
-| `Construction` | 建設 |
+| 物件 | 時機 | 內容 |
+|------|------|------|
+| `OfficerFive` | 武將狀態變更即寫回 | 統合五維 |
+| `Stats` | 戰鬥／查看 | 最終戰鬥力六項 |
 
-五維為計算用（`UnitLeadership` 等），最終只存 `Stats` 一包。兵種表 `Troop*` 仍為兵種定義原始值。
+兵種表 `Troop*` 仍為兵種定義原始值（與上兩者不同層）。
 
 ## 技能
 

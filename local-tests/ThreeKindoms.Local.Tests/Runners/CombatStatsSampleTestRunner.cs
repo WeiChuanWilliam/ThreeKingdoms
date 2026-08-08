@@ -64,7 +64,7 @@ namespace ThreeKindoms.Local.Tests.Runners
                         name = name.Substring(0, 10);
 
                     TestLog.Line(log,
-                        $"{id,4} {name,-10} {combat.UnitLeadership,4} {combat.UnitForce,4} {combat.UnitIntelligence,4} {combat.UnitPolicy,4} {combat.UnitCharisma,4} | " +
+                        $"{id,4} {name,-10} {combat.OfficerFive.Leadership,4} {combat.OfficerFive.Force,4} {combat.OfficerFive.Intelligence,4} {combat.OfficerFive.Policy,4} {combat.OfficerFive.Charisma,4} | " +
                         $"{s.Attack,6} {s.Defense,6} {s.Jipo,6} {s.Gongcheng,6} {s.Strategy,6} {s.Construction,6}");
                     ok++;
                 }

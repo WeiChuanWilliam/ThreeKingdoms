@@ -35,7 +35,8 @@ OfficerPool（static）
 OfficerDef（JSON 表）
 OfficerFactory.FromDef → Officer
 OfficerPerformanceRules（靜態公式）
-Officer.EffectiveAttack 等（戰鬥讀取）
+Officer.EffectiveAttack 等（武將有效五維讀取；非部隊屬性）
+Combat.Stats / CombatTroopStatBlock（部隊最終攻防等）
 ```
 
 ---
@@ -142,11 +143,15 @@ perform = round( base × 傷勢係數 × 體力係數 × 道具係數 )
 程式：`OfficerPerformanceRules.ComputePerform`  
 常數：`StatMin=1`, `StatMax=100`, `StaminaMin=0`, `StaminaMax=100`
 
-### 5.2 戰鬥讀取五維 — ✅
+### 5.2 武將有效五維與部隊最終屬性 — ✅
 
-`Officer.EffectiveAttack`／`CombatRelevantSum`／`BlendedCombatRelevantSum`  
+**武將**：`Officer.EffectiveAttack` 等／`CombatRelevantSum`／`BlendedCombatRelevantSum`  
 → 優先 `*Perform`，若 Perform==0 才退回基礎值  
-主副將合算：`BlendCommanderAndVice`（主×2 + 副）/ 3
+
+**部隊五維合成**：`CombatStatMath` 主×2＋最佳副／3 → `UnitForce` 等  
+
+**部隊最終**：`Combat.Stats`（`CombatTroopStatBlock`：攻／防／擊破／破城／策略／建設）  
+→ **沒有** `Combat.EffectiveAttack`；讀 `Stats.Attack`
 
 ### 5.3 亂數 — ✅
 

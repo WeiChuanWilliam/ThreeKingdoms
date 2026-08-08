@@ -229,7 +229,13 @@ Pool 內每個 defId 一個 Officer（Singleton）
 發揮值（attackPerform, leadershipPerform, …）
         │
         ▼
-戰鬥讀取（Officer.EffectiveAttack 等／BlendedCombatRelevantSum）
+武將讀取（Officer.EffectiveAttack 等）
+        │
+        ▼
+部隊合成五維（CombatStatMath → UnitForce 等）
+        │
+        ▼
+部隊最終（Combat.Stats / CombatTroopStatBlock：攻防…）
 ```
 
 ### 4.2 計算入口（單一）
@@ -260,20 +266,27 @@ perform = round( base × 傷勢係數 × 體力係數 × 道具係數 )
 - 基礎六圍、發揮值皆 **`byte`**，設計區間 **1～100**；體力 **0～100**。
 - 傷勢 **1～3** 與 **死亡（`IsAlive`）分離**；`HealthChange` 只升降傷勢，不直接設死亡。
 
-### 4.3 戰鬥讀取（白話）
+### 4.3 武將有效五維 vs 部隊最終屬性（白話）
 
-戰鬥應讀 **`Officer.EffectiveAttack`／`EffectiveIntelligence`／`EffectiveLeadership`**（有發揮值用發揮值，否則基礎值），主副將合算用 **`Officer.BlendedCombatRelevantSum(commander, vice)`**。
+**武將層**（`Officer`，仍用 `Effective*`）：
+讀 **`Officer.EffectiveAttack`／`EffectiveIntelligence`／`EffectiveLeadership`／`EffectivePolicy`／`EffectiveCharisma`**
+（有發揮值用發揮值，否則基礎值）。主副將先由 `CombatStatMath.BlendOfficerStat`（主×2 + 最佳副）/3 合成部隊五維（`UnitForce` 等）。
 
 ```text
 若 AttackPerform > 0  →  用 AttackPerform
 若 AttackPerform == 0 →  退回 Attack
 ```
 
-**白話**：關羽表上武力 97（`Attack`），重傷疲勞後可能只剩 70（`AttackPerform`）。戰鬥應讀 `EffectiveAttack`＝70。
+**白話**：關羽表上武力 97（`Attack`），重傷疲勞後可能只剩 70（`AttackPerform`）。部隊合成用 `Officer.EffectiveAttack`＝70，**不是**部隊上的 `EffectiveAttack`。
 
-程式位置：`AbstractOfficer` 的 `Effective*`／`CombatRelevantSum`／`BlendedCombatRelevantSum`。
+**部隊層**（最終存一包，無 `Combat.EffectiveAttack`）：
+`CombatStatMath` 用五維＋兵力／士氣／體力算出 **攻／防／擊破／破城／策略／建設**，寫入 **`Combat.Stats`**（型別 `CombatTroopStatBlock`）。
+讀最終攻擊請用 **`combat.Stats.Attack`**，不要找部隊 `Effective*`。
 
-統率部隊加成（`CombatStatMath`）目前仍用主將 `Leadership`（基礎統率）；是否改為 `EffectiveLeadership` 待戰鬥規則一併調整（見 §10.3）。
+程式位置：
+- 武將：`AbstractOfficer` 的 `Effective*`
+- 部隊：`Combat.Stats`／`CombatStatMath.Recalculate`
+- 詳見 [`UNIT_MANPOWER_AND_SKILLS.md`](UNIT_MANPOWER_AND_SKILLS.md)
 
 ---
 
@@ -403,7 +416,7 @@ Unit
   AddViceOfficerFromPool(defId) →  Get(defId) → AddViceOfficer（須通過「未在其他部隊」檢查）
 ```
 
-主副將能力混合（`Officer.BlendedCombatRelevantSum`）仍用各將的 **Effective*** 合算。
+主副將能力混合仍用各將的 **Officer.Effective*** 合算成部隊五維；最終攻防在 **`Combat.Stats`**，沒有部隊 `EffectiveAttack`。
 
 ---
 
@@ -457,9 +470,9 @@ public abstract int RollRandom(int minInclusive, int maxInclusive);
 
 併入 `CalculatePerformance`（Singleton 狀態一併反映），或戰鬥回合內暫時疊算？
 
-### 10.3 統率加成用基礎還是發揮
+### 10.3 傷病後部隊 Stats 何時重算
 
-`CombatStatMath.GetLeadershipFactor` 用 `Leadership` 或 `LeadershipPerform`。
+武將 `SetInjury` 只刷新 `*Perform`，**不**自動寫 `Combat.Stats`。交戰前或 dirty 時呼叫 `Combat.RecalculateStats()`。
 
 ### 10.4 副將上限
 
@@ -472,7 +485,7 @@ public abstract int RollRandom(int minInclusive, int maxInclusive);
 1. **Singleton 指派**：`Unit` 改引用 Pool；廢除 Clone 路徑
 2. **`CalculatePerformance`**：傷病 ＋ 體力公式；`StaminaChange` / `HealthChange` 後 Refresh
 3. **指派衝突檢查**：同一 defId 不可多部隊
-4. 戰鬥／統率讀取統一改 `*Perform`
+4. 部隊最終屬性統一讀 `Combat.Stats`（`CombatTroopStatBlock`）；武將讀 `Officer.Effective*`
 5. 存檔：只存 Pool 內 Officer 列表 + 各部隊 commander/vice **defId**（還原時重新綁引用）
 
 ---

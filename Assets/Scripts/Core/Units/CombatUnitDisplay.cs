@@ -25,7 +25,7 @@ namespace ThreeKindoms.Core.Units
             return
                 $"{prefix} {unit.UnitName}{sitePart} | 兵科{category} 兵种{kindLabel} | " +
                 $"兵力{unit.Soldiers} 士气{unit.Morale} 体力{unit.Stamina} 金{unit.Money} | " +
-                $"統{unit.UnitLeadership} 武{unit.UnitForce} 智{unit.UnitIntelligence} 政{unit.UnitPolicy} 魅{unit.UnitCharisma} | " +
+                $"統{unit.OfficerFive.Leadership} 武{unit.OfficerFive.Force} 智{unit.OfficerFive.Intelligence} 政{unit.OfficerFive.Policy} 魅{unit.OfficerFive.Charisma} | " +
                 $"攻{s.Attack} 防{s.Defense} 破{s.Jipo} 城{s.Gongcheng} 策{s.Strategy} 建{s.Construction} | " +
                 $"主将{commander} 副将{unit.ViceOfficers.Count}";
         }

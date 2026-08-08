@@ -49,28 +49,44 @@ namespace ThreeKindoms.Core.Units
         public int TroopStage { get; private set; }
 
         /// <summary>
-        /// 最終戰鬥屬性（攻／防／擊破／破城／策略／建設）。
-        /// 由 <see cref="CombatStatMath.Recalculate"/> 寫入。
+        /// 主副將統合五維（統／武／智／政／魅）。
+        /// 武將狀態變更時 <see cref="RefreshOfficerFive"/> 寫回；不是戰鬥力。
         /// </summary>
-        public CombatTroopStatBlock Stats { get; private set; }
+        public UnitOfficerFiveBlock OfficerFive { get; private set; }
+
+        CombatTroopStatBlock _stats;
+        bool _statsDirty = true;
+
+        /// <summary>
+        /// 最終戰鬥力（攻／防／擊破／破城／策略／建設）。
+        /// 戰鬥／查看時才重算（讀取時若 dirty 會 <see cref="RecalculateStats"/>）。
+        /// </summary>
+        public CombatTroopStatBlock Stats
+        {
+            get
+            {
+                EnsureStats();
+                return _stats;
+            }
+        }
 
         /// <summary>副將（戰鬥部隊至多一位）。</summary>
         public Officer ViceOfficer => ViceOfficers.Count > 0 ? ViceOfficers[0] : null;
 
-        /// <summary>部隊整體統率。合成公式：<see cref="CombatStatMath.GetUnitLeadership"/> → BlendOfficerStat。</summary>
-        public short UnitLeadership => CombatStatMath.GetUnitLeadership(this);
+        /// <summary>統合統率（讀 <see cref="OfficerFive"/>）。</summary>
+        public short UnitLeadership => OfficerFive.Leadership;
 
-        /// <summary>部隊整體武力。合成公式：<see cref="CombatStatMath.GetUnitForce"/> → BlendOfficerStat。</summary>
-        public short UnitForce => CombatStatMath.GetUnitForce(this);
+        /// <summary>統合武力。</summary>
+        public short UnitForce => OfficerFive.Force;
 
-        /// <summary>部隊整體智力。合成公式：<see cref="CombatStatMath.GetUnitIntelligence"/> → BlendOfficerStat。</summary>
-        public short UnitIntelligence => CombatStatMath.GetUnitIntelligence(this);
+        /// <summary>統合智力。</summary>
+        public short UnitIntelligence => OfficerFive.Intelligence;
 
-        /// <summary>部隊整體政治。合成公式：<see cref="CombatStatMath.GetUnitPolicy"/> → BlendOfficerStat。</summary>
-        public short UnitPolicy => CombatStatMath.GetUnitPolicy(this);
+        /// <summary>統合政治。</summary>
+        public short UnitPolicy => OfficerFive.Policy;
 
-        /// <summary>部隊整體魅力。合成公式：<see cref="CombatStatMath.GetUnitCharisma"/> → BlendOfficerStat。</summary>
-        public short UnitCharisma => CombatStatMath.GetUnitCharisma(this);
+        /// <summary>統合魅力。</summary>
+        public short UnitCharisma => OfficerFive.Charisma;
 
         /// <summary>部隊類型：戰鬥部隊。</summary>
         public override UnitKind Kind => UnitKind.Combat;
@@ -85,11 +101,36 @@ namespace ThreeKindoms.Core.Units
             SetGarrison(false);
         }
 
-        /// <summary>重算最終戰鬥屬性並寫入 <see cref="Stats"/>。</summary>
+        /// <summary>武將狀態／主副變更後：重算統合五維並標記 Stats dirty。</summary>
+        public void RefreshOfficerFive() => CombatStatMath.RefreshOfficerFive(this);
+
+        /// <summary>由 <see cref="CombatStatMath"/> 寫入統合五維。</summary>
+        internal void ApplyOfficerFive(in UnitOfficerFiveBlock five)
+        {
+            OfficerFive = five;
+            MarkStatsDirty();
+        }
+
+        /// <summary>戰鬥／查看：重算 <see cref="Stats"/>。</summary>
         public void RecalculateStats() => CombatStatMath.Recalculate(this);
 
-        /// <summary>由 <see cref="CombatStatMath"/> 寫入最終屬性。</summary>
-        internal void ApplyStats(in CombatTroopStatBlock stats) => Stats = stats;
+        /// <summary>若 Stats 已過期則重算。</summary>
+        public void EnsureStats()
+        {
+            if (!_statsDirty)
+                return;
+            RecalculateStats();
+        }
+
+        /// <summary>兵力／士氣等變了：不立刻算 Stats，標記待戰鬥／查看再算。</summary>
+        public void MarkStatsDirty() => _statsDirty = true;
+
+        /// <summary>由 <see cref="CombatStatMath"/> 寫入戰鬥力。</summary>
+        internal void ApplyStats(in CombatTroopStatBlock stats)
+        {
+            _stats = stats;
+            _statsDirty = false;
+        }
 
         /// <summary>設定唯一副將（取代既有副將）。</summary>
         public bool SetViceOfficer(Officer unitCopy)
@@ -97,12 +138,12 @@ namespace ThreeKindoms.Core.Units
             ClearViceOfficers();
             if (unitCopy == null)
             {
-                RecalculateStats();
+                RefreshOfficerFive();
                 return true;
             }
 
             bool ok = base.AddViceOfficer(unitCopy);
-            RecalculateStats();
+            RefreshOfficerFive();
             return ok;
         }
 
@@ -117,49 +158,49 @@ namespace ThreeKindoms.Core.Units
                 return false;
             bool ok = base.AddViceOfficer(unitCopy);
             if (ok)
-                RecalculateStats();
+                RefreshOfficerFive();
             return ok;
         }
 
-        /// <summary>設定主將後重算。</summary>
+        /// <summary>設定主將後刷新統合五維。</summary>
         public override void SetCommander(Officer officer)
         {
             base.SetCommander(officer);
-            RecalculateStats();
+            RefreshOfficerFive();
         }
 
-        /// <summary>從武將池設定主將後重算。</summary>
+        /// <summary>從武將池設定主將後刷新統合五維。</summary>
         public override void SetCommanderFromPool(int officerDefId)
         {
             base.SetCommanderFromPool(officerDefId);
-            RecalculateStats();
+            RefreshOfficerFive();
         }
 
         /// <inheritdoc />
         public override void SetManpower(int totalSoldiers, int woundedCount = 0)
         {
             base.SetManpower(totalSoldiers, woundedCount);
-            RecalculateStats();
+            MarkStatsDirty();
         }
 
         /// <inheritdoc />
         public override void SetMorale(short value)
         {
             base.SetMorale(value);
-            RecalculateStats();
+            MarkStatsDirty();
         }
 
         /// <inheritdoc />
         public override void SetStamina(short value)
         {
             base.SetStamina(value);
-            RecalculateStats();
+            MarkStatsDirty();
         }
 
         /// <summary>設定兵科大類。</summary>
         public void SetTroopType(TroopType type) => TroopType = type;
 
-        /// <summary>綁定兵種表後重算。</summary>
+        /// <summary>綁定兵種表；標記 Stats dirty（兵種暫未進公式亦可）。</summary>
         public void BindTroopKind(AbstractTroopKind kind)
         {
             if (kind == null) return;
@@ -173,7 +214,7 @@ namespace ThreeKindoms.Core.Units
             TroopStamina = kind.Stamina;
             TroopAttackRange = kind.AttackRange;
             TroopStage = kind.Stage;
-            RecalculateStats();
+            MarkStatsDirty();
         }
 
         /// <summary>戰法暫停：恒為 0。</summary>
@@ -188,19 +229,11 @@ namespace ThreeKindoms.Core.Units
         /// <summary>暫定兵糧無限。</summary>
         public override bool TryConsumeDailyFood() => true;
 
-        /// <summary>野戰：回傳攻擊（詳見 <see cref="Stats"/>）。</summary>
-        protected override int CalculateNonGarrisonCombatPower()
-        {
-            RecalculateStats();
-            return Stats.Attack;
-        }
+        /// <summary>野戰：回傳攻擊（讀 Stats 時會 Ensure）。</summary>
+        protected override int CalculateNonGarrisonCombatPower() => Stats.Attack;
 
         /// <summary>駐紮：同野戰（之後可疊據點加成）。</summary>
-        protected override int CalculateGarrisonCombatPower()
-        {
-            RecalculateStats();
-            return Stats.Attack;
-        }
+        protected override int CalculateGarrisonCombatPower() => Stats.Attack;
 
         /// <summary>戰法暫停：不匯出。</summary>
         internal void CollectEquippedSkills(

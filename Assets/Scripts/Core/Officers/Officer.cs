@@ -187,6 +187,16 @@ namespace ThreeKindoms.Core.Officers
         /// </summary>
         public void SetDeployed(bool deployed) => isDeployed = deployed;
 
+        /// <summary>任職中的戰鬥部隊（用於傷病等更新後回寫統合五維）。</summary>
+        Combat? assignedCombat;
+
+        /// <summary>由 <see cref="Units.Combat"/> 指派／卸任時設定。</summary>
+        public void SetAssignedCombat(Combat? combat) => assignedCombat = combat;
+
+        /// <inheritdoc />
+        protected override void OnPerformanceRefreshed() =>
+            assignedCombat?.RefreshOfficerFive();
+
 
 
         /// <summary>增減忠誠度（0～100）。</summary>

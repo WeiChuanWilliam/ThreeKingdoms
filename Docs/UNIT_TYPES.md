@@ -21,7 +21,7 @@ Unit（父類，abstract）
 | `UnitKind` | 中文 | 角色 |
 |------------|------|------|
 | `Legion` | 兵團 | 出征編制；自帶糧薪；隸屬武將／戰鬥部隊 |
-| `Combat` | 戰鬥 | 實際作戰；兵種六圍與戰法 |
+| `Combat` | 戰鬥 | 實際作戰；`Combat.Stats`（攻防等）與兵種表 `Troop*` |
 | `Transport` | 運輸 | 運補；計略戰法 |
 
 **沒有**獨立的「駐紮部隊」子類。駐紮是父類上的**狀態**（見 §2）。
@@ -92,8 +92,8 @@ public int CalculateCombatPower()
 
 ### `Combat`（戰鬥）
 
-- 作戰主體；兵種六圍、四槽戰法；1 主將 + 1 副將
-- 駐紮 → 走戰鬥部隊駐紮戰鬥力
+- 作戰主體；最終屬性 `Stats`（`CombatTroopStatBlock`）、兵種表 `Troop*`；1 主將 + 1 副將
+- 駐紮 → 走戰鬥部隊駐紮（之後可疊據點）
 
 ### `Transport`（運輸）
 

@@ -377,7 +377,17 @@ namespace ThreeKindoms.Core.Officers
 
 
         /// <summary>觸發發揮值重算（屬性變更後呼叫）。</summary>
-        protected void RefreshPerformance() => CalculatePerformance();
+        /// <summary>重算發揮值；子類可在之後通知所屬部隊刷新統合五維。</summary>
+        protected void RefreshPerformance()
+        {
+            CalculatePerformance();
+            OnPerformanceRefreshed();
+        }
+
+        /// <summary>發揮值已更新（例：傷病）。預設無動作。</summary>
+        protected virtual void OnPerformanceRefreshed()
+        {
+        }
 
     }
 

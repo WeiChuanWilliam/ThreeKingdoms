@@ -192,6 +192,7 @@ namespace ThreeKindoms.Core.Units
         /// <summary>
         /// 戰鬥／運輸部隊任職 → <see cref="Officer.IsDeployed"/>＝true；
         /// 兵團任職不算出戰；卸任 → false。
+        /// 戰鬥部隊另綁 <see cref="Officer.SetAssignedCombat"/> 以便傷病回寫統合五維。
         /// </summary>
         void SyncOfficerDeployed(Officer officer, bool assigned)
         {
@@ -199,6 +200,8 @@ namespace ThreeKindoms.Core.Units
                 return;
             if (Kind == UnitKind.Combat || Kind == UnitKind.Transport)
                 officer.SetDeployed(assigned);
+            if (this is Combat combat)
+                officer.SetAssignedCombat(assigned ? combat : null);
             // Legion：指派／卸任皆不改 IsDeployed（不算出戰）
         }
 
