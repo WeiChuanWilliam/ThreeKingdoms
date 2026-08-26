@@ -14,7 +14,6 @@
 |------|------|
 | 抽象地形 | `Core/Terrain/AbstractTerrain.cs` |
 | 具體定義 | `Core/Terrain/TerrainDefinition.cs` |
-| 效果表 | `Core/Terrain/TerrainEffectMaps.cs` |
 | 旗標 | `Data/Terrain/TerrainFlags.cs` |
 | JSON | `Data/Terrain/TerrainDef.cs`、`TerrainDatabase.cs` |
 
@@ -25,8 +24,6 @@
 | `terrainName` / `terrain_id()` | `TerrainName` / `TerrainId` |
 | `TerrainFlags` 位元 | `TerrainFlags` struct + `Pack`/`Unpack` |
 | `fireEffect` / `moralePenalty` | `int`（與 C++ 一致） |
-| `Map<short,short>` ×3 | `TerrainEffectMaps` 三張 short 字典 |
-| `Map<short,bool> reachableUnit` | `Dictionary<short,bool>` |
 
 ## 與六角 Spike 的關係
 
@@ -35,10 +32,7 @@
 
 ## 與 Unit 的差異
 
-| | Unit::AbstractUnit | Terrain::AbstractTerrain |
-|--|-------------------|-------------------------|
-| reachable 表 | `Map<short,short>` | `Map<short,bool>` |
-| 用途 | 地圖上的部隊/據點 | 地形**類型**定義 |
+地形是**類型定義**（平原／山地等），不是地圖上的部隊。部隊用 `Unit` + `LocationGrid`。
 
 載入範例：
 

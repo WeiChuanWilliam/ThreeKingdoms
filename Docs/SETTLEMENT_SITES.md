@@ -1,7 +1,7 @@
 # 據點與駐紮（Settlement Sites）
 
 **狀態**：類型與駐紮防禦加成定案；建造消耗、耐久待參數表。  
-程式：`SettlementSiteKind`、`SettlementSiteRules`、`StationedCombatRules`、`Unit.IsGarrison`。
+程式：`SettlementSiteKind`、`SettlementSiteRules`、`StationRules`、`Unit.IsGarrison`。
 
 ---
 
@@ -10,7 +10,7 @@
 - **駐紮** = `Unit.IsGarrison == true`；部隊仍是 `Combat`／`Legion`／`Transport`，**不換類別**。
 - 進入有據點的格子 → `StationRules.TryAutoStation` 自動駐紮。
 - 下列 **八種** 據點皆可駐紮。
-- 駐紮時戰鬥力走「駐紮公式」（依 `UnitKind`：運輸偏防、兵團高攻高防、戰鬥部隊駐紮強化）— 見 [`UNIT_TYPES.md`](UNIT_TYPES.md)。
+- 駐紮時戰鬥力走 `CombatStatMath` 的駐紮分支（公式未寫）— 見 [`UNIT_TYPES.md`](UNIT_TYPES.md)。
 
 ---
 
@@ -70,8 +70,7 @@
 | 玩家建造？ | `SettlementSiteRules.IsPlayerBuilt(kind)` |
 | 高防建造？ | `SettlementSiteRules.IsHighDefenseBuilt`（岩砦、要塞） |
 | 低防建造？ | `SettlementSiteRules.IsLowDefenseBuilt`（陣、寨） |
-| 駐紮防禦加成％ | `SettlementSiteRules.GetStationedDefenseBonusPercent(kind)` |
-| 駐紮是否用面向 | `StationedCombatRules.UsesFacingVector(unit)` → 駐紮為 false |
+| 駐紮防禦加成％ | `SettlementSiteRules.GetStationedDefenseBonusPercent(kind)`（骨架，未接戰鬥） |
 
 ---
 
@@ -116,13 +115,11 @@ effectiveDefense = baseDefense × (1 + 據點加成% / 100) × …其他修正
 程式：
 
 ```csharp
-SettlementSiteRules.GetStationedDefenseBonusPercent(siteKind);  // 5～30
-SettlementSiteRules.GetStationedDefenseMultiplier(siteKind);    // 1.05～1.30
-StationedCombatRules.GetDefenseMultiplier(unit);                // 未駐紮 → 1.0
-StationedCombatRules.UsesFacingVector(unit);                    // 駐紮 → false
+SettlementSiteRules.GetStationedDefenseBonusPercent(siteKind);  // 骨架 0，未接戰鬥
+SettlementSiteRules.GetStationedDefenseMultiplier(siteKind);    // 骨架 1.0
 ```
 
-**未實作**：與 `CombatStatMath`、Facing 傷害結算的實際串接。
+**未實作**：據點加成尚未接入 `CombatStatMath`／`CombatBattleFormulas`。
 
 ---
 

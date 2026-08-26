@@ -5,7 +5,7 @@ using Xunit;
 
 namespace ThreeKindoms.Local.Tests
 {
-    public class CombatPowerRulesTests
+    public class CombatStatMathTests
     {
         [Fact]
         public void Recalculate_writes_stats_block()
@@ -39,11 +39,13 @@ namespace ThreeKindoms.Local.Tests
             cmd.SetStats(atk: 80, intel: 60, lead: 70, pol: 50, charm: 50);
             full.SetCommander(cmd);
             hurt.SetCommander(cmd);
+            // Soldiers＝可戰；Wounded＝獨立。傷兵多不代表可戰變少，除非你主動把可戰調低。
             full.SetManpower(1000, woundedCount: 0);
-            hurt.SetManpower(1000, woundedCount: 500);
+            hurt.SetManpower(500, woundedCount: 500);
 
-            Assert.Equal(1000, full.EffectiveCombatStrength);
-            Assert.Equal(500, hurt.EffectiveCombatStrength);
+            Assert.Equal(1000, full.Soldiers);
+            Assert.Equal(500, hurt.Soldiers);
+            Assert.Equal(500, hurt.Wounded);
             Assert.True(full.Stats.Attack > hurt.Stats.Attack);
         }
 

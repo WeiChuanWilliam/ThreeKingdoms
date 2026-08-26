@@ -1,13 +1,18 @@
 ## 兵力與傷兵
 
-- `Soldiers`：總兵力（含傷兵）
-- `Wounded`：傷兵（仍屬部隊，**不計入**戰鬥人力）
-- `EffectiveCombatStrength`／`FightingStrength`＝總兵 − 傷兵
+- `Soldiers`：可戰士兵（戰鬥力／交戰直接用這個）
+- `Wounded`：傷兵（獨立欄位；仍屬部隊，不參與戰鬥計算）
+- 寫入：`Unit.SetManpower(soldiers, wounded)`
+- 全滅：可戰士兵 &lt; `UnitConfigUtil.MinSoldiers`（預設 10）
 
-```
-UnitManpower.FightingStrength(soldiers, wounded);
-UnitManpower.MinSoldiers; // 10
-```
+沒有 `UnitManpower`／`EffectiveCombatStrength`：不必再「總兵 − 傷兵」。
+
+交戰造成傷兵時，由你的結算公式自行決定如何改兩個數字，例如：
+- 陣亡 → 減 `Soldiers`（離開部隊）
+- 轉傷 → 減 `Soldiers`、加 `Wounded`（`BattleDamageResult.Apply` 會同時做這兩步）
+- 治癒 → 減 `Wounded`、加 `Soldiers`
+
+例：兵 1000、陣亡 100、轉傷 400 → 可戰 **500**、傷兵 **400**。
 
 ## 戰鬥部隊屬性兩段式
 

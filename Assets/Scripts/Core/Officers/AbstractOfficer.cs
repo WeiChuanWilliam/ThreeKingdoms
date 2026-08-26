@@ -200,27 +200,6 @@ namespace ThreeKindoms.Core.Officers
         /// <summary>戰鬥用魅力。</summary>
         public byte EffectiveCharisma => PickPerform(charismaPerform, charisma);
 
-        /// <summary>戰鬥力相關三維合計（武＋智＋統，皆用 Effective*）。</summary>
-        public int CombatRelevantSum =>
-            EffectiveAttack + EffectiveIntelligence + EffectiveLeadership;
-
-        /// <summary>
-        /// 主將權重 2、副將權重 1 合算後的戰鬥三維合計。
-        /// 僅副將時回傳副將；皆無則 0。
-        /// </summary>
-        public static int BlendedCombatRelevantSum(Officer commander, Officer vice)
-        {
-            if (commander == null)
-                return vice?.CombatRelevantSum ?? 0;
-            if (vice == null)
-                return commander.CombatRelevantSum;
-
-            int atk = (commander.EffectiveAttack * 2 + vice.EffectiveAttack) / 3;
-            int intel = (commander.EffectiveIntelligence * 2 + vice.EffectiveIntelligence) / 3;
-            int lead = (commander.EffectiveLeadership * 2 + vice.EffectiveLeadership) / 3;
-            return atk + intel + lead;
-        }
-
         static byte PickPerform(byte perform, byte baseStat) =>
             perform > 0 ? perform : baseStat;
 

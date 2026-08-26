@@ -4,12 +4,10 @@
 
 | C++ | C# |
 |-----|-----|
-| `Unit::AbstractUnit` | `Core/Units/AbstractUnit.cs` |
-| `Unit::ActualUnit` | `Core/Units/ActualUnit.cs`（綁定 `LocationGrid`，讀著火/建築） |
+| `Unit::AbstractUnit` | `Core/Units/Unit.cs` |
+| `Unit::ActualUnit` | 併入 `Unit` + `UnitLocationBinding` |
 | `unitFlags` | `Data/Units/UnitFlags.cs` |
-| `Map<short,short>` ×4 | `Core/Units/UnitEffectMaps.cs` |
 | `Building*` | `Core/Buildings/Building.cs` |
-| `ForceUnit*` | `Core/Units/ForceUnit.cs` |
 | `AbstractTerrain` | `Core/Terrain/AbstractTerrain.cs`（見 README_TERRAIN.md） |
 
 ## 欄位
@@ -25,9 +23,8 @@
 
 ## 與 Spike
 
-- 已移除 `MapUnit`、`UnitFactory`、`UnitState`；請用 `ActualUnit` + `LocationGrid`。
+- 已移除 `MapUnit`、`UnitFactory`、`UnitState`；請用 `Unit` + `UnitLocationBinding` + `LocationGrid`。
 - 部隊進入格時：`EnterHex` → 同步 `StationedBuilding`、`IsOnFire`（讀 Location）。
-- `Officer.Defend*Skill(..., AbstractUnit selfUnit)` 已對應 `Core.Units.AbstractUnit`。
 
 ## C++ 原檔問題
 

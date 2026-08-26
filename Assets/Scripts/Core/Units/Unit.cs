@@ -10,12 +10,11 @@ namespace ThreeKindoms.Core.Units
 {
     /// <summary>
     /// 地圖上所有部隊的抽象基類。
-    /// 設計中的四種部隊：<see cref="Legion"/>（兵團）、<see cref="Combat"/>（戰鬥隊）、<see cref="Transport"/>（運輸隊），以及本類本身。
+    /// 三種部隊：<see cref="Legion"/>（兵團）、<see cref="Combat"/>（戰鬥隊）、<see cref="Transport"/>（運輸隊）。
     /// </summary>
     public abstract class Unit
     {
         readonly List<Officer> viceOfficers = new();
-        bool annihilated;
 
         /// <summary>部隊顯示名稱。</summary>
         public string UnitName { get; }
@@ -37,9 +36,6 @@ namespace ThreeKindoms.Core.Units
         /// <summary>腳下格造成的士氣懲罰。</summary>
         public short MoralePenalty { get; private set; }
 
-        /// <summary>部隊身上的效果對照表（戰法、計略等，預留）。</summary>
-        public UnitEffectMaps EffectMaps { get; } = new();
-
         /// <summary>腳下格著火即視為著火。</summary>
         public bool IsOnFire => Location?.IsOnFire == true;
 
@@ -55,10 +51,10 @@ namespace ThreeKindoms.Core.Units
         /// <summary>主將（直接引用劇本 <see cref="OfficerPool"/> 內武將）。</summary>
         public Officer Commander { get; private set; }
 
-        /// <summary>士兵總數（含傷兵；傷兵仍屬部隊）。</summary>
+        /// <summary>可戰士兵數（不含傷兵；戰鬥力／交戰用人數直接用這個）。</summary>
         public int Soldiers { get; private set; }
 
-        /// <summary>傷兵數（計入部隊，但不計入戰鬥人力 <see cref="EffectiveCombatStrength"/>）。</summary>
+        /// <summary>傷兵數（獨立計數；仍屬部隊，但不參與戰鬥計算）。</summary>
         public int Wounded { get; private set; }
 
         /// <summary>部隊與地圖格的綁定（座標、行動力、進出格）。</summary>
@@ -79,11 +75,11 @@ namespace ThreeKindoms.Core.Units
         /// <summary>副將列表（戰鬥部隊至多一位，其他類型依設計）。</summary>
         public IReadOnlyList<Officer> ViceOfficers => viceOfficers;
 
-        /// <summary>可作戰兵力＝總兵 − 傷兵（傷兵不計入）。</summary>
-        public int EffectiveCombatStrength => UnitManpower.FightingStrength(Soldiers, Wounded);
-
-        /// <summary>是否已全滅（兵力歸零）。</summary>
-        public bool IsAnnihilated => annihilated || UnitManpower.IsAnnihilated(Soldiers);
+        /// <summary>是否已全滅（可戰過低，或士氣／體力歸零）。無額外旗標，純看狀態。</summary>
+        public bool IsAnnihilated =>
+            Soldiers < Data.Units.UnitConfigUtil.MinSoldiers
+            || Morale <= 0
+            || Stamina <= 0;
 
         /// <summary>部隊類型（兵團／戰鬥／運輸）。</summary>
         public abstract UnitKind Kind { get; }
@@ -96,25 +92,6 @@ namespace ThreeKindoms.Core.Units
 
         /// <summary>計算本部隊每日兵糧消耗量。暫定兵糧無限 → 子類回傳 0。</summary>
         public abstract int CalculateFoodConsumption();
-
-        /// <summary>
-        /// 當前戰鬥力評分：依 <see cref="IsGarrison"/> 分流至駐紮／非駐紮抽象方法。
-        /// 全滅為 0。
-        /// </summary>
-        public int CalculateCombatPower()
-        {
-            if (IsAnnihilated)
-                return 0;
-            return IsGarrison
-                ? CalculateGarrisonCombatPower()
-                : CalculateNonGarrisonCombatPower();
-        }
-
-        /// <summary>非駐紮（野戰）戰鬥力；由子類覆寫。</summary>
-        protected abstract int CalculateNonGarrisonCombatPower();
-
-        /// <summary>駐紮（garrison）戰鬥力；由子類覆寫。</summary>
-        protected abstract int CalculateGarrisonCombatPower();
 
         /// <summary>駐紮於城池／要塞等據點時為 true；駐紮中不可移動且通常不耗糧。</summary>
         public bool IsGarrison { get; private set; }
@@ -205,12 +182,6 @@ namespace ThreeKindoms.Core.Units
             // Legion：指派／卸任皆不改 IsDeployed（不算出戰）
         }
 
-        /// <summary>設定士氣並限制在 0～100。</summary>
-        public virtual void SetMorale(short value) => Morale = NumericUtil.ClampToTarget(value, (short)0, (short)100);
-
-        /// <summary>設定體力並限制在 0～100。</summary>
-        public virtual void SetStamina(short value) => Stamina = NumericUtil.ClampToTarget(value, (short)0, (short)100);
-
         /// <summary>設定攜帶金錢（負值視為 0）。</summary>
         public void SetMoney(int value) => Money = value < 0 ? 0 : value;
 
@@ -229,15 +200,42 @@ namespace ThreeKindoms.Core.Units
         /// <summary>設定腳下格士氣懲罰。</summary>
         public void SetMoralePenalty(short value) => MoralePenalty = value;
 
-        /// <summary>設定士兵與傷兵；全滅時自動從註冊表移除。</summary>
-        public virtual void SetManpower(int totalSoldiers, int woundedCount = 0)
+        /// <summary>
+        /// 設定可戰士兵與傷兵（兩者獨立；傷兵不從士兵扣）。
+        /// 可戰過低時自註冊表移除。
+        /// </summary>
+        public virtual void SetManpower(int soldiers, int woundedCount = 0)
         {
-            Soldiers = System.Math.Max(0, totalSoldiers);
-            Wounded = NumericUtil.ClampToTarget(woundedCount, 0, Soldiers);
-            bool wasAnnihilated = annihilated;
-            annihilated = UnitManpower.IsAnnihilated(Soldiers);
-            if (!wasAnnihilated && annihilated)
-                UnitRegistry.Unregister(this);
+            Soldiers = System.Math.Max(0, soldiers);
+            Wounded = System.Math.Max(0, woundedCount);
+            if (Soldiers < Data.Units.UnitConfigUtil.MinSoldiers)
+                TryRemoveIfAnnihilated();
+        }
+
+        /// <summary>設定士氣並限制在 0～100；士氣歸零則自註冊表移除。</summary>
+        public virtual void SetMorale(short value)
+        {
+            Morale = NumericUtil.ClampToTarget(value, (short)0, (short)100);
+            if (Morale <= 0)
+                TryRemoveIfAnnihilated();
+        }
+
+        /// <summary>設定體力並限制在 0～100；體力歸零則自註冊表移除。</summary>
+        public virtual void SetStamina(short value)
+        {
+            Stamina = NumericUtil.ClampToTarget(value, (short)0, (short)100);
+            if (Stamina <= 0)
+                TryRemoveIfAnnihilated();
+        }
+
+        /// <summary>
+        /// 若 <see cref="IsAnnihilated"/> 則從 <see cref="UnitRegistry"/> 移除；否則無事。
+        /// </summary>
+        public void TryRemoveIfAnnihilated()
+        {
+            if (!IsAnnihilated)
+                return;
+            UnitRegistry.Unregister(this);
         }
 
         /// <summary>設定是否駐紮（駐紮中不可移動）。</summary>
@@ -283,9 +281,9 @@ namespace ThreeKindoms.Core.Units
             return null;
         }
 
-        /// <summary>依兵力計算基礎耗糧（每 100 兵至少 1）。</summary>
+        /// <summary>依人頭計算基礎耗糧（可戰＋傷兵；每 100 人至少 1）。</summary>
         protected int BaseFoodByHeadCount() =>
-            System.Math.Max(1, Soldiers / 100);
+            System.Math.Max(1, (Soldiers + Wounded) / 100);
 
     }
 

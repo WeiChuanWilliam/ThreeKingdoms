@@ -1,7 +1,4 @@
 using System;
-using System.Collections.Generic;
-using ThreeKindoms.Core.Buildings;
-using ThreeKindoms.Core.Units;
 
 namespace ThreeKindoms.Core.Locations
 {

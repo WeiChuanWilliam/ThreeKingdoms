@@ -154,45 +154,6 @@ namespace ThreeKindoms.Core.Units
         static CombatTroopStatBlock CalculateLegionGarrison(Legion legion) =>
             PlaceholderOnes;
 
-        /// <summary>是否走「非駐紮 Combat」完整公式。</summary>
-        public static bool UsesFullCombatFieldFormula(Unit unit) =>
-            unit is Combat combat && !combat.IsGarrison && !combat.IsAnnihilated;
-
-        // -------------------------------------------------------------------------
-        // 單維入口（戰鬥／查看用；讀 OfficerFive）
-        // -------------------------------------------------------------------------
-
-        public static int CalculateAttack(Unit unit) =>
-            ResolveCombatFieldStat(unit, c => Placeholder(c.OfficerFive.Force, c));
-
-        public static int CalculateDefense(Unit unit) =>
-            ResolveCombatFieldStat(unit, c => Placeholder(c.OfficerFive.Leadership, c));
-
-        public static int CalculateJipo(Unit unit) =>
-            ResolveCombatFieldStat(unit, c => Placeholder(c.OfficerFive.Force, c));
-
-        public static int CalculateGongcheng(Unit unit) =>
-            ResolveCombatFieldStat(unit, c => Placeholder(c.OfficerFive.Force, c));
-
-        public static int CalculateStrategy(Unit unit) =>
-            ResolveCombatFieldStat(unit, c => Placeholder(c.OfficerFive.Intelligence, c));
-
-        public static int CalculateConstruction(Unit unit) =>
-            ResolveCombatFieldStat(unit, c => Placeholder(c.OfficerFive.Policy, c));
-
-        static int ResolveCombatFieldStat(Unit unit, Func<Combat, int> fullFormula)
-        {
-            if (unit == null)
-                return 0;
-            if (unit is not Combat combat)
-                return 1;
-            if (combat.IsAnnihilated)
-                return 0;
-            if (!UsesFullCombatFieldFormula(combat))
-                return 1;
-            return fullFormula(combat);
-        }
-
         /// <summary>
         /// 【暫代共同倍率｜之後可刪】屬性 × 健康兵力/100 × 士氣/100 × 體力/100。
         /// </summary>
@@ -201,7 +162,7 @@ namespace ThreeKindoms.Core.Units
             if (unit == null || officerStat <= 0)
                 return 0;
 
-            int fighting = unit.EffectiveCombatStrength;
+            int fighting = unit.Soldiers;
             if (fighting <= 0)
                 return 0;
 

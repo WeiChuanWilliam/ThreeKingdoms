@@ -10,8 +10,8 @@
 | 個性表 | `StreamingAssets/personality_traits.json`（來源 `Docs/PERSONALITY_TRAITS_TABLES.md`） |
 | `Item` | `Data/Items/ItemDef.cs`（佔位） |
 | 戰法（部隊四槽） | `Core/Units/Combat.cs` + `Data/Skill/Skill.cs` |
-| `Unit::AbstractUnit` | `Core/Units/AbstractUnit.cs` |
-| `Unit::ActualUnit` | `Core/Units/MapUnit.cs` |
+| `Unit::AbstractUnit` | `Core/Units/Unit.cs` |
+| `Unit::ActualUnit` | 併入 `Unit` + `UnitLocationBinding` |
 | 表資料 | `Data/Officers/OfficerDef.cs` + `StreamingAssets/officers.json` |
 
 ## 欄位對照

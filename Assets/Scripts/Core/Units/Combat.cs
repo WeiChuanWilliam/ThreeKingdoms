@@ -4,7 +4,7 @@ using ThreeKindoms.Data.Units.TroopKinds;
 
 namespace ThreeKindoms.Core.Units
 {
-    public sealed class Combat : Unit, ICombatTroopStatsSource
+    public sealed class Combat : Unit
     {
         /// <summary>戰鬥部隊每日耗糧倍率（相對於人頭基數）。</summary>
         public override float FoodConsumptionFactor => UnitConfigUtil.GetFoodConsumptionFactor(UnitKind.Combat);
@@ -72,21 +72,6 @@ namespace ThreeKindoms.Core.Units
 
         /// <summary>副將（戰鬥部隊至多一位）。</summary>
         public Officer ViceOfficer => ViceOfficers.Count > 0 ? ViceOfficers[0] : null;
-
-        /// <summary>統合統率（讀 <see cref="OfficerFive"/>）。</summary>
-        public short UnitLeadership => OfficerFive.Leadership;
-
-        /// <summary>統合武力。</summary>
-        public short UnitForce => OfficerFive.Force;
-
-        /// <summary>統合智力。</summary>
-        public short UnitIntelligence => OfficerFive.Intelligence;
-
-        /// <summary>統合政治。</summary>
-        public short UnitPolicy => OfficerFive.Policy;
-
-        /// <summary>統合魅力。</summary>
-        public short UnitCharisma => OfficerFive.Charisma;
 
         /// <summary>部隊類型：戰鬥部隊。</summary>
         public override UnitKind Kind => UnitKind.Combat;
@@ -177,9 +162,9 @@ namespace ThreeKindoms.Core.Units
         }
 
         /// <inheritdoc />
-        public override void SetManpower(int totalSoldiers, int woundedCount = 0)
+        public override void SetManpower(int soldiers, int woundedCount = 0)
         {
-            base.SetManpower(totalSoldiers, woundedCount);
+            base.SetManpower(soldiers, woundedCount);
             MarkStatsDirty();
         }
 
@@ -228,12 +213,6 @@ namespace ThreeKindoms.Core.Units
 
         /// <summary>暫定兵糧無限。</summary>
         public override bool TryConsumeDailyFood() => true;
-
-        /// <summary>野戰：回傳攻擊（讀 Stats 時會 Ensure）。</summary>
-        protected override int CalculateNonGarrisonCombatPower() => Stats.Attack;
-
-        /// <summary>駐紮：同野戰（之後可疊據點加成）。</summary>
-        protected override int CalculateGarrisonCombatPower() => Stats.Attack;
 
         /// <summary>戰法暫停：不匯出。</summary>
         internal void CollectEquippedSkills(

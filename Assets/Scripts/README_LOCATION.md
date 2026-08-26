@@ -8,7 +8,6 @@
 | （具體類） | `Core/Locations/MapLocation.cs` |
 | `LocationFlag` | `Data/Locations/LocationFlags.cs` |
 | `Building::AbstractBuilding` | `Core/Buildings/AbstractBuilding.cs` |
-| `Unit::GroupUnit` | `Core/Units/GroupUnit.cs` |
 | 整圖索引 | `Core/Locations/LocationGrid.cs` |
 
 ## 座標
@@ -30,7 +29,7 @@
 LocationGrid (每 hex 一格 MapLocation)
   ├─ terrain  → Terrain::AbstractTerrain
   ├─ building → AbstractBuilding
-  ├─ fightingUnit / groupUnit
+  ├─ fightingUnit
   └─ belonged   → 勢力
 
 MapUnit（部隊）在 hex 上移動時呼叫 UnitMoveIn / UnitMoveOut
@@ -41,4 +40,4 @@ MapUnit（部隊）在 hex 上移動時呼叫 UnitMoveIn / UnitMoveOut
 - `AbstractBuildings` / `AbstractBuilding` 混用 → C# 統一 `AbstractBuilding`
 - `virtual ... const{}` 空實作 → C# `abstract` + `MapLocation` 預設
 
-請繼續貼：`AbstractBuilding` 完整標頭、城池 `City`、若有的 `GroupUnit.h`。
+請繼續貼：`AbstractBuilding` 完整標頭、城池 `City`。

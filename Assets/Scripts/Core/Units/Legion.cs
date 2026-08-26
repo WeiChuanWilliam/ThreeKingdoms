@@ -34,12 +34,5 @@ namespace ThreeKindoms.Core.Units
 
         /// <summary>暫定兵糧無限：不實際扣除 <see cref="CarriedFood"/>。</summary>
         public bool TryConsumeFood(int amount) => true;
-
-        /// <summary>野戰：無法正常作戰，戰鬥力 0。</summary>
-        protected override int CalculateNonGarrisonCombatPower() => 0;
-
-        /// <summary>駐紮：高攻高防（接近戰鬥部隊量級）。</summary>
-        protected override int CalculateGarrisonCombatPower() =>
-            UnitCombatPowerRules.CalculateStationedLegionPower(this);
     }
 }

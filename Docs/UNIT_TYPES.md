@@ -47,39 +47,31 @@ Combat / Legion / Transport
 
 ---
 
-## 3. 戰鬥力：父類分流＋子類兩個抽象方法
+## 3. 戰鬥力：`CombatStatMath`（尚未設計公式）
 
-`Unit.CalculateCombatPower()` 內建判斷式：
+部隊能力只走 `CombatStatMath`：
 
-```csharp
-public int CalculateCombatPower()
-{
-    if (IsAnnihilated) return 0;
-    return IsGarrison
-        ? CalculateGarrisonCombatPower()      // 抽象：駐紮
-        : CalculateNonGarrisonCombatPower();  // 抽象：非駐紮（野戰）
-}
-```
+1. 類型：`Combat`／`Transport`／`Legion`
+2. 駐紮：僅 Combat、Legion 再分；Transport 不看駐紮
 
-子類（`Legion`／`Combat`／`Transport`）各自 `override` 上述兩個 `protected abstract` 方法。
+目前只有**非駐紮 Combat** 有暫代公式；其餘回 1。交戰規則在 `CombatBattleFormulas`（空殼）。
 
-### 3.1 駐紮戰鬥力（依種類，意圖）
+### 3.1 駐紮意圖（公式未寫）
 
 | 部隊 | 非駐紮 | 駐紮 |
 |------|--------|------|
-| **Transport** | 幾乎無戰力 | **偏提高防禦**（守輜重） |
-| **Legion** | 0（不可野戰） | **高攻高防** |
-| **Combat** | 一般戰鬥力公式 | 駐紮公式（可疊據點加成；目前先同野戰） |
+| **Transport** | 幾乎無戰力（待設計） | 不走駐紮分支 |
+| **Legion** | 待設計 | 待設計 |
+| **Combat** | `CalculateCombatField`（暫代） | 待設計 |
 
 ### 3.2 實作落點
 
 | 項目 | 位置 |
 |------|------|
 | 布林 | `Unit.IsGarrison` / `SetGarrison` |
-| 分流 | `Unit.CalculateCombatPower()` |
-| 子類覆寫 | `CalculateGarrisonCombatPower` / `CalculateNonGarrisonCombatPower` |
-| 駐紮係數 | `unit.properties` / `UnitConfigUtil`（依 `UnitKind`） |
-| 據點防禦％ | 可與 [`SETTLEMENT_SITES.md`](SETTLEMENT_SITES.md) 疊加 |
+| 能力計算 | `CombatStatMath` → `Combat.Stats` |
+| 交戰 | `CombatBattleFormulas` |
+| 據點類型 | [`SETTLEMENT_SITES.md`](SETTLEMENT_SITES.md)（加成公式未接） |
 
 ---
 
@@ -88,17 +80,16 @@ public int CalculateCombatPower()
 ### `Legion`（兵團）
 
 - 野戰出征編制；自帶軍糧
-- 駐紮 → `IsGarrison`；戰鬥力走兵團駐紮（高攻高防）
+- 駐紮 → `IsGarrison`；能力走 `CombatStatMath` 兵團分支（公式未寫）
 
 ### `Combat`（戰鬥）
 
 - 作戰主體；最終屬性 `Stats`（`CombatTroopStatBlock`）、兵種表 `Troop*`；1 主將 + 1 副將
-- 駐紮 → 走戰鬥部隊駐紮（之後可疊據點）
+- 駐紮 → `IsGarrison`；`CombatStatMath.CalculateCombatGarrison`（公式未寫）
 
 ### `Transport`（運輸）
 
-- 運糧運錢；僅計略戰法槽
-- 駐紮 → 偏防禦強化
+- 運糧運錢；不看駐紮（`CombatStatMath.CalculateTransport`，公式未寫）
 
 ---
 

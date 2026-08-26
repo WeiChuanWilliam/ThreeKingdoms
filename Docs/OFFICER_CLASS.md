@@ -232,7 +232,7 @@ Pool 內每個 defId 一個 Officer（Singleton）
 武將讀取（Officer.EffectiveAttack 等）
         │
         ▼
-部隊合成五維（CombatStatMath → UnitForce 等）
+部隊合成五維（CombatStatMath → `Combat.OfficerFive`）
         │
         ▼
 部隊最終（Combat.Stats / CombatTroopStatBlock：攻防…）
@@ -270,7 +270,7 @@ perform = round( base × 傷勢係數 × 體力係數 × 道具係數 )
 
 **武將層**（`Officer`，仍用 `Effective*`）：
 讀 **`Officer.EffectiveAttack`／`EffectiveIntelligence`／`EffectiveLeadership`／`EffectivePolicy`／`EffectiveCharisma`**
-（有發揮值用發揮值，否則基礎值）。主副將先由 `CombatStatMath.BlendOfficerStat`（主×2 + 最佳副）/3 合成部隊五維（`UnitForce` 等）。
+（有發揮值用發揮值，否則基礎值）。主副將先由 `CombatStatMath.BlendOfficerStat`（主×2 + 最佳副）/3 合成部隊五維（寫入 `Combat.OfficerFive`）。
 
 ```text
 若 AttackPerform > 0  →  用 AttackPerform
@@ -499,4 +499,5 @@ public abstract int RollRandom(int minInclusive, int maxInclusive);
 | 讀表上武力 | `officer.Attack` |
 | 體力變化後更新發揮 | `officer.StaminaChange(delta)`（內部 Refresh） |
 | 派主將 | `unit.SetCommanderFromPool(defId)` → 綁定 Singleton |
-| 戰鬥合算三維 | `Officer.CombatRelevantSum`／`BlendedCombatRelevantSum` |
+| 部隊五維 | `Combat.OfficerFive` |
+| 部隊戰鬥力 | `Combat.Stats` |

@@ -17,7 +17,6 @@ namespace ThreeKindoms.Core.Locations
         protected LocationFlags locationFlags = LocationFlags.DefaultPassable;
         protected AbstractBuilding building;
         protected Unit fightingUnit;
-        protected GroupUnit groupUnit;
         protected AbstractTerrain terrain;
         protected short belonged;
 
@@ -35,9 +34,6 @@ namespace ThreeKindoms.Core.Locations
 
         /// <summary>格上戰鬥或駐留部隊（與 <see cref="OccupyingUnit"/> 同源）。</summary>
         public Unit FightingUnit => fightingUnit;
-
-        /// <summary>格上集結／編組單位（可為 null）。</summary>
-        public GroupUnit GroupUnit => groupUnit;
 
         /// <summary>格地形定義。</summary>
         public AbstractTerrain Terrain => terrain;
@@ -69,9 +65,6 @@ namespace ThreeKindoms.Core.Locations
 
         /// <summary>登記部隊進入此格。</summary>
         public void SetFightingUnit(Unit unit) => fightingUnit = unit;
-
-        /// <summary>設定格上集結單位。</summary>
-        public void SetGroupUnit(GroupUnit group) => groupUnit = group;
 
         /// <summary>覆寫格狀態旗標。</summary>
         public void SetFlags(LocationFlags flags) => locationFlags = flags;

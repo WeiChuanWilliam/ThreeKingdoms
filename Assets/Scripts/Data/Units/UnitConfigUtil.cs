@@ -140,21 +140,6 @@ namespace ThreeKindoms.Data.Units
         public static short GetFireBaseMoraleLossPerDay() =>
             (short)NumericUtil.ClampToTarget(GetInt("unit.fire.base_morale_loss_per_day", 2), 0, 100);
 
-        public static float GetCombatPowerOfficerScale() =>
-            GetFloat("unit.combat_power.officer_scale", 0.002f);
-
-        public static float GetCombatPowerSkillBonusPerSkill() =>
-            GetFloat("unit.combat_power.skill_bonus_per_skill", 0.02f);
-
-        public static float GetCombatPowerMoraleWeight() =>
-            GetFloat("unit.combat_power.morale_weight", 1f);
-
-        public static float GetCombatPowerStaminaWeight() =>
-            GetFloat("unit.combat_power.stamina_weight", 1f);
-
-        public static float GetCombatPowerManpowerDivisor() =>
-            Math.Max(1f, GetFloat("unit.combat_power.manpower_divisor", 100f));
-
         static string NormalizeKindKey(string kindKey)
         {
             if (string.IsNullOrWhiteSpace(kindKey)) return "";

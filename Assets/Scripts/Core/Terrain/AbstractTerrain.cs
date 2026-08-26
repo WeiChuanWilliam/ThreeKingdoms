@@ -13,7 +13,6 @@ namespace ThreeKindoms.Core.Terrain
         protected TerrainFlags terrainFlags;
         protected int fireEffect;
         protected int moralePenalty;
-        protected readonly TerrainEffectMaps effectMaps = new();
 
         /// <summary>地形顯示名稱。</summary>
         public string TerrainName => terrainName;
@@ -29,9 +28,6 @@ namespace ThreeKindoms.Core.Terrain
 
         /// <summary>進入或停留時士氣懲罰值。</summary>
         public int MoralePenalty => moralePenalty;
-
-        /// <summary>對各兵種的移動、攻防與可達修正表。</summary>
-        public TerrainEffectMaps EffectMaps => effectMaps;
 
         /// <summary>以 id 與名稱初始化地形定義。</summary>
         protected AbstractTerrain(int id, string name)

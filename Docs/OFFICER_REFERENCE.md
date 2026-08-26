@@ -145,13 +145,9 @@ perform = round( base × 傷勢係數 × 體力係數 × 道具係數 )
 
 ### 5.2 武將有效五維與部隊最終屬性 — ✅
 
-**武將**：`Officer.EffectiveAttack` 等／`CombatRelevantSum`／`BlendedCombatRelevantSum`  
-→ 優先 `*Perform`，若 Perform==0 才退回基礎值  
-
-**部隊五維合成**：`CombatStatMath` 主×2＋最佳副／3 → `UnitForce` 等  
-
-**部隊最終**：`Combat.Stats`（`CombatTroopStatBlock`：攻／防／擊破／破城／策略／建設）  
-→ **沒有** `Combat.EffectiveAttack`；讀 `Stats.Attack`
+**武將**：`Officer.EffectiveAttack` 等（發揮值）  
+**部隊五維**：`Combat.OfficerFive`（`CombatStatMath.RefreshOfficerFive`）  
+**部隊最終**：`Combat.Stats`（`CombatTroopStatBlock`）
 
 ### 5.3 亂數 — ✅
 

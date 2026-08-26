@@ -71,13 +71,5 @@ namespace ThreeKindoms.Core.Units
                 });
             }
         }
-
-        /// <summary>野戰：幾乎無作戰能力。</summary>
-        protected override int CalculateNonGarrisonCombatPower() =>
-            UnitCombatPowerRules.CalculateTransportPower(this);
-
-        /// <summary>駐紮：偏提高防禦（守輜重）。</summary>
-        protected override int CalculateGarrisonCombatPower() =>
-            UnitCombatPowerRules.CalculateGarrisonTransportPower(this);
     }
 }

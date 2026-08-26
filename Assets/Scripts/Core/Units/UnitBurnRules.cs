@@ -147,18 +147,20 @@ namespace ThreeKindoms.Core.Units
             return new UnitBurnDamageResult(deaths, woundedIncrease: 0, moraleLoss);
         }
 
-        /// <summary>將燃燒結算結果寫回部隊兵力與士氣。</summary>
+        /// <summary>將燃燒結算結果寫回部隊兵力與士氣；結束後檢查全滅並自註冊表移除。</summary>
         public static void ApplyBurnDamageResult(Unit unit, in UnitBurnDamageResult result)
         {
             if (unit == null || !result.HasEffect)
                 return;
 
             int newSoldiers = Math.Max(0, unit.Soldiers - result.SoldierDeaths);
-            int newWounded = Math.Min(unit.Wounded + result.WoundedIncrease, newSoldiers);
+            int newWounded = Math.Max(0, unit.Wounded + result.WoundedIncrease);
             unit.SetManpower(newSoldiers, newWounded);
 
             if (result.MoraleLoss > 0)
                 unit.ChangeMorale((short)-result.MoraleLoss);
+
+            unit.TryRemoveIfAnnihilated();
         }
 
         /// <summary>著火格每日結算：建立上下文、計算並套用燃燒傷害。</summary>
