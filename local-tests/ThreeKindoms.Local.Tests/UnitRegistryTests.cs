@@ -2,6 +2,7 @@ using ThreeKindoms.Core;
 using ThreeKindoms.Core.Locations;
 using ThreeKindoms.Core.Terrain;
 using ThreeKindoms.Core.Units;
+using ThreeKindoms.Data.Terrain;
 using ThreeKindoms.Data.Units;
 using Xunit;
 
@@ -74,7 +75,7 @@ namespace ThreeKindoms.Local.Tests
             grid.TickAllUnitsAtSunrise();
 
             Assert.True(combat.IsOnFire);
-            Assert.NotEqual(HazardDamageLevel.None, combat.FlameDamage);
+            Assert.NotEqual(TerrainHazardLevel.None, combat.FlameDamage);
         }
     }
 }

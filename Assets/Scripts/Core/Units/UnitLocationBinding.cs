@@ -1,7 +1,7 @@
 using ThreeKindoms.Core.Buildings;
 using ThreeKindoms.Core.Locations;
 using ThreeKindoms.Core.Terrain;
-using ThreeKindoms.Data.Units;
+using ThreeKindoms.Data.Terrain;
 
 namespace ThreeKindoms.Core.Units
 {
@@ -168,8 +168,7 @@ namespace ThreeKindoms.Core.Units
             if (_currentLocation == null)
             {
                 _unit.SetFireEffect(0);
-                _unit.SetFlameDamage(HazardDamageLevel.None);
-                _unit.SetTrapDamage(HazardDamageLevel.None);
+                _unit.ApplyTerrainHazard(UnitHazardSnapshot.None);
                 return;
             }
 
@@ -181,23 +180,24 @@ namespace ThreeKindoms.Core.Units
             _unit.SetMoralePenalty((short)(_currentLocation.Terrain?.MoralePenalty ?? 0));
         }
 
-        /// <summary>火焰／陷阱格共用傷害等級（0～3）；分開寫入 UnitFlags。</summary>
+        /// <summary>火焰／陷阱格共用傷害等級（0～3）；寫入 <see cref="Unit.TerrainHazard"/>。</summary>
         void ApplyHazardFromTile(bool onFire, bool onTrap, int terrainFireEffect)
         {
-            HazardDamageLevel level = ResolveHazardLevel(onFire || onTrap, terrainFireEffect);
-            _unit.SetFlameDamage(onFire ? level : HazardDamageLevel.None);
-            _unit.SetTrapDamage(onTrap ? level : HazardDamageLevel.None);
+            TerrainHazardLevel level = ResolveHazardLevel(onFire || onTrap, terrainFireEffect);
+            _unit.ApplyTerrainHazard(new UnitHazardSnapshot(
+                onFire ? level : TerrainHazardLevel.None,
+                onTrap ? level : TerrainHazardLevel.None));
             _unit.SetFireEffect(onFire
                 ? (short)(terrainFireEffect > 0 ? terrainFireEffect : 1)
                 : (short)0);
         }
 
-        static HazardDamageLevel ResolveHazardLevel(bool onHazardTile, int terrainFireEffect)
+        static TerrainHazardLevel ResolveHazardLevel(bool onHazardTile, int terrainFireEffect)
         {
-            if (!onHazardTile) return HazardDamageLevel.None;
-            if (terrainFireEffect >= 3) return HazardDamageLevel.Serious;
-            if (terrainFireEffect >= 2) return HazardDamageLevel.Medium;
-            return HazardDamageLevel.Slight;
+            if (!onHazardTile) return TerrainHazardLevel.None;
+            if (terrainFireEffect >= 3) return TerrainHazardLevel.Serious;
+            if (terrainFireEffect >= 2) return TerrainHazardLevel.Medium;
+            return TerrainHazardLevel.Slight;
         }
     }
 }

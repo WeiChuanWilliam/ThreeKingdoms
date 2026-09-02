@@ -222,7 +222,7 @@ TroopKindRegistry.Get("knight.hubao").Attack;
 
 ## 兵種 class 繼承（你要的結構）
 
-見 `TroopKinds/README.md`：
+見 [TROOP_KINDS_CODE.md](TROOP_KINDS_CODE.md)：
 
 ```text
 AbstractTroopKind                    ← 所有兵種共通

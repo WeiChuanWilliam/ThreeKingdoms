@@ -1,7 +1,7 @@
 using System;
 using ThreeKindoms.Core;
 using ThreeKindoms.Core.Locations;
-using ThreeKindoms.Core.Officers;
+using ThreeKindoms.Data.Terrain;
 using ThreeKindoms.Data.Units;
 
 namespace ThreeKindoms.Core.Units
@@ -16,12 +16,12 @@ namespace ThreeKindoms.Core.Units
         public int TerrainN { get; }
 
         /// <summary>腳下格火焰傷害等級。</summary>
-        public HazardDamageLevel FlameLevel { get; }
+        public TerrainHazardLevel FlameLevel { get; }
 
         /// <summary>部隊身上的火焰效果強度。</summary>
         public short FireEffect { get; }
 
-        /// <summary>結算時現役兵力。</summary>
+        /// <summary>結算時可戰兵力。</summary>
         public int Soldiers { get; }
 
         /// <summary>結算時傷兵數。</summary>
@@ -43,34 +43,10 @@ namespace ThreeKindoms.Core.Units
         }
     }
 
-    /// <summary>燃燒傷害結算結果（<see cref="UnitBurnRules.CalculateBurnDamage"/> 產出）。</summary>
-    public readonly struct UnitBurnDamageResult
-    {
-        /// <summary>無燃燒效果的空結果。</summary>
-        public static UnitBurnDamageResult None => default;
-
-        /// <summary>燃燒造成的陣亡人數。</summary>
-        public int SoldierDeaths { get; }
-
-        /// <summary>燃燒新增的傷兵數。</summary>
-        public int WoundedIncrease { get; }
-
-        /// <summary>燃燒造成的士氣下降。</summary>
-        public short MoraleLoss { get; }
-
-        /// <summary>是否有任何燃燒效果（陣亡、傷兵或士氣）。</summary>
-        public bool HasEffect => SoldierDeaths > 0 || WoundedIncrease > 0 || MoraleLoss > 0;
-
-        /// <summary>建立燃燒傷害結算結果（負值歸零）。</summary>
-        public UnitBurnDamageResult(int soldierDeaths, int woundedIncrease, short moraleLoss)
-        {
-            SoldierDeaths = soldierDeaths < 0 ? 0 : soldierDeaths;
-            WoundedIncrease = woundedIncrease < 0 ? 0 : woundedIncrease;
-            MoraleLoss = moraleLoss < 0 ? (short)0 : moraleLoss;
-        }
-    }
-
-    /// <summary>所有部隊：是否燃燒 → 燃燒傷害計算與套用。</summary>
+    /// <summary>
+    /// 部隊火攻：是否燃燒 → 算出 <see cref="BattleDamageResult"/> → 統一 <see cref="BattleDamageResult.Apply"/>。
+    /// 陷阱／建築傷害等同理：各自算 Result，再 Apply。
+    /// </summary>
     public static class UnitBurnRules
     {
         /// <summary>藤甲個性：受火傷害加劇。</summary>
@@ -112,15 +88,19 @@ namespace ThreeKindoms.Core.Units
             return true;
         }
 
-        /// <summary>依燃燒上下文計算每日陣亡與士氣損失。</summary>
-        public static UnitBurnDamageResult CalculateBurnDamage(in UnitBurnContext context)
+        /// <summary>
+        /// 【火攻傷害公式｜之後改這裡】
+        /// 依燃燒上下文算出 <see cref="BattleDamageResult"/>（不改 Unit）。
+        /// 目前暫代：陣亡＋士氣；傷兵／體力為 0。
+        /// </summary>
+        public static BattleDamageResult CalculateBurnDamage(in UnitBurnContext context)
         {
             if (context.Unit == null || context.Soldiers <= 0)
-                return UnitBurnDamageResult.None;
+                return BattleDamageResult.None;
 
             float levelMult = GetFlameLevelMultiplier(context.FlameLevel);
             if (levelMult <= 0f)
-                return UnitBurnDamageResult.None;
+                return BattleDamageResult.None;
 
             int basePer1000 = UnitConfigUtil.GetFireBaseDeathsPer1000Soldiers();
             float personalityMult = GetPersonalityFireDamageMultiplier(context.Unit);
@@ -142,43 +122,31 @@ namespace ThreeKindoms.Core.Units
             }
 
             if (deaths == 0 && moraleLoss == 0)
-                return UnitBurnDamageResult.None;
+                return BattleDamageResult.None;
 
-            return new UnitBurnDamageResult(deaths, woundedIncrease: 0, moraleLoss);
+            return new BattleDamageResult(
+                soldierDeaths: deaths,
+                woundedIncrease: 0,
+                moraleLoss: moraleLoss,
+                staminaLoss: 0);
         }
 
-        /// <summary>將燃燒結算結果寫回部隊兵力與士氣；結束後檢查全滅並自註冊表移除。</summary>
-        public static void ApplyBurnDamageResult(Unit unit, in UnitBurnDamageResult result)
-        {
-            if (unit == null || !result.HasEffect)
-                return;
-
-            int newSoldiers = Math.Max(0, unit.Soldiers - result.SoldierDeaths);
-            int newWounded = Math.Max(0, unit.Wounded + result.WoundedIncrease);
-            unit.SetManpower(newSoldiers, newWounded);
-
-            if (result.MoraleLoss > 0)
-                unit.ChangeMorale((short)-result.MoraleLoss);
-
-            unit.TryRemoveIfAnnihilated();
-        }
-
-        /// <summary>著火格每日結算：建立上下文、計算並套用燃燒傷害。</summary>
+        /// <summary>著火格每日結算：算 <see cref="BattleDamageResult"/> 再 <see cref="BattleDamageResult.Apply"/>。</summary>
         public static bool TryApplyDailyBurnDamage(Unit unit, MapLocation location)
         {
             if (!TryCreateBurnContext(unit, location, out UnitBurnContext context))
                 return false;
 
-            UnitBurnDamageResult result = CalculateBurnDamage(context);
-            ApplyBurnDamageResult(unit, result);
+            BattleDamageResult result = CalculateBurnDamage(context);
+            BattleDamageResult.Apply(unit, result);
             return result.HasEffect;
         }
 
-        static float GetFlameLevelMultiplier(HazardDamageLevel level) => level switch
+        static float GetFlameLevelMultiplier(TerrainHazardLevel level) => level switch
         {
-            HazardDamageLevel.Serious => 1.5f,
-            HazardDamageLevel.Medium => 1f,
-            HazardDamageLevel.Slight => 0.5f,
+            TerrainHazardLevel.Serious => 1.5f,
+            TerrainHazardLevel.Medium => 1f,
+            TerrainHazardLevel.Slight => 0.5f,
             _ => 0f
         };
 

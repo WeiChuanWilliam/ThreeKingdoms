@@ -4,6 +4,7 @@ using ThreeKindoms.Core.Buildings;
 using ThreeKindoms.Core.Locations;
 using ThreeKindoms.Core.Officers;
 using ThreeKindoms.Core.Terrain;
+using ThreeKindoms.Data.Terrain;
 using ThreeKindoms.Data.Units;
 
 namespace ThreeKindoms.Core.Units
@@ -22,10 +23,15 @@ namespace ThreeKindoms.Core.Units
         /// <summary>所屬勢力 id。</summary>
         public int Belonged { get; }
 
-        UnitFlags unitFlags;
+        UnitFlags unitFlags = new();
 
-        /// <summary>部隊狀態旗標（可達、火焰／陷阱傷害等）。</summary>
-        public ref UnitFlags UnitFlags => ref unitFlags;
+        /// <summary>部隊計略／異常狀態（混亂、偽報、止步、斷糧）。</summary>
+        public UnitFlags Status => unitFlags;
+
+        UnitHazardSnapshot terrainHazard;
+
+        /// <summary>腳下格環境傷害快照（火／陷阱等；由 Location 同步）。</summary>
+        public UnitHazardSnapshot TerrainHazard => terrainHazard;
 
         /// <summary>駐紮或關聯的建築據點。</summary>
         public AbstractBuilding Building { get; private set; }
@@ -111,6 +117,7 @@ namespace ThreeKindoms.Core.Units
             UnitName = name ?? "";
             Belonged = factionBelonged;
             unitFlags = new UnitFlags();
+            terrainHazard = UnitHazardSnapshot.None;
             Location = new UnitLocationBinding(this);
         }
 
@@ -238,29 +245,20 @@ namespace ThreeKindoms.Core.Units
             UnitRegistry.Unregister(this);
         }
 
+        /// <summary>由 <see cref="UnitLocationBinding"/> 寫入腳下格環境傷害。</summary>
+        internal void ApplyTerrainHazard(in UnitHazardSnapshot hazard) => terrainHazard = hazard;
+
+        /// <summary>著火格火焰傷害等級（讀 <see cref="TerrainHazard"/>）。</summary>
+        public TerrainHazardLevel FlameDamage => terrainHazard.FlameLevel;
+
+        /// <summary>陷阱格傷害等級（讀 <see cref="TerrainHazard"/>）。</summary>
+        public TerrainHazardLevel TrapDamage => terrainHazard.TrapLevel;
+
+        /// <summary>火焰與陷阱環境傷害取較高者。</summary>
+        public TerrainHazardLevel EnvironmentalDamage => terrainHazard.EnvironmentalLevel;
+
         /// <summary>設定是否駐紮（駐紮中不可移動）。</summary>
         public void SetGarrison(bool garrison) => IsGarrison = garrison;
-
-        /// <summary>設定尋路可達旗標。</summary>
-        public void SetReachableFlag(bool reachable) => UnitFlags.Reachable = reachable;
-
-        /// <summary>設定火焰環境傷害等級。</summary>
-        public void SetFlameDamage(HazardDamageLevel level) =>
-            UnitFlags.FlameDamage = UnitFlags.ClampHazard(level);
-
-        /// <summary>設定陷阱環境傷害等級。</summary>
-        public void SetTrapDamage(HazardDamageLevel level) =>
-            UnitFlags.TrapDamage = UnitFlags.ClampHazard(level);
-
-        /// <summary>火焰環境傷害等級。</summary>
-        public HazardDamageLevel FlameDamage => UnitFlags.FlameDamage;
-
-        /// <summary>陷阱環境傷害等級。</summary>
-        public HazardDamageLevel TrapDamage => UnitFlags.TrapDamage;
-
-        /// <summary>火焰與陷阱取較重者（格傷害規則相同時用）。</summary>
-        public HazardDamageLevel EnvironmentalDamage =>
-            (HazardDamageLevel)System.Math.Max((byte)FlameDamage, (byte)TrapDamage);
 
         /// <summary>該武將 defId 是否為本隊主將或副將。</summary>
         public bool IsOfficerAssigned(int officerDefId) =>

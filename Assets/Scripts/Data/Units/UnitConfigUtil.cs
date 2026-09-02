@@ -4,6 +4,7 @@ using System.IO;
 using ThreeKindoms.Core;
 using ThreeKindoms.Core.Units;
 using ThreeKindoms.Data.Scenario;
+using ThreeKindoms.Data.Terrain;
 
 namespace ThreeKindoms.Data.Units
 {
@@ -251,11 +252,11 @@ namespace ThreeKindoms.Data.Units
         /// <summary>相容舊 API。</summary>
         public static string GetTroopDisplayName(TroopType troop) => GetTroopTypeDisplayName(troop);
 
-        public static string GetHazardDisplayName(HazardDamageLevel level) => level switch
+        public static string GetHazardDisplayName(TerrainHazardLevel level) => level switch
         {
-            HazardDamageLevel.Slight => Get("hazard.slight", "輕微"),
-            HazardDamageLevel.Medium => Get("hazard.medium", "中等"),
-            HazardDamageLevel.Serious => Get("hazard.serious", "嚴重"),
+            TerrainHazardLevel.Slight => Get("hazard.slight", "輕微"),
+            TerrainHazardLevel.Medium => Get("hazard.medium", "中等"),
+            TerrainHazardLevel.Serious => Get("hazard.serious", "嚴重"),
             _ => Get("hazard.none", "無")
         };
     }

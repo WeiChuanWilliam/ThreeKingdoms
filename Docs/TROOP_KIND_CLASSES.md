@@ -2,14 +2,14 @@
 
 ## 數值欄位（所有兵種皆有）
 
-| 屬性 | 中文 | 說明 |
+| 屬性 | 中文   | 說明 |
 |------|------|------|
-| `Attack` | 攻擊 | 對一般部隊 |
-| `Defense` | 防禦 | |
-| `Mobility` | 機動 | 戰場/行軍係數用 |
+| `Attack` | 攻擊   | 對一般部隊 |
+| `Defense` | 防禦   | |
+| `Mobility` | 機動   | 戰場/行軍係數用 |
 | `AttackRange` | 攻擊距離 | **普攻**射程（格）；properties: `attack_range`。戰法自有射程見 [`SKILL_DESIGN.md`](SKILL_DESIGN.md)，二者無關 |
-| `Jipo` | 急迫 | 削城防耐久、打缺口 |
-| `Gongcheng` | 工程 | 對城內守軍傷害 |
+| `Jipo` | 擊破   | 削城防耐久、打缺口 |
+| `Gongcheng` | 攻城   | 對城內守軍傷害 |
 
 ## 程式位置
 

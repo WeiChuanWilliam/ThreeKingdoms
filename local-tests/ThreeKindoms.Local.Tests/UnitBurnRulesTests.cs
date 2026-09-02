@@ -3,6 +3,7 @@ using ThreeKindoms.Core.Locations;
 using ThreeKindoms.Core.Officers;
 using ThreeKindoms.Core.Terrain;
 using ThreeKindoms.Core.Units;
+using ThreeKindoms.Data.Terrain;
 using ThreeKindoms.Data.Units;
 using Xunit;
 
@@ -39,7 +40,7 @@ namespace ThreeKindoms.Local.Tests
             Assert.True(UnitBurnRules.IsBurning(combat));
             Assert.True(UnitBurnRules.TryCreateBurnContext(combat, loc, out var ctx));
             Assert.Equal(2, ctx.TerrainN);
-            Assert.Equal(HazardDamageLevel.Medium, ctx.FlameLevel);
+            Assert.Equal(TerrainHazardLevel.Medium, ctx.FlameLevel);
             Assert.Equal(1f, ctx.FireDamageFactor);
         }
 

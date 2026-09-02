@@ -193,4 +193,4 @@ perform = round( base × 傷勢係數 × 體力係數 × 道具係數 )
 
 - [`OFFICER_CLASS.md`](OFFICER_CLASS.md) — Singleton、Pool、設計共識  
 - [`SCENARIO_OFFICER_POOL.md`](SCENARIO_OFFICER_POOL.md) — 開局篩選、死亡、存檔  
-- [`Assets/Scripts/README_OFFICER.md`](../Assets/Scripts/README_OFFICER.md) — C++ 對照（若存在）
+- [OFFICER_CPP_MIGRATION.md](OFFICER_CPP_MIGRATION.md) — C++ 對照

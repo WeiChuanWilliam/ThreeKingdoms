@@ -3,8 +3,8 @@ using System;
 namespace ThreeKindoms.Core.Units
 {
     /// <summary>
-    /// 一次交戰／傷害結算結果（兵力、傷兵、士氣、體力四項調整量）。
-    /// 用建構子產生；用 <see cref="Apply"/> 寫回 <see cref="Unit"/>。
+    /// 一次傷害結算結果（兵力、傷兵、士氣、體力四項調整量）。
+    /// 交戰／火攻／陷阱／建築等皆產出此結果，再統一用 <see cref="Apply"/> 寫回 <see cref="Unit"/>。
     /// </summary>
     public readonly struct BattleDamageResult
     {

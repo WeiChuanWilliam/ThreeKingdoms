@@ -1,45 +1,27 @@
-using System;
-using ThreeKindoms.Core;
+using ThreeKindoms.Core.Units;
 
 namespace ThreeKindoms.Data.Units
 {
-    /// <summary>火焰／陷阱等「格子上環境傷害」共用 0～3 級（格視同火焰傷害規則）。</summary>
-    public enum HazardDamageLevel : byte
+    /// <summary>
+    /// 部隊狀態容器：計略／異常負面狀態（混亂、偽報、止步、斷糧）。
+    /// 地形傷害見 <see cref="Terrain.TerrainHazardLevel"/> 與 <see cref="Core.Units.UnitHazardSnapshot"/>。
+    /// </summary>
+    public sealed class UnitFlags
     {
-        None = 0,
-        Slight = 1,
-        Medium = 2,
-        Serious = 3
-    }
+        /// <summary>混亂。</summary>
+        public UnitMessStatus Mess { get; } = new();
 
-    /// <summary>對應 C++ unitFlags。火焰與陷阱分開記，計算時可視為同類環境傷害。</summary>
-    [Serializable]
-    public struct UnitFlags
-    {
-        public bool Reachable;
-        public HazardDamageLevel FlameDamage;
-        public HazardDamageLevel TrapDamage;
+        /// <summary>偽報。</summary>
+        public UnitDeceiveStatus Deceive { get; } = new();
 
-        public static HazardDamageLevel ClampHazard(HazardDamageLevel value) =>
-            (HazardDamageLevel)NumericUtil.ClampToTarget((byte)value, (byte)0, (byte)3);
+        /// <summary>止步。</summary>
+        public UnitStopStatus Stop { get; } = new();
 
-        public static HazardDamageLevel FromByte(byte value) =>
-            ClampHazard((HazardDamageLevel)value);
+        /// <summary>斷糧。</summary>
+        public UnitCutSupplyStatus CutSupply { get; } = new();
 
-        public byte Pack()
-        {
-            byte b = 0;
-            if (Reachable) b |= 1 << 0;
-            b |= (byte)(((byte)ClampHazard(FlameDamage) & 0x3) << 1);
-            b |= (byte)(((byte)ClampHazard(TrapDamage) & 0x3) << 3);
-            return b;
-        }
-
-        public static UnitFlags Unpack(byte b) => new()
-        {
-            Reachable = (b & (1 << 0)) != 0,
-            FlameDamage = FromByte((byte)((b >> 1) & 0x3)),
-            TrapDamage = FromByte((byte)((b >> 3) & 0x3))
-        };
+        /// <summary>是否有任一負面狀態（目前皆 false）。</summary>
+        public bool HasAnyNegative =>
+            Mess.IsActive || Deceive.IsActive || Stop.IsActive || CutSupply.IsActive;
     }
 }

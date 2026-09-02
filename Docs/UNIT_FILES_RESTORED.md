@@ -5,7 +5,7 @@
 | C++ | C# 檔案 |
 |-----|---------|
 | `Unit::AbstractUnit` | `Core/Units/Unit.cs` |
-| `unitFlags` | `Data/Units/UnitFlags.cs` |
+| `unitFlags` | `Data/Units/UnitFlags.cs`（部隊計略狀態；非地形傷害） |
 
 ## 先前誤刪、已還原的檔案
 
