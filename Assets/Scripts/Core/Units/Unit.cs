@@ -25,7 +25,7 @@ namespace ThreeKindoms.Core.Units
 
         UnitFlags unitFlags = new();
 
-        /// <summary>部隊計略／異常狀態（混亂、偽報、止步、斷糧）。</summary>
+        /// <summary>部隊計略／異常狀態剩餘天數（混亂、偽報、止步、斷糧；0＝無）。</summary>
         public UnitFlags Status => unitFlags;
 
         UnitHazardSnapshot terrainHazard;

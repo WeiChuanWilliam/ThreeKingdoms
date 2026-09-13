@@ -22,8 +22,8 @@
 
 ## UnitFlags（部隊狀態）
 
-**不是**地形傷害。負面狀態容器：`unit.Status`（混亂／偽報／止步／斷糧）。  
-詳見 [UNIT_STATUS_AND_TERRAIN_HAZARD.md](UNIT_STATUS_AND_TERRAIN_HAZARD.md)。
+**不是**地形傷害。負面狀態為剩餘天數（`byte`，0～255）：`unit.Status`（`Mess`／`Deceive`／`Stop`／`CutSupply`）。  
+`CutSupply` 規則特殊（擊破倒數 → 到期斷量；補糧即取消），見 [UNIT_STATUS_AND_TERRAIN_HAZARD.md](UNIT_STATUS_AND_TERRAIN_HAZARD.md)。
 
 腳下格火／陷阱傷害等級 → `Unit.TerrainHazard`（自 Location 同步）。
 
