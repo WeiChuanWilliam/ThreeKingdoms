@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using ThreeKindoms.Core.Terrain;
 
 namespace ThreeKindoms.Core
 {
@@ -25,13 +26,15 @@ namespace ThreeKindoms.Core
         /// <summary>清空地圖。</summary>
         public void Clear() => _cells.Clear();
 
-        /// <summary>取得進入該格的行動力消耗；不可通行則為 int.MaxValue。</summary>
-        public int GetEnterCost(HexCoord c)
-        {
-            if (!_cells.TryGetValue(c, out var cell) || !cell.Passable)
-                return int.MaxValue;
-            return cell.EnterCost;
-        }
+        /// <summary>該格是否可進入（格可通行且地形可達）。</summary>
+        public bool CanEnter(HexCoord c) =>
+            _cells.TryGetValue(c, out var cell)
+            && cell.Passable
+            && TerrainRegistry.Get(cell.Terrain).TerrainFlags.Reachable;
+
+        /// <summary>離開該格所需行動力（地形 MoveCost，未計部隊行軍倍率）；無此格則為 int.MaxValue。</summary>
+        public int GetLeaveCost(HexCoord c) =>
+            _cells.TryGetValue(c, out var cell) ? TerrainRegistry.Get(cell.Terrain).MoveCost : int.MaxValue;
 
         /// <summary>建立矩形區域的 axial 六角格（Spike 用）。</summary>
         public static HexGrid CreateRectangle(int width, int height, System.Func<HexCoord, CellData> factory)

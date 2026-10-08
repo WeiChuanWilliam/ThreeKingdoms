@@ -240,7 +240,7 @@ float GetFacingCombatMultiplier(HexDirection attackerFrom, HexDirection defender
 |------|--------|
 | `CellData.CountyId` / `OwnerId` | 可對接戰略據點；需另建 `StrategicNodeGraph` |
 | `TerrainType`（平原／山林…） | 保留**行軍**；不作戰術山谷加成 |
-| `MovementRules` 每日行動力 | 戰略行軍沿用；戰術塗格另訂消耗 |
+| `Unit.DailyMovementPoints` 每日行動力 | 戰略行軍沿用；戰術塗格另訂消耗 |
 | `Legion` | 待加 `carriedFood` / `carriedMoney` 上限 |
 | 補給線程式 | **不實作**；若舊稿有則刪 |
 | `Combat` 戰鬥實例 | 待加 `Facing`、戰術格控制表 |

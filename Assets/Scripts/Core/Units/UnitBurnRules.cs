@@ -1,7 +1,6 @@
 using System;
 using ThreeKindoms.Core;
 using ThreeKindoms.Core.Locations;
-using ThreeKindoms.Data.Terrain;
 using ThreeKindoms.Data.Units;
 
 namespace ThreeKindoms.Core.Units
@@ -14,9 +13,6 @@ namespace ThreeKindoms.Core.Units
 
         /// <summary>地形火焰強度係數 N。</summary>
         public int TerrainN { get; }
-
-        /// <summary>腳下格火焰傷害等級。</summary>
-        public TerrainHazardLevel FlameLevel { get; }
 
         /// <summary>部隊身上的火焰效果強度。</summary>
         public short FireEffect { get; }
@@ -35,7 +31,6 @@ namespace ThreeKindoms.Core.Units
         {
             Unit = unit;
             TerrainN = terrainN;
-            FlameLevel = unit.FlameDamage;
             FireEffect = unit.FireEffect;
             Soldiers = unit.Soldiers;
             Wounded = unit.Wounded;
@@ -45,7 +40,7 @@ namespace ThreeKindoms.Core.Units
 
     /// <summary>
     /// 部隊火攻：是否燃燒 → 算出 <see cref="BattleDamageResult"/> → 統一 <see cref="BattleDamageResult.Apply"/>。
-    /// 陷阱／建築傷害等同理：各自算 Result，再 Apply。
+    /// 腳下有無火由 <see cref="Unit.IsOnFire"/>（LocationFlags）決定，無傷害等級。
     /// </summary>
     public static class UnitBurnRules
     {
@@ -54,6 +49,9 @@ namespace ThreeKindoms.Core.Units
 
         /// <summary>火攻個性：受火傷害減輕。</summary>
         public const string TraitHuogong = "火攻";
+
+        /// <summary>滅火個性：不受火傷害。</summary>
+        public const string TraitMiehuo = "滅火";
 
         /// <summary>腳下格著火即視為燃燒中。</summary>
         public static bool IsBurning(Unit unit) =>
@@ -98,14 +96,9 @@ namespace ThreeKindoms.Core.Units
             if (context.Unit == null || context.Soldiers <= 0)
                 return BattleDamageResult.None;
 
-            float levelMult = GetFlameLevelMultiplier(context.FlameLevel);
-            if (levelMult <= 0f)
-                return BattleDamageResult.None;
-
             int basePer1000 = UnitConfigUtil.GetFireBaseDeathsPer1000Soldiers();
             float personalityMult = GetPersonalityFireDamageMultiplier(context.Unit);
             float rawDeaths = context.Soldiers * (basePer1000 / 1000f)
-                              * levelMult
                               * context.TerrainN
                               * context.FireDamageFactor
                               * personalityMult;
@@ -118,7 +111,7 @@ namespace ThreeKindoms.Core.Units
             if (deaths > 0)
             {
                 short baseMorale = UnitConfigUtil.GetFireBaseMoraleLossPerDay();
-                moraleLoss = (short)NumericUtil.ClampToTarget((int)MathF.Round(baseMorale * levelMult), 0, 100);
+                moraleLoss = (short)NumericUtil.ClampToTarget((int)baseMorale, 0, 100);
             }
 
             if (deaths == 0 && moraleLoss == 0)
@@ -141,14 +134,6 @@ namespace ThreeKindoms.Core.Units
             BattleDamageResult.Apply(unit, result);
             return result.HasEffect;
         }
-
-        static float GetFlameLevelMultiplier(TerrainHazardLevel level) => level switch
-        {
-            TerrainHazardLevel.Serious => 1.5f,
-            TerrainHazardLevel.Medium => 1f,
-            TerrainHazardLevel.Slight => 0.5f,
-            _ => 0f
-        };
 
         static float GetPersonalityFireDamageMultiplier(Unit unit)
         {

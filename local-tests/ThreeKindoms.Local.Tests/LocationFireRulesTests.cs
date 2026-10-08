@@ -45,8 +45,7 @@ namespace ThreeKindoms.Local.Tests
         [Fact(Skip = SkipReason)]
         public void CountFire_at_sunrise_extinguishes_on_failed_roll()
         {
-            var terrain = TerrainDefinition.FromTerrainType(TerrainType.Forest);
-            terrain.SetFireEffect(1);
+            var terrain = TerrainRegistry.Get(TerrainType.Forest);
             var loc = new MapLocation(new HexCoord(0, 0), terrain);
             loc.SetOnFire();
             loc.CountFire(roll0To99: 99);

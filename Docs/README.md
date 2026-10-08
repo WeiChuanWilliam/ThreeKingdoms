@@ -22,7 +22,7 @@
 | [UNIT_TYPES.md](UNIT_TYPES.md) | Legion / Combat / Transport |
 | [UNIT_MANPOWER_AND_SKILLS.md](UNIT_MANPOWER_AND_SKILLS.md) | 兵力、Stats 兩段式 |
 | [UNIT_STATUS_AND_TERRAIN_HAZARD.md](UNIT_STATUS_AND_TERRAIN_HAZARD.md) | 計略狀態 vs 地形傷害 |
-| [TERRAIN.md](TERRAIN.md) | 地形類型、terrain.properties |
+| [TERRAIN.md](TERRAIN.md) | 地形類型、TerrainRegistry |
 | [SETTLEMENT_SITES.md](SETTLEMENT_SITES.md) | 據點／建築種類 |
 | [COMBAT_AND_CAMPAIGN_ARCHITECTURE.md](COMBAT_AND_CAMPAIGN_ARCHITECTURE.md) | 戰略／戰術架構修訂 |
 | [NAVY_AND_RIVER_MOVEMENT.md](NAVY_AND_RIVER_MOVEMENT.md) | 水軍、江河（規劃） |

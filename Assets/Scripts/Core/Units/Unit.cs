@@ -4,7 +4,6 @@ using ThreeKindoms.Core.Buildings;
 using ThreeKindoms.Core.Locations;
 using ThreeKindoms.Core.Officers;
 using ThreeKindoms.Core.Terrain;
-using ThreeKindoms.Data.Terrain;
 using ThreeKindoms.Data.Units;
 
 namespace ThreeKindoms.Core.Units
@@ -28,28 +27,32 @@ namespace ThreeKindoms.Core.Units
         /// <summary>部隊計略／異常狀態剩餘天數（混亂、偽報、止步、斷糧；0＝無）。</summary>
         public UnitFlags Status => unitFlags;
 
-        UnitHazardSnapshot terrainHazard;
-
-        /// <summary>腳下格環境傷害快照（火／陷阱等；由 Location 同步）。</summary>
-        public UnitHazardSnapshot TerrainHazard => terrainHazard;
-
         /// <summary>駐紮或關聯的建築據點。</summary>
         public AbstractBuilding Building { get; private set; }
 
-        /// <summary>腳下格火焰強度（由地形／格狀態同步）。</summary>
+        /// <summary>腳下格火焰參數 n（著火時自地形同步；未著火為 0）。</summary>
         public short FireEffect { get; private set; }
 
         /// <summary>腳下格造成的士氣懲罰。</summary>
         public short MoralePenalty { get; private set; }
 
-        /// <summary>腳下格著火即視為著火。</summary>
+        /// <summary>腳下格著火（讀 LocationFlags.OnFire）。</summary>
         public bool IsOnFire => Location?.IsOnFire == true;
+
+        /// <summary>腳下格有陷阱（讀 LocationFlags.OnTrap）。</summary>
+        public bool IsOnTrap => Location?.IsOnTrap == true;
 
         /// <summary>士氣（0～100）。</summary>
         public short Morale { get; private set; }
 
         /// <summary>體力（0～100）。</summary>
         public short Stamina { get; private set; }
+
+        /// <summary>本日剩餘行動力。</summary>
+        public int MovementPoints { get; private set; }
+
+        /// <summary>每日日出補滿的行動力。</summary>
+        public int DailyMovementPoints { get; private set; }
 
         /// <summary>攜帶金錢。</summary>
         public int Money { get; private set; }
@@ -117,9 +120,28 @@ namespace ThreeKindoms.Core.Units
             UnitName = name ?? "";
             Belonged = factionBelonged;
             unitFlags = new UnitFlags();
-            terrainHazard = UnitHazardSnapshot.None;
+            DailyMovementPoints = UnitConfigUtil.DailyMovementPoints;
+            MovementPoints = DailyMovementPoints;
             Location = new UnitLocationBinding(this);
         }
+
+        /// <summary>設定每日行動力（負值視為 0）。</summary>
+        public void SetDailyMovementPoints(int value) => DailyMovementPoints = System.Math.Max(0, value);
+
+        /// <summary>日出時補滿本日行動力。</summary>
+        public void RefillMovementPoints() => MovementPoints = DailyMovementPoints;
+
+        /// <summary>扣除行動力；不足時不扣，回傳 false。</summary>
+        public bool TrySpendMovementPoints(int cost)
+        {
+            if (cost < 0 || MovementPoints < cost)
+                return false;
+            MovementPoints -= cost;
+            return true;
+        }
+
+        /// <summary>駐軍轉換等情境：沿用另一部隊的剩餘行動力。</summary>
+        internal void InheritMovementFrom(Unit source) => MovementPoints = source.MovementPoints;
 
         /// <summary>是否已指派該 defId 的副將。</summary>
         public bool ContainsViceOfficer(int officerDefId) =>
@@ -244,18 +266,6 @@ namespace ThreeKindoms.Core.Units
                 return;
             UnitRegistry.Unregister(this);
         }
-
-        /// <summary>由 <see cref="UnitLocationBinding"/> 寫入腳下格環境傷害。</summary>
-        internal void ApplyTerrainHazard(in UnitHazardSnapshot hazard) => terrainHazard = hazard;
-
-        /// <summary>著火格火焰傷害等級（讀 <see cref="TerrainHazard"/>）。</summary>
-        public TerrainHazardLevel FlameDamage => terrainHazard.FlameLevel;
-
-        /// <summary>陷阱格傷害等級（讀 <see cref="TerrainHazard"/>）。</summary>
-        public TerrainHazardLevel TrapDamage => terrainHazard.TrapLevel;
-
-        /// <summary>火焰與陷阱環境傷害取較高者。</summary>
-        public TerrainHazardLevel EnvironmentalDamage => terrainHazard.EnvironmentalLevel;
 
         /// <summary>設定是否駐紮（駐紮中不可移動）。</summary>
         public void SetGarrison(bool garrison) => IsGarrison = garrison;

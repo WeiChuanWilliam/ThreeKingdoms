@@ -1,12 +1,11 @@
 using ThreeKindoms.Core.Buildings;
 using ThreeKindoms.Core.Locations;
 using ThreeKindoms.Core.Terrain;
-using ThreeKindoms.Data.Terrain;
 
 namespace ThreeKindoms.Core.Units
 {
     /// <summary>部隊（<see cref="Unit"/>）與地圖格的連動。</summary>
-    public sealed class UnitLocationBinding : IMapUnitMovement
+    public sealed class UnitLocationBinding
     {
         Unit _unit;
         LocationGrid _locationGrid;
@@ -17,9 +16,6 @@ namespace ThreeKindoms.Core.Units
 
         /// <summary>目前所在六角格座標。</summary>
         public HexCoord Position { get; set; }
-
-        /// <summary>本日剩餘移動點數。</summary>
-        public int MovementPointsLeft { get; set; }
 
         /// <summary>目前佔據的地圖格實例。</summary>
         public MapLocation CurrentLocation => _currentLocation;
@@ -43,7 +39,6 @@ namespace ThreeKindoms.Core.Units
         public UnitLocationBinding(Unit unit)
         {
             _unit = unit;
-            MovementPointsLeft = MovementRules.DefaultDailyPoints;
         }
 
         /// <summary>進入地圖世界：掛載格網、落點並登記至 <see cref="UnitRegistry"/>。</summary>
@@ -73,12 +68,8 @@ namespace ThreeKindoms.Core.Units
             _locationGrid = source._locationGrid;
             _currentLocation = source._currentLocation;
             Position = source.Position;
-            MovementPointsLeft = source.MovementPointsLeft;
+            _unit.InheritMovementFrom(source._unit);
         }
-
-        /// <summary>日出時補滿本日移動點數。</summary>
-        public void RefillMovementAtSunrise() =>
-            MovementPointsLeft = MovementRules.DefaultDailyPoints;
 
         /// <summary>從目前腳下格／地形同步著火與環境傷害（不含續燃擲骰與灼燒結算）。</summary>
         public void SyncEnvironmentFromLocation() => ApplyFireAndMoraleFromLocation();
@@ -119,29 +110,22 @@ namespace ThreeKindoms.Core.Units
             return true;
         }
 
-        /// <summary>沿路徑逐步移動並扣除進格成本；駐紮中無法移動。</summary>
+        /// <summary>沿路徑逐步移動；每步由腳下地形 <see cref="AbstractTerrain.CalculateMovement"/> 扣除離格行動力。駐紮中無法移動。</summary>
         public bool MoveAlongPath(HexGrid pathGrid, System.Collections.Generic.IReadOnlyList<HexCoord> path)
         {
             if (_unit.IsGarrison)
                 return false;
             if (path == null || path.Count <= 1) return false;
-            float speed = UnitMarchSpeed.GetMarchSpeedMultiplier(_unit);
-            if (speed <= 0f)
-                return false;
 
             for (int i = 1; i < path.Count; i++)
             {
                 var step = path[i];
-                int cost = pathGrid.GetEnterCost(step);
-                if (speed < 1f)
-                    cost = System.Math.Max(1, (int)(cost / speed));
-                if (MovementPointsLeft < cost) break;
+                if (!pathGrid.CanEnter(step)) break;
+                if (CurrentTerrain == null || !CurrentTerrain.CalculateMovement(_unit)) break;
 
                 pathGrid.TryGet(step, out var cell);
-                var terrain = TerrainDefinition.FromTerrainType(cell.Terrain);
-                if (!EnterHex(step, terrain)) break;
+                if (!EnterHex(step, TerrainRegistry.Get(cell.Terrain))) break;
 
-                MovementPointsLeft -= cost;
                 _currentLocation?.UnitMoved();
             }
 
@@ -168,36 +152,15 @@ namespace ThreeKindoms.Core.Units
             if (_currentLocation == null)
             {
                 _unit.SetFireEffect(0);
-                _unit.ApplyTerrainHazard(UnitHazardSnapshot.None);
                 return;
             }
 
-            ApplyHazardFromTile(
-                _currentLocation.LocationFlags.OnFire,
-                _currentLocation.LocationFlags.OnTrap,
-                _currentLocation.Terrain?.FireEffect ?? 0);
-
-            _unit.SetMoralePenalty((short)(_currentLocation.Terrain?.MoralePenalty ?? 0));
-        }
-
-        /// <summary>火焰／陷阱格共用傷害等級（0～3）；寫入 <see cref="Unit.TerrainHazard"/>。</summary>
-        void ApplyHazardFromTile(bool onFire, bool onTrap, int terrainFireEffect)
-        {
-            TerrainHazardLevel level = ResolveHazardLevel(onFire || onTrap, terrainFireEffect);
-            _unit.ApplyTerrainHazard(new UnitHazardSnapshot(
-                onFire ? level : TerrainHazardLevel.None,
-                onTrap ? level : TerrainHazardLevel.None));
+            bool onFire = _currentLocation.LocationFlags.OnFire;
+            int terrainFireEffect = _currentLocation.Terrain?.FireEffect ?? 0;
             _unit.SetFireEffect(onFire
                 ? (short)(terrainFireEffect > 0 ? terrainFireEffect : 1)
                 : (short)0);
-        }
-
-        static TerrainHazardLevel ResolveHazardLevel(bool onHazardTile, int terrainFireEffect)
-        {
-            if (!onHazardTile) return TerrainHazardLevel.None;
-            if (terrainFireEffect >= 3) return TerrainHazardLevel.Serious;
-            if (terrainFireEffect >= 2) return TerrainHazardLevel.Medium;
-            return TerrainHazardLevel.Slight;
+            _unit.SetMoralePenalty((short)(_currentLocation.Terrain?.MoralePenalty ?? 0));
         }
     }
 }

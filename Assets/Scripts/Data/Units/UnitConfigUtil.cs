@@ -4,7 +4,6 @@ using System.IO;
 using ThreeKindoms.Core;
 using ThreeKindoms.Core.Units;
 using ThreeKindoms.Data.Scenario;
-using ThreeKindoms.Data.Terrain;
 
 namespace ThreeKindoms.Data.Units
 {
@@ -137,7 +136,7 @@ namespace ThreeKindoms.Data.Units
         public static int GetFireBaseDeathsPer1000Soldiers() =>
             System.Math.Max(0, GetInt("unit.fire.base_deaths_per_1000_soldiers", 50));
 
-        /// <summary>日出灼燒：基礎士氣下降（再乘 FlameLevel）。</summary>
+        /// <summary>日出灼燒：基礎士氣下降。</summary>
         public static short GetFireBaseMoraleLossPerDay() =>
             (short)NumericUtil.ClampToTarget(GetInt("unit.fire.base_morale_loss_per_day", 2), 0, 100);
 
@@ -251,13 +250,5 @@ namespace ThreeKindoms.Data.Units
 
         /// <summary>相容舊 API。</summary>
         public static string GetTroopDisplayName(TroopType troop) => GetTroopTypeDisplayName(troop);
-
-        public static string GetHazardDisplayName(TerrainHazardLevel level) => level switch
-        {
-            TerrainHazardLevel.Slight => Get("hazard.slight", "輕微"),
-            TerrainHazardLevel.Medium => Get("hazard.medium", "中等"),
-            TerrainHazardLevel.Serious => Get("hazard.serious", "嚴重"),
-            _ => Get("hazard.none", "無")
-        };
     }
 }

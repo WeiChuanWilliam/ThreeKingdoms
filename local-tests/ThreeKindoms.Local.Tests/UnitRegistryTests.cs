@@ -18,7 +18,7 @@ namespace ThreeKindoms.Local.Tests
             UnitRegistry.Clear();
 
             var grid = new LocationGrid();
-            var terrain = TerrainDefinition.FromTerrainType(TerrainType.Plain);
+            var terrain = TerrainRegistry.Get(TerrainType.Plain);
             var hex = new HexCoord(2, 3);
             var combat = UnitUtil.CreateCombat(1, "blade", 1000, commanderOfficerId: 0);
             combat.Location.BindToWorld(grid, hex, terrain);
@@ -38,17 +38,16 @@ namespace ThreeKindoms.Local.Tests
             UnitConfigUtil.Load(TestPaths.UnitPropertiesPath);
 
             var grid = new LocationGrid();
-            var terrain = TerrainDefinition.FromTerrainType(TerrainType.Forest);
-            terrain.SetFireEffect(4);
+            var terrain = TerrainRegistry.Get(TerrainType.Forest);
             var fireHex = new HexCoord(0, 0);
             var safeHex = new HexCoord(9, 9);
             grid.GetOrCreate(fireHex, terrain).SetOnFire();
-            grid.GetOrCreate(safeHex, TerrainDefinition.FromTerrainType(TerrainType.Plain));
+            grid.GetOrCreate(safeHex, TerrainRegistry.Get(TerrainType.Plain));
 
             var onFire = UnitUtil.CreateCombat(1, "blade", 1000, commanderOfficerId: 0);
             onFire.Location.BindToWorld(grid, fireHex, terrain);
             var safe = UnitUtil.CreateCombat(1, "blade", 1000, commanderOfficerId: 0);
-            safe.Location.BindToWorld(grid, safeHex, TerrainDefinition.FromTerrainType(TerrainType.Plain));
+            safe.Location.BindToWorld(grid, safeHex, TerrainRegistry.Get(TerrainType.Plain));
 
             int before = onFire.Soldiers;
             grid.ApplyBurnDamageAtSunrise();
@@ -63,8 +62,7 @@ namespace ThreeKindoms.Local.Tests
             UnitRegistry.Clear();
 
             var grid = new LocationGrid();
-            var terrain = TerrainDefinition.FromTerrainType(TerrainType.Forest);
-            terrain.SetFireEffect(1);
+            var terrain = TerrainRegistry.Get(TerrainType.Forest);
             var loc = grid.GetOrCreate(new HexCoord(0, 0), terrain);
             loc.SetOnFire();
 
@@ -75,7 +73,7 @@ namespace ThreeKindoms.Local.Tests
             grid.TickAllUnitsAtSunrise();
 
             Assert.True(combat.IsOnFire);
-            Assert.NotEqual(TerrainHazardLevel.None, combat.FlameDamage);
+            Assert.True(combat.IsOnFire);
         }
     }
 }

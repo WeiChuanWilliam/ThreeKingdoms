@@ -2,8 +2,7 @@ using System;
 
 namespace ThreeKindoms.Data.Terrain
 {
-    
-    /// <summary>對應 C++ TerrainFlags 位元欄位。</summary>
+    /// <summary>地形類型「能不能」：可達、可建、可設陷阱、可築寨、可燃。格子當下狀態見 LocationFlags。</summary>
     [Serializable]
     public struct TerrainFlags
     {
@@ -12,25 +11,5 @@ namespace ThreeKindoms.Data.Terrain
         public bool Trap;
         public bool Fort;
         public bool Fireable;
-
-        public byte Pack()
-        {
-            byte b = 0;
-            if (Reachable) b |= 1 << 0;
-            if (Construction) b |= 1 << 1;
-            if (Trap) b |= 1 << 2;
-            if (Fort) b |= 1 << 3;
-            if (Fireable) b |= 1 << 4;
-            return b;
-        }
-
-        public static TerrainFlags Unpack(byte b) => new()
-        {
-            Reachable = (b & (1 << 0)) != 0,
-            Construction = (b & (1 << 1)) != 0,
-            Trap = (b & (1 << 2)) != 0,
-            Fort = (b & (1 << 3)) != 0,
-            Fireable = (b & (1 << 4)) != 0
-        };
     }
 }

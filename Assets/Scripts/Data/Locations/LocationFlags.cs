@@ -7,7 +7,7 @@ namespace ThreeKindoms.Data.Locations
     public struct LocationFlags
     {
         public bool OnFire;
-        /// <summary>陷阱格；對部隊的傷害等級規則與火焰相同。</summary>
+        /// <summary>陷阱格（當下是否有陷阱；能否設陷阱見地形 <c>TerrainFlags.Trap</c>）。</summary>
         public bool OnTrap;
         public bool OnDefence;
         public bool Built;

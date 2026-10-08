@@ -20,7 +20,6 @@ namespace ThreeKindoms.Core
         public int q;
         public int r;
         public string terrain = "plain";
-        public int enterCost = -1;
         public int countyId;
         public int ownerId;
         public bool passable = true;
@@ -42,12 +41,9 @@ namespace ThreeKindoms.Core
             foreach (var c in data.cells)
             {
                 var coord = new HexCoord(c.q, c.r);
-                var terrain = ParseTerrain(c.terrain);
-                int cost = c.enterCost >= 0 ? c.enterCost : MovementRules.GetDefaultEnterCost(terrain);
                 grid.Set(coord, new CellData
                 {
-                    Terrain = terrain,
-                    EnterCost = (byte)Math.Min(cost, 255),
+                    Terrain = ParseTerrain(c.terrain),
                     CountyId = (ushort)c.countyId,
                     OwnerId = (byte)c.ownerId,
                     Passable = c.passable
@@ -57,14 +53,10 @@ namespace ThreeKindoms.Core
             return grid;
         }
 
-        static TerrainType ParseTerrain(string s) => s?.ToLowerInvariant() switch
-        {
-            "road" => TerrainType.Road,
-            "hill" => TerrainType.Hill,
-            "mountain" => TerrainType.Mountain,
-            "water" => TerrainType.Water,
-            "forest" => TerrainType.Forest,
-            _ => TerrainType.Plain
-        };
+        /// <summary>接受 <see cref="TerrainType"/> 名稱（不分大小寫）或數值 id；無法辨識時視為平地。</summary>
+        static TerrainType ParseTerrain(string s) =>
+            Enum.TryParse(s, ignoreCase: true, out TerrainType t) && Enum.IsDefined(typeof(TerrainType), t)
+                ? t
+                : TerrainType.Plain;
     }
 }

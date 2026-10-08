@@ -239,7 +239,7 @@ namespace ThreeKindoms.UnityBridge
             GUILayout.Label($"兵{core.Soldiers} 傷{core.Wounded}" + (core.IsAnnihilated ? " 團滅" : ""));
             if (core is Combat combatPower)
                 GUILayout.Label($"攻{combatPower.Stats.Attack} 防{combatPower.Stats.Defense} 城{combatPower.Stats.Gongcheng} 破{combatPower.Stats.Jipo} 策{combatPower.Stats.Strategy} 建{combatPower.Stats.Construction}");
-            GUILayout.Label($"@ {loc.Position}  行動力 {loc.MovementPointsLeft}/15  糧/日{core.CalculateFoodConsumption()}");
+            GUILayout.Label($"@ {loc.Position}  行動力 {core.MovementPoints}/{core.DailyMovementPoints}  糧/日{core.CalculateFoodConsumption()}");
             if (loc.IsOnFire) GUILayout.Label("狀態：腳下格著火");
             if (loc.StationedBuilding != null) GUILayout.Label($"建築：{loc.StationedBuilding.Name}");
             if (_hover.HasValue)

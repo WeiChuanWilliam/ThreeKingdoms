@@ -1,9 +1,8 @@
 using System.Collections.Generic;
-using ThreeKindoms.Core.Units;
 
 namespace ThreeKindoms.Core
 {
-    /// <summary>Dijkstra：邊權 = 進入目標格的 enterCost。可限制最大消耗（今日剩餘行動力）。</summary>
+    /// <summary>Dijkstra：邊權 = 離開目前格的地形 MoveCost。可限制最大消耗（今日剩餘行動力）。</summary>
     public static class HexPathfinder
     {
         /// <summary>在消耗上限內以 Dijkstra 尋找起點至目標的最短路徑。</summary>
@@ -17,9 +16,7 @@ namespace ThreeKindoms.Core
                 return PathfindingResult.Fail("起點不在地圖上");
             if (!grid.Contains(goal))
                 return PathfindingResult.Fail("目標不在地圖上");
-
-            int goalCost = grid.GetEnterCost(goal);
-            if (goalCost == int.MaxValue)
+            if (!grid.CanEnter(goal))
                 return PathfindingResult.Fail("目標不可進入");
 
             var dist = new Dictionary<HexCoord, int> { [start] = 0 };
@@ -49,16 +46,13 @@ namespace ThreeKindoms.Core
                 if (bestDist > maxCost)
                     continue;
 
+                int leave = grid.GetLeaveCost(current);
                 foreach (var next in HexMath.GetNeighbors(current))
                 {
-                    if (!grid.Contains(next))
+                    if (!grid.CanEnter(next))
                         continue;
 
-                    int enter = grid.GetEnterCost(next);
-                    if (enter == int.MaxValue)
-                        continue;
-
-                    int nextDist = bestDist + enter;
+                    int nextDist = bestDist + leave;
                     if (nextDist > maxCost)
                         continue;
 
@@ -73,42 +67,6 @@ namespace ThreeKindoms.Core
             }
 
             return PathfindingResult.Fail("無法到達目標（行動力或地形限制）");
-        }
-
-        /// <summary>沿最短路徑移動，直到行動力不足；回傳實際走過的格（含終點）。</summary>
-        /// <summary>僅更新座標與行動力；若要連動 Location 請用 <see cref="UnitLocationBinding.MoveAlongPath"/>。</summary>
-        public static PathfindingResult MoveAlongPath(
-            HexGrid grid,
-            IMapUnitMovement unit,
-            HexCoord goal)
-        {
-            var result = FindPath(grid, unit.Position, goal, unit.MovementPointsLeft);
-            if (!result.Success)
-                return result;
-
-            var walked = new List<HexCoord> { unit.Position };
-            int spent = 0;
-
-            for (int i = 1; i < result.Path.Count; i++)
-            {
-                var step = result.Path[i];
-                int cost = grid.GetEnterCost(step);
-                if (unit.MovementPointsLeft < cost)
-                    break;
-
-                unit.MovementPointsLeft -= cost;
-                spent += cost;
-                unit.Position = step;
-                walked.Add(step);
-
-                if (step.Equals(goal))
-                    return PathfindingResult.Ok(walked, spent);
-            }
-
-            if (walked.Count <= 1)
-                return PathfindingResult.Fail("行動力不足以離開起點");
-
-            return PathfindingResult.Ok(walked, spent);
         }
 
         static PathfindingResult BuildPath(

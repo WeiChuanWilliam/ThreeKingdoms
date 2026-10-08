@@ -17,8 +17,7 @@ namespace ThreeKindoms.Local.Tests
         public void TryCreateBurnContext_requires_tile_on_fire()
         {
             var grid = new LocationGrid();
-            var terrain = TerrainDefinition.FromTerrainType(TerrainType.Forest);
-            terrain.SetFireEffect(1);
+            var terrain = TerrainRegistry.Get(TerrainType.Forest);
             var loc = grid.GetOrCreate(new HexCoord(0, 0), terrain);
 
             var combat = CreateCombatOnLocation(grid, loc, terrain);
@@ -29,8 +28,7 @@ namespace ThreeKindoms.Local.Tests
         public void TryCreateBurnContext_succeeds_when_burning_and_n_nonzero()
         {
             var grid = new LocationGrid();
-            var terrain = TerrainDefinition.FromTerrainType(TerrainType.Forest);
-            terrain.SetFireEffect(2);
+            var terrain = TerrainRegistry.Get(TerrainType.Forest);
             var loc = grid.GetOrCreate(new HexCoord(0, 0), terrain);
             loc.SetOnFire();
 
@@ -40,7 +38,6 @@ namespace ThreeKindoms.Local.Tests
             Assert.True(UnitBurnRules.IsBurning(combat));
             Assert.True(UnitBurnRules.TryCreateBurnContext(combat, loc, out var ctx));
             Assert.Equal(2, ctx.TerrainN);
-            Assert.Equal(TerrainHazardLevel.Medium, ctx.FlameLevel);
             Assert.Equal(1f, ctx.FireDamageFactor);
         }
 
@@ -48,8 +45,7 @@ namespace ThreeKindoms.Local.Tests
         public void Huoshen_trait_blocks_burn_context()
         {
             var grid = new LocationGrid();
-            var terrain = TerrainDefinition.FromTerrainType(TerrainType.Forest);
-            terrain.SetFireEffect(1);
+            var terrain = TerrainRegistry.Get(TerrainType.Forest);
             var loc = grid.GetOrCreate(new HexCoord(0, 0), terrain);
             loc.SetOnFire();
 
@@ -70,8 +66,7 @@ namespace ThreeKindoms.Local.Tests
             UnitConfigUtil.Load(TestPaths.UnitPropertiesPath);
 
             var grid = new LocationGrid();
-            var terrain = TerrainDefinition.FromTerrainType(TerrainType.Forest);
-            terrain.SetFireEffect(2);
+            var terrain = TerrainRegistry.Get(TerrainType.Forest);
             var loc = grid.GetOrCreate(new HexCoord(0, 0), terrain);
             loc.SetOnFire();
 
@@ -92,8 +87,7 @@ namespace ThreeKindoms.Local.Tests
             UnitConfigUtil.Load(TestPaths.UnitPropertiesPath);
 
             var grid = new LocationGrid();
-            var terrain = TerrainDefinition.FromTerrainType(TerrainType.Forest);
-            terrain.SetFireEffect(1);
+            var terrain = TerrainRegistry.Get(TerrainType.Forest);
             var loc = grid.GetOrCreate(new HexCoord(0, 0), terrain);
             loc.SetOnFire();
 
@@ -112,8 +106,7 @@ namespace ThreeKindoms.Local.Tests
             UnitConfigUtil.Load(TestPaths.UnitPropertiesPath);
 
             var grid = new LocationGrid();
-            var terrain = TerrainDefinition.FromTerrainType(TerrainType.Forest);
-            terrain.SetFireEffect(2);
+            var terrain = TerrainRegistry.Get(TerrainType.Forest);
             var loc = grid.GetOrCreate(new HexCoord(0, 0), terrain);
             loc.SetOnFire();
 
@@ -125,7 +118,7 @@ namespace ThreeKindoms.Local.Tests
             Assert.True(combat.Soldiers < 1000);
         }
 
-        static Combat CreateCombatOnLocation(LocationGrid grid, MapLocation loc, TerrainDefinition terrain)
+        static Combat CreateCombatOnLocation(LocationGrid grid, MapLocation loc, AbstractTerrain terrain)
         {
             var combat = UnitUtil.CreateCombat(1, "blade", 1000, commanderOfficerId: 0);
             combat.Location.BindToWorld(grid, loc.Hex, terrain);

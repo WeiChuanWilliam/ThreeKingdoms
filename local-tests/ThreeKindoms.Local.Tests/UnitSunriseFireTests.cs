@@ -20,8 +20,7 @@ namespace ThreeKindoms.Local.Tests
             UnitConfigUtil.Load(TestPaths.UnitPropertiesPath);
 
             var grid = new LocationGrid();
-            var terrain = TerrainDefinition.FromTerrainType(TerrainType.Forest);
-            terrain.SetFireEffect(1);
+            var terrain = TerrainRegistry.Get(TerrainType.Forest);
             var loc = grid.GetOrCreate(new HexCoord(0, 0), terrain);
             loc.SetOnFire();
 
@@ -33,7 +32,7 @@ namespace ThreeKindoms.Local.Tests
 
             grid.TickAllUnitsAtSunrise();
             Assert.True(combat.IsOnFire);
-            Assert.NotEqual(TerrainHazardLevel.None, combat.FlameDamage);
+            Assert.True(combat.IsOnFire);
             Assert.True(combat.FireEffect > 0);
         }
 
@@ -42,8 +41,7 @@ namespace ThreeKindoms.Local.Tests
         {
             UnitRegistry.Clear();
             var grid = new LocationGrid();
-            var terrain = TerrainDefinition.FromTerrainType(TerrainType.Forest);
-            terrain.SetFireEffect(1);
+            var terrain = TerrainRegistry.Get(TerrainType.Forest);
             var loc = grid.GetOrCreate(new HexCoord(0, 0), terrain);
             loc.SetOnFire();
 
@@ -55,7 +53,7 @@ namespace ThreeKindoms.Local.Tests
 
             grid.TickAllUnitsAtSunrise();
             Assert.False(combat.IsOnFire);
-            Assert.Equal(TerrainHazardLevel.None, combat.FlameDamage);
+            Assert.False(combat.IsOnFire);
         }
     }
 }

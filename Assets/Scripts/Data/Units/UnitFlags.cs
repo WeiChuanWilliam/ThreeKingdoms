@@ -3,7 +3,7 @@ namespace ThreeKindoms.Data.Units
     /// <summary>
     /// 部隊計略／異常狀態：剩餘天數（0＝無；<see cref="byte"/> 上限 255）。
     /// 行動時以 <c>&gt; 0</c> 視為有效；日出對各欄位各自減 1（斷糧另有結算規則）。
-    /// 地形傷害見 <see cref="Terrain.TerrainHazardLevel"/> 與 <see cref="Core.Units.UnitHazardSnapshot"/>。
+    /// 腳下格有無火／陷阱見 <see cref="Core.Units.Unit.IsOnFire"/>／<see cref="Core.Units.Unit.IsOnTrap"/>（讀 LocationFlags）。
     /// </summary>
     public sealed class UnitFlags
     {

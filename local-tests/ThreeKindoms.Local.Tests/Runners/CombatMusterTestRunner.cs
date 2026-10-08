@@ -104,7 +104,7 @@ namespace ThreeKindoms.Local.Tests.Runners
                     var grid = new LocationGrid();
                     var spawn = new HexCoord(0, 0);
                     var next = new HexCoord(1, 0);
-                    AbstractTerrain plain = TerrainDefinition.FromTerrainType(TerrainType.Plain);
+                    AbstractTerrain plain = TerrainRegistry.Get(TerrainType.Plain);
 
                     Combat combat = UnitUtil.DeployCombat(
                         FactionId,

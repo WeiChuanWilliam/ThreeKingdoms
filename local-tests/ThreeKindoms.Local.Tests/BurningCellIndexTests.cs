@@ -14,7 +14,7 @@ namespace ThreeKindoms.Local.Tests
         public void SetOnFire_registers_hex_in_grid_index()
         {
             var grid = new LocationGrid();
-            var terrain = TerrainDefinition.FromTerrainType(TerrainType.Forest);
+            var terrain = TerrainRegistry.Get(TerrainType.Forest);
             var loc = grid.GetOrCreate(new HexCoord(3, 4), terrain);
 
             Assert.False(grid.IsBurning(loc.Hex));
@@ -27,7 +27,7 @@ namespace ThreeKindoms.Local.Tests
         public void Extinguish_unregisters_hex()
         {
             var grid = new LocationGrid();
-            var terrain = TerrainDefinition.FromTerrainType(TerrainType.Forest);
+            var terrain = TerrainRegistry.Get(TerrainType.Forest);
             var loc = grid.GetOrCreate(new HexCoord(1, 1), terrain);
             loc.SetOnFire();
 
@@ -43,8 +43,7 @@ namespace ThreeKindoms.Local.Tests
             UnitConfigUtil.Load(TestPaths.UnitPropertiesPath);
 
             var grid = new LocationGrid();
-            var terrain = TerrainDefinition.FromTerrainType(TerrainType.Forest);
-            terrain.SetFireEffect(1);
+            var terrain = TerrainRegistry.Get(TerrainType.Forest);
             var loc = grid.GetOrCreate(new HexCoord(0, 0), terrain);
             loc.SetOnFire();
 
@@ -60,9 +59,8 @@ namespace ThreeKindoms.Local.Tests
             UnitConfigUtil.Load(TestPaths.UnitPropertiesPath);
 
             var grid = new LocationGrid();
-            var plain = TerrainDefinition.FromTerrainType(TerrainType.Plain);
-            var forest = TerrainDefinition.FromTerrainType(TerrainType.Forest);
-            forest.SetFireEffect(4);
+            var plain = TerrainRegistry.Get(TerrainType.Plain);
+            var forest = TerrainRegistry.Get(TerrainType.Forest);
 
             grid.GetOrCreate(new HexCoord(0, 0), plain);
             var burning = grid.GetOrCreate(new HexCoord(1, 0), forest);

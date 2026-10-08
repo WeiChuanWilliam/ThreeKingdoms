@@ -31,7 +31,7 @@ namespace ThreeKindoms.UnityBridge
             PlayerUnit = CreateFallbackPlayerUnit(start);
 
             if (grid.TryGet(start, out var cell))
-                PlayerUnit.Location.BindToWorld(Locations, start, TerrainDefinition.FromTerrainType(cell.Terrain));
+                PlayerUnit.Location.BindToWorld(Locations, start, TerrainRegistry.Get(cell.Terrain));
         }
 
         static Unit CreateFallbackPlayerUnit(HexCoord start)
@@ -52,7 +52,7 @@ namespace ThreeKindoms.UnityBridge
             foreach (var hex in grid.AllCoords)
             {
                 if (grid.TryGet(hex, out var cell))
-                    locGrid.GetOrCreate(hex, TerrainDefinition.FromTerrainType(cell.Terrain));
+                    locGrid.GetOrCreate(hex, TerrainRegistry.Get(cell.Terrain));
             }
             return locGrid;
         }
@@ -86,6 +86,8 @@ namespace ThreeKindoms.UnityBridge
         public void NextDaySunrise()
         {
             Clock.AdvanceToNextSunrise();
+            foreach (var unit in UnitRegistry.All)
+                unit.RefillMovementPoints();
             LastMessage = $"第 {Clock.TotalDay} 天日出（結算尚未實作）";
         }
 

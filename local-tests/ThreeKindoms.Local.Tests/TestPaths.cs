@@ -36,9 +36,6 @@ namespace ThreeKindoms.Local.Tests
         public static string OfficerPropertiesPath =>
             Path.Combine(StreamingAssetsPath, "chinese", "officer.properties");
 
-        public static string TerrainPropertiesPath =>
-            Path.Combine(StreamingAssetsPath, "chinese", "terrain.properties");
-
         public static string ScenarioOfficersPath =>
             Path.Combine(StreamingAssetsPath, "scenario_officers", "opening.json");
 

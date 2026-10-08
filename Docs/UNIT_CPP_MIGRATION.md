@@ -25,12 +25,12 @@
 **不是**地形傷害。負面狀態為剩餘天數（`byte`，0～255）：`unit.Status`（`Mess`／`Deceive`／`Stop`／`CutSupply`）。  
 `CutSupply` 規則特殊（擊破倒數 → 到期斷量；補糧即取消），見 [UNIT_STATUS_AND_TERRAIN_HAZARD.md](UNIT_STATUS_AND_TERRAIN_HAZARD.md)。
 
-腳下格火／陷阱傷害等級 → `Unit.TerrainHazard`（自 Location 同步）。
+腳下格火／陷阱 → `Unit.IsOnFire`／`IsOnTrap`（讀 LocationFlags）。
 
 ## 與 Spike
 
 - 已移除 `MapUnit`、`UnitFactory`、`UnitState`；請用 `Unit` + `UnitLocationBinding` + `LocationGrid`。
-- 部隊進入格時：`EnterHex` → 同步 `StationedBuilding`、`IsOnFire`（讀 Location）、`TerrainHazard`。
+- 部隊進入格時：`EnterHex` → 同步 `StationedBuilding`、`FireEffect`／士氣懲罰；著火／陷阱讀 LocationFlags。
 
 ## C++ 原檔問題
 
