@@ -26,7 +26,7 @@ namespace ThreeKindoms.Core
         Rapids = 18,        // 急流
         FrozenRiver = 19,   // 凍河
         Coast = 20,         // 沿海
-        City = 21,          // 城池（城池、關隘、要塞）
+        City = 21,          // 城池（城池、關隘、要塞、岩砦）
         Stockade = 22,      // 城寨（港灣、陣、寨、縣城）
         Impassable = 23     // 不可通行
     }

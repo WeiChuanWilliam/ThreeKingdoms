@@ -22,7 +22,7 @@
 
 - 地形是**類型**不是格子：每種地形全域只有一個實例，由 `TerrainRegistry` 建立並持有（子類建構子為 `internal`）。
 - 建築、火、陷阱等狀態跟著 **Location** 走；Location 以地形 id 取得地形資料，再決定能不能燒、能不能建。
-- 城池（城池、關隘、要塞）與城寨（港灣、陣、寨、縣城）只描述「這格是什麼地」；據點本身的資料仍在 Location 的建築上。
+- 城池（城池、關隘、要塞、岩砦；較不易著火）與城寨（港灣、縣城、陣、寨）只描述「這格是什麼地」；據點本身的資料（佔用格、中心格、耐久、駐紮兵團）在 Location 的建築上，見 [SETTLEMENT_SITES.md](SETTLEMENT_SITES.md) §6。
 
 ```csharp
 AbstractTerrain t = TerrainRegistry.Get(cell.Terrain); // 以 TerrainType
@@ -75,7 +75,7 @@ AbstractTerrain t2 = TerrainRegistry.Get(23);          // 以 id → 不可通�
 | 成員 | 說明 |
 |------|------|
 | `TerrainName` / `TerrainId` | 名稱與類型 id（= `TerrainType` 數值） |
-| `TerrainFlags` | 可達／可建／可陷／要塞／可燃 |
+| `TerrainFlags` | 可達／可建／可陷／要塞／可燃（可建＝能蓋普通建物如陣、寨；要塞＝能蓋要塞、岩砦等花大量金錢時間的建物） |
 | `MoveCost` | 離開此格所需行動力 |
 | `FireEffect` | 火計 n |
 | `MoralePenalty` / `StaminaPenalty` | 士氣／體力懲罰（負值＝回復） |

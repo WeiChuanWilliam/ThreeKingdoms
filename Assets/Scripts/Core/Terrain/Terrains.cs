@@ -210,7 +210,7 @@ namespace ThreeKindoms.Core.Terrain
         public override bool CalculateMovement(Unit unit) => SpendMoveCost(unit);
     }
 
-    /// <summary>城池（城池、關隘、要塞）。</summary>
+    /// <summary>城池（城池、關隘、要塞、岩砦）。</summary>
     public sealed class CityTerrain : AbstractTerrain
     {
         internal CityTerrain() : base(TerrainType.City, "城池", 0,
